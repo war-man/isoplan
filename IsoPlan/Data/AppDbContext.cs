@@ -17,6 +17,8 @@ namespace IsoPlan.Data
             modelBuilder.Entity<Schedule>()
                 .HasKey(s => new { s.ConstructionSiteId, s.EmployeeId, s.Date });
 
+            modelBuilder.Entity<User>().HasAlternateKey(u => u.Username).HasName("AlternateKey_Username");
+
             Hash.CreatePasswordHash("milan", out byte[] passwordHash, out byte[] passwordSalt);
 
             modelBuilder.Entity<User>().HasData(
