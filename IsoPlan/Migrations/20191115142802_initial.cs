@@ -8,26 +8,6 @@ namespace IsoPlan.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ConstructionSites",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    Address = table.Column<string>(nullable: true),
-                    Client = table.Column<string>(nullable: true),
-                    StartDate = table.Column<DateTime>(nullable: false),
-                    EndDate = table.Column<DateTime>(nullable: false),
-                    RGDate = table.Column<DateTime>(nullable: false),
-                    RGCollected = table.Column<bool>(nullable: false),
-                    Active = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ConstructionSites", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
@@ -36,13 +16,38 @@ namespace IsoPlan.Migrations
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     Salary = table.Column<float>(nullable: false),
+                    AccountNumber = table.Column<string>(nullable: true),
+                    ContractType = table.Column<string>(nullable: true),
                     WorkStart = table.Column<DateTime>(nullable: false),
-                    WorkEnd = table.Column<DateTime>(nullable: false),
-                    Active = table.Column<bool>(nullable: false)
+                    WorkEnd = table.Column<DateTime>(nullable: true),
+                    Status = table.Column<string>(nullable: true),
+                    Note = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Employees", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Jobs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Address = table.Column<string>(nullable: true),
+                    ClientName = table.Column<string>(nullable: true),
+                    ClientNumber = table.Column<string>(nullable: true),
+                    ClientEmail = table.Column<string>(nullable: true),
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    EndDate = table.Column<DateTime>(nullable: false),
+                    RGDate = table.Column<DateTime>(nullable: false),
+                    RGCollected = table.Column<bool>(nullable: false),
+                    Status = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Jobs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,7 +58,7 @@ namespace IsoPlan.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
-                    Username = table.Column<string>(nullable: true),
+                    Username = table.Column<string>(nullable: false),
                     Role = table.Column<string>(nullable: true),
                     PasswordHash = table.Column<byte[]>(nullable: true),
                     PasswordSalt = table.Column<byte[]>(nullable: true)
@@ -61,6 +66,7 @@ namespace IsoPlan.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                    table.UniqueConstraint("AlternateKey_Username", x => x.Username);
                 });
 
             migrationBuilder.CreateTable(
@@ -78,9 +84,9 @@ namespace IsoPlan.Migrations
                 {
                     table.PrimaryKey("PK_Schedules", x => new { x.ConstructionSiteId, x.EmployeeId, x.Date });
                     table.ForeignKey(
-                        name: "FK_Schedules_ConstructionSites_ConstructionSiteId",
+                        name: "FK_Schedules_Jobs_ConstructionSiteId",
                         column: x => x.ConstructionSiteId,
-                        principalTable: "ConstructionSites",
+                        principalTable: "Jobs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -94,7 +100,7 @@ namespace IsoPlan.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "FirstName", "LastName", "PasswordHash", "PasswordSalt", "Role", "Username" },
-                values: new object[] { 1, "Milan", "Milovanovic", new byte[] { 152, 172, 52, 243, 110, 140, 163, 122, 236, 11, 118, 232, 203, 57, 183, 107, 23, 77, 119, 25, 98, 183, 141, 10, 157, 194, 179, 77, 89, 12, 240, 44, 166, 188, 181, 218, 218, 202, 213, 69, 7, 67, 25, 15, 83, 143, 249, 1, 231, 72, 211, 143, 242, 78, 219, 130, 38, 121, 137, 119, 225, 172, 154, 22 }, new byte[] { 142, 36, 208, 161, 16, 105, 125, 67, 199, 99, 238, 2, 148, 220, 153, 64, 212, 132, 197, 146, 212, 158, 29, 99, 253, 248, 44, 11, 128, 160, 61, 63, 188, 167, 203, 247, 154, 241, 132, 181, 163, 62, 161, 205, 18, 64, 34, 129, 74, 120, 47, 193, 29, 217, 202, 190, 71, 73, 204, 202, 50, 69, 181, 71, 89, 29, 251, 76, 132, 208, 159, 44, 217, 39, 68, 46, 167, 157, 131, 234, 58, 103, 188, 156, 147, 107, 216, 106, 181, 27, 187, 58, 218, 212, 254, 154, 93, 72, 108, 247, 163, 24, 6, 65, 170, 210, 75, 81, 233, 38, 155, 237, 196, 207, 218, 200, 158, 149, 28, 181, 128, 188, 68, 86, 12, 155, 134, 15 }, "Admin", "milan" });
+                values: new object[] { 1, "Milan", "Milovanovic", new byte[] { 38, 137, 158, 23, 150, 114, 140, 120, 247, 60, 252, 232, 79, 75, 36, 34, 110, 227, 81, 68, 88, 19, 196, 17, 75, 58, 180, 117, 232, 54, 196, 188, 99, 247, 184, 133, 14, 210, 222, 3, 14, 41, 46, 19, 158, 52, 79, 236, 35, 103, 247, 128, 63, 163, 49, 126, 165, 81, 21, 87, 188, 216, 189, 110 }, new byte[] { 9, 106, 121, 147, 243, 126, 119, 205, 93, 138, 41, 189, 121, 170, 113, 68, 215, 155, 118, 73, 122, 85, 38, 21, 18, 109, 225, 190, 106, 50, 159, 199, 84, 62, 206, 117, 248, 228, 225, 178, 250, 218, 183, 237, 70, 48, 28, 175, 187, 143, 106, 19, 198, 84, 16, 194, 194, 137, 62, 236, 131, 1, 6, 77, 13, 150, 64, 133, 184, 63, 151, 3, 120, 105, 127, 234, 185, 6, 159, 153, 7, 129, 71, 41, 192, 101, 137, 115, 200, 88, 140, 9, 123, 76, 106, 229, 234, 130, 83, 93, 130, 106, 84, 60, 169, 187, 33, 210, 24, 11, 214, 90, 6, 212, 25, 48, 71, 216, 216, 233, 252, 235, 240, 191, 215, 197, 135, 183 }, "Admin", "milan" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schedules_EmployeeId",
@@ -111,7 +117,7 @@ namespace IsoPlan.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "ConstructionSites");
+                name: "Jobs");
 
             migrationBuilder.DropTable(
                 name: "Employees");

@@ -13,6 +13,7 @@ const useStyles = makeStyles(theme => ({
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
         width: 200,
+        textAlign: 'left',
     },
     closeButton: {
         position: 'absolute',
@@ -22,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     },
     actions: {
         width: '100%'
-    }
+    },
 }));
 
 
@@ -49,8 +50,8 @@ function UserAddDialog(props) {
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>
-            <form className={classes.container} autoComplete="off" onSubmit={handleSubmit}>
-                <DialogContent>
+            <form autoComplete="off" onSubmit={handleSubmit}>
+                <DialogContent className={classes.container}>
                     <TextField
                         autoFocus
                         label="First Name"
@@ -85,9 +86,9 @@ function UserAddDialog(props) {
                         onBlur={handleChange('password')}
                         margin="normal"
                         autoComplete="nope"
-                    />
+                    /> 
                     <FormControl margin="normal" className={classes.textField}>
-                        <InputLabel htmlFor="add-role">Role</InputLabel>
+                        <InputLabel>Role</InputLabel>
                         <Select                            
                             value={userToAdd.role}
                             onChange={handleChange('role')}                            
@@ -97,6 +98,7 @@ function UserAddDialog(props) {
                             )}
                         </Select>
                     </FormControl>
+                    <div className={classes.textField}></div>
                 </DialogContent>
                 <DialogActions className={classes.actions}>
                     <Button variant="contained" type="submit" color="primary">

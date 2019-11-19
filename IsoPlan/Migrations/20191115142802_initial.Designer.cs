@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IsoPlan.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20191109191259_employeeNote")]
-    partial class employeeNote
+    [Migration("20191115142802_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,7 +49,7 @@ namespace IsoPlan.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("WorkEnd")
+                    b.Property<DateTime?>("WorkEnd")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("WorkStart")
@@ -152,9 +152,13 @@ namespace IsoPlan.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasAlternateKey("Username")
+                        .HasName("AlternateKey_Username");
 
                     b.ToTable("Users");
 
@@ -164,8 +168,8 @@ namespace IsoPlan.Migrations
                             Id = 1,
                             FirstName = "Milan",
                             LastName = "Milovanovic",
-                            PasswordHash = new byte[] { 140, 81, 117, 11, 6, 91, 19, 23, 108, 8, 10, 62, 65, 113, 211, 46, 116, 205, 124, 27, 80, 35, 39, 137, 165, 126, 120, 23, 144, 103, 64, 11, 117, 134, 177, 92, 15, 186, 213, 41, 221, 152, 135, 3, 96, 118, 169, 60, 245, 198, 53, 251, 183, 14, 238, 78, 13, 2, 184, 56, 23, 10, 141, 201 },
-                            PasswordSalt = new byte[] { 216, 74, 2, 137, 82, 246, 20, 174, 67, 165, 181, 205, 163, 71, 187, 191, 15, 240, 105, 165, 101, 71, 21, 159, 49, 193, 53, 114, 89, 170, 126, 61, 249, 170, 73, 105, 18, 162, 106, 154, 203, 232, 120, 194, 165, 129, 63, 38, 119, 159, 136, 209, 242, 73, 158, 69, 33, 59, 108, 99, 144, 15, 183, 37, 175, 172, 9, 66, 119, 189, 212, 145, 115, 81, 3, 184, 255, 127, 201, 33, 255, 18, 91, 146, 162, 211, 64, 166, 76, 237, 57, 129, 43, 86, 111, 11, 11, 165, 222, 77, 136, 20, 51, 117, 100, 45, 149, 83, 125, 131, 48, 216, 49, 1, 172, 191, 182, 182, 184, 237, 226, 217, 204, 111, 248, 236, 27, 50 },
+                            PasswordHash = new byte[] { 38, 137, 158, 23, 150, 114, 140, 120, 247, 60, 252, 232, 79, 75, 36, 34, 110, 227, 81, 68, 88, 19, 196, 17, 75, 58, 180, 117, 232, 54, 196, 188, 99, 247, 184, 133, 14, 210, 222, 3, 14, 41, 46, 19, 158, 52, 79, 236, 35, 103, 247, 128, 63, 163, 49, 126, 165, 81, 21, 87, 188, 216, 189, 110 },
+                            PasswordSalt = new byte[] { 9, 106, 121, 147, 243, 126, 119, 205, 93, 138, 41, 189, 121, 170, 113, 68, 215, 155, 118, 73, 122, 85, 38, 21, 18, 109, 225, 190, 106, 50, 159, 199, 84, 62, 206, 117, 248, 228, 225, 178, 250, 218, 183, 237, 70, 48, 28, 175, 187, 143, 106, 19, 198, 84, 16, 194, 194, 137, 62, 236, 131, 1, 6, 77, 13, 150, 64, 133, 184, 63, 151, 3, 120, 105, 127, 234, 185, 6, 159, 153, 7, 129, 71, 41, 192, 101, 137, 115, 200, 88, 140, 9, 123, 76, 106, 229, 234, 130, 83, 93, 130, 106, 84, 60, 169, 187, 33, 210, 24, 11, 214, 90, 6, 212, 25, 48, 71, 216, 216, 233, 252, 235, 240, 191, 215, 197, 135, 183 },
                             Role = "Admin",
                             Username = "milan"
                         });

@@ -15,7 +15,7 @@ namespace IsoPlan.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Schedule>()
-                .HasKey(s => new { s.ConstructionSiteId, s.EmployeeId, s.Date });
+                .HasKey(s => new { s.JobId, s.EmployeeId, s.Date });
 
             modelBuilder.Entity<User>().HasAlternateKey(u => u.Username).HasName("AlternateKey_Username");
 

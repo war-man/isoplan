@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => ({
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
         width: 200,
+        textAlign: 'left',
     },
     closeButton: {
         position: 'absolute',
@@ -56,8 +57,8 @@ function EmployeeAddDialog(props) {
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>
-            <form className={classes.container} autoComplete="off" onSubmit={handleSubmit}>
-                <DialogContent>
+            <form autoComplete="off" onSubmit={handleSubmit}>
+                <DialogContent className={classes.container} >
                     <TextField
                         autoFocus
                         label='Prénom'
@@ -76,13 +77,13 @@ function EmployeeAddDialog(props) {
                         margin="normal"
                     />
                     <FormControl margin="normal" className={classes.textField}>
-                        <InputLabel htmlFor="add-role">Statut</InputLabel>
+                        <InputLabel>Statut</InputLabel>
                         <Select                            
                             value={employeeToAdd.status}
                             onChange={handleChange('status')}                            
                         >
-                            {employeeStatusList.map((role, i) =>
-                                <MenuItem key={i} value={role}>{role}</MenuItem>
+                            {employeeStatusList.map((status, i) =>
+                                <MenuItem key={i} value={status}>{status}</MenuItem>
                             )}
                         </Select>
                     </FormControl>
@@ -105,13 +106,13 @@ function EmployeeAddDialog(props) {
                         margin="normal"
                     />
                     <FormControl margin="normal" className={classes.textField}>
-                        <InputLabel htmlFor="add-role">Contrat</InputLabel>
+                        <InputLabel>Contrat</InputLabel>
                         <Select                            
                             value={employeeToAdd.contractType}
                             onChange={handleChange('contractType')}                            
                         >
-                            {contractTypeList.map((role, i) =>
-                                <MenuItem key={i} value={role}>{role}</MenuItem>
+                            {contractTypeList.map((contract, i) =>
+                                <MenuItem key={i} value={contract}>{contract}</MenuItem>
                             )}
                         </Select>
                     </FormControl>

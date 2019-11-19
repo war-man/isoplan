@@ -95,8 +95,7 @@ namespace IsoPlan.Services
                 !string.IsNullOrWhiteSpace(employee.AccountNumber) &&
                 ContractType.ContractTypeList.Contains(employee.ContractType) &&
                 (employee.WorkStart != null) &&
-                EmployeeStatus.EmployeeStatusList.Contains(employee.Status) &&
-                (employee.Note != null)
+                EmployeeStatus.EmployeeStatusList.Contains(employee.Status) 
             );
         }
     }

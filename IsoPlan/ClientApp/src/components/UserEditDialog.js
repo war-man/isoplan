@@ -8,11 +8,13 @@ const useStyles = makeStyles(theme => ({
     container: {
         display: 'flex',
         flexWrap: 'wrap',
+        justifyContent: 'center',
     },
     textField: {
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
         width: 200,
+        textAlign: 'left',
     },
     closeButton: {
         position: 'absolute',
@@ -84,7 +86,7 @@ function UserEditDialog(props) {
                         autoComplete="nope"
                     />
                     <FormControl margin="normal" className={classes.textField}>
-                        <InputLabel htmlFor="add-role">Role</InputLabel>
+                        <InputLabel>Role</InputLabel>
                         <Select
                             value={userToEdit.role}
                             onChange={handleChange('role')}
@@ -96,6 +98,7 @@ function UserEditDialog(props) {
                             )}
                         </Select>
                     </FormControl>
+                    <div className={classes.textField}></div>
                 </DialogContent>
                 <DialogActions className={classes.actions}>                
                     <Button variant="contained" type="submit" color="primary">
@@ -103,7 +106,6 @@ function UserEditDialog(props) {
                     </Button>
                 </DialogActions>
             </form>
-            
         </Dialog>
     )
 }

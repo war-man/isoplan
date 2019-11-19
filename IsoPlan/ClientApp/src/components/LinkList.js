@@ -10,9 +10,9 @@ function LinkList() {
     return (
         <List>
             <LinkListItem text="Home" icon={<DashboardIcon />} to='/'/>
-            <LinkListItem text="Construction sites" icon={<ApartmentIcon />} to='/constructionSites'/>
-            <LinkListItem text="Employees" icon={<PeopleIcon />} to='/employees'/>
-            <LinkListItem text="Users" icon={<AccountBoxIcon />} to='/users'/>
+            <LinkListItem text="Jobs" icon={<ApartmentIcon />} to='/jobs/'/>
+            <LinkListItem text="Employees" icon={<PeopleIcon />} to='/employees/'/>
+            <LinkListItem text="Users" icon={<AccountBoxIcon />} to='/users/'/>
         </List>
     )
 }

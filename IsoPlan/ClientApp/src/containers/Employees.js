@@ -6,6 +6,7 @@ import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog';
 import EmployeeAddDialog from '../components/EmployeeAddDialog';
 import { EmployeeStatus, EmployeeStatusList } from '../helpers/employeeStatus';
 import { ContractType, ContractTypeList } from '../helpers/contractType';
+import { Redirect } from 'react-router-dom';
 import moment from 'moment';
 
 function Employees(){
@@ -23,6 +24,7 @@ function Employees(){
         draggable: false,
         actionsColumnIndex: -1,
         pageSizeOptions: [],
+        paging: false,
     }
     const actions = [
         {
@@ -34,13 +36,21 @@ function Employees(){
             }
         },
         rowData => ({
+            icon: 'more_horiz',
+            tooltip: 'Détails',
+            onClick: (event, rowData) => {
+                setRedirectId(rowData.id);
+                setRedirect(true);
+            }
+        }),
+        rowData => ({
             icon: 'delete',
             tooltip: 'Supprimer',
             onClick: (event, rowData) => {
                 setDeleteId(rowData.id);
                 setConfirmOpen(true);
             }
-        })
+        }),        
     ]
 
     const [employeeToAdd, setEmployeeToAdd] = useState({
@@ -111,8 +121,18 @@ function Employees(){
         getEmployees()
     }, [])
 
+    const [redirect, setRedirect] = useState(false);
+    const [redirectId, setRedirectId] = useState(0);
+
+    const renderRedirect = () => {
+        if (redirect) {
+          return <Redirect push to={`${redirectId}`} />
+        }
+    }
+
     return (
         <Dashboard>
+            {renderRedirect()}
             <MaterialTable
                 columns={columns}
                 data={data}

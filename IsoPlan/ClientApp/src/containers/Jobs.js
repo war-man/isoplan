@@ -1,7 +1,7 @@
 import React from 'react';
 import Dashboard from '../components/Dashboard';
 
-function ConstructionSites(){
+function Jobs(){
     return (
         <Dashboard>
             test con sites
@@ -9,4 +9,4 @@ function ConstructionSites(){
     )
 }
 
-export default ConstructionSites;
+export default Jobs;

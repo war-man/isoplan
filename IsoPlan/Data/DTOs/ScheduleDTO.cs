@@ -7,7 +7,7 @@ namespace IsoPlan.Data.DTOs
 {
     public class ScheduleDTO
     {
-        public JobDTO ConstructionSite { get; set; }
+        public JobDTO Job { get; set; }
         public EmployeeDTO Employee { get; set; }
         public double Salary { get; set; }
         public DateTime Date { get; set; }

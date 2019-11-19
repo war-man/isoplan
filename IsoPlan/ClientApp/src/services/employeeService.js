@@ -1,10 +1,20 @@
 import { authHeader, handleResponse } from '../helpers/authentication'
 
 export const employeeService = {
+    get,
     getAll,
     create,
     update,
     deleteEmployee
+}
+
+function get(id) {
+    const requestOptions =
+    {
+        method: 'GET',
+        headers: authHeader()
+    };
+    return fetch(`${process.env.REACT_APP_API_URL}api/Employees/${id}`, requestOptions).then(handleResponse)     
 }
 
 function getAll() {
@@ -38,7 +48,7 @@ function update(employee) {
             ...authHeader(),
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({employee})
+        body: JSON.stringify(employee)
     };
     return fetch(`${process.env.REACT_APP_API_URL}api/Employees/${employee.id}`, requestOptions).then(handleResponse)        
 }

@@ -19,6 +19,7 @@ function Users() {
         draggable: false,
         actionsColumnIndex: -1,
         pageSizeOptions: [],
+        paging: false,
     }
     const actions = [
         {
