@@ -112,7 +112,6 @@ export default function Dashboard(props) {
                     <IconButton
                         edge="start"
                         color="inherit"
-                        aria-label="open drawer"
                         onClick={handleDrawerOpen}
                         className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
                     >

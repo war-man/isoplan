@@ -39,5 +39,6 @@ namespace IsoPlan.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Job> Jobs { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<EmployeeFile> EmployeeFiles { get; set; }
     }
 }

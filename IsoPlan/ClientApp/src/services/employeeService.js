@@ -5,7 +5,10 @@ export const employeeService = {
     getAll,
     create,
     update,
-    deleteEmployee
+    deleteEmployee,
+    getFiles,
+    uploadFile,
+    deleteFile
 }
 
 function get(id) {
@@ -62,4 +65,33 @@ function deleteEmployee(id) {
         },
     };
     return fetch(`${process.env.REACT_APP_API_URL}api/Employees/${id}`, requestOptions).then(handleResponse)        
+}
+
+function getFiles(id) {
+    const requestOptions =
+    {
+        method: 'GET',
+        headers: authHeader()
+    };
+    return fetch(`${process.env.REACT_APP_API_URL}api/Employees/${id}/files`, requestOptions).then(handleResponse)     
+}
+
+function uploadFile(id, formData) {
+    formData.append("employeeId", id);
+    const requestOptions =
+    {
+        method: 'POST',
+        headers: authHeader(),
+        body: formData
+    };
+    return fetch(`${process.env.REACT_APP_API_URL}api/Employees/files`, requestOptions).then(handleResponse)     
+}
+
+function deleteFile(id) {
+    const requestOptions =
+    {
+        method: 'DELETE',
+        headers: authHeader()
+    };
+    return fetch(`${process.env.REACT_APP_API_URL}api/Employees/files/${id}`, requestOptions).then(handleResponse)     
 }

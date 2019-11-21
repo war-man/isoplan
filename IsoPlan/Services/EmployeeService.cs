@@ -13,6 +13,10 @@ namespace IsoPlan.Services
         IEnumerable<Employee> GetAll();
         Employee GetById(int id);
         void Create(Employee employee);
+        void CreateFile(EmployeeFile employeeFile);
+        EmployeeFile GetFile(int id);
+        void DeleteFile(EmployeeFile employeeFile);
+        List<EmployeeFile> GetFiles(int employeeId);
         void Update(Employee employee);
         void Delete(int id);
     }
@@ -43,6 +47,44 @@ namespace IsoPlan.Services
             }
             _context.Employees.Add(employee);
             _context.SaveChanges();
+        }
+
+        public void CreateFile(EmployeeFile employeeFile)
+        {
+            _context.EmployeeFiles.Add(employeeFile);
+            _context.SaveChanges();
+        }
+
+        public EmployeeFile GetFile(int id)
+        {
+            return _context.EmployeeFiles.Find(id);
+        }
+
+        public void DeleteFile(EmployeeFile employeeFile)
+        {
+            _context.EmployeeFiles.Remove(employeeFile);
+            _context.SaveChanges();
+        }
+
+        public List<EmployeeFile> GetFiles(int employeeId)
+        {
+            var employee = _context.Employees.Find(employeeId);
+
+            if (employee == null)
+            {
+                throw new AppException("Employee not found");
+            }
+
+            return _context.EmployeeFiles
+                .Select(ef => new EmployeeFile
+                {
+                    Id = ef.Id,
+                    Name = ef.Name,
+                    EmployeeId = ef.EmployeeId
+                })
+                .Where(ef => ef.EmployeeId == employeeId)
+                .OrderBy(ef => ef.Name)
+                .ToList();
         }
 
         public void Update(Employee employeeParam)

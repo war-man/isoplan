@@ -7,6 +7,7 @@ import { ContractType, ContractTypeList } from '../helpers/contractType';
 import { Grid, Paper, TextField, FormControl, MenuItem, Button, InputLabel, Select, makeStyles } from '@material-ui/core';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import Files from '../components/Files';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -28,10 +29,6 @@ const useStyles = makeStyles(theme => ({
         marginRight: theme.spacing(1),
         width: 220,
         textAlign: 'left',
-    },
-    noteField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
     },
     actions: {
         marginLeft: theme.spacing(12),
@@ -58,7 +55,7 @@ function EmployeeDetails() {
     const handleSubmit = (event) => {
         event.preventDefault();
         employeeService.update(employee)
-            .then(res => {
+            .then(() => {
                 getEmployee(id);
             })
             .catch(err => {
@@ -90,12 +87,48 @@ function EmployeeDetails() {
 
     useEffect(() => {
         getEmployee(id)
+        getFiles(id)
     }, [id]);
+
+    const [files, setFiles] = useState([])
+    const getFiles = id => {
+        employeeService.getFiles(id)
+            .then(res => {
+                setFiles(res)
+            })
+            .catch(err => {
+                alert(err)
+            })
+    }
+    const getFile = fileId => {
+        employeeService.getFile(fileId)           
+            .catch(err => {
+                alert(err)
+            })
+    }
+    const uploadFile = id => formData => {
+        employeeService.uploadFile(id, formData)
+            .then(() => {
+                getFiles(id)
+            })
+            .catch(err => {
+                alert(err)
+            })
+    }
+    const deleteFile = fileId => {
+        employeeService.deleteFile(fileId)
+            .then(() => {
+                getFiles(id)
+            })
+            .catch(err => {
+                alert(err)
+            })
+    }
 
     return (
         <Dashboard>
             <Grid container spacing={3} className={classes.root}>
-                <Grid item sm={12} md={6}>
+                <Grid item sm={12} md={8}>
                     <Paper className={classes.paper}>
                         <form autoComplete="off" onSubmit={handleSubmit} className={classes.container}>
                             <TextField
@@ -188,26 +221,29 @@ function EmployeeDetails() {
                                 multiline
                                 value={employee.note}
                                 onChange={handleChange('note')}
-                                className={classes.noteField}
+                                className={classes.textField}
                                 fullWidth
+                                rowsMax={10}
                                 margin="normal"
                                 variant="outlined"
                             />
+                            <div className={classes.textField}></div>
                             <div className={classes.actions}>
                                 <Button variant="contained" type="submit" color="primary">
                                     Enregistrer
                                 </Button>
-                            </div>                            
+                            </div>
                         </form>
                     </Paper>
                 </Grid>
-                <Grid item container sm={12} md={6}>
-                    <Grid item xs={12}>
-                        <Paper className={classes.paper}>files</Paper>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Paper className={classes.paper}>upload</Paper>
-                    </Grid>
+                <Grid item sm={12} md={4}>
+                    <Files 
+                        files={files} 
+                        getFile={getFile}
+                        uploadFile={uploadFile(id)}    
+                        deleteFile={deleteFile}  
+                        to={'/api/employees/files'}                 
+                    />
                 </Grid>
             </Grid>
         </Dashboard>

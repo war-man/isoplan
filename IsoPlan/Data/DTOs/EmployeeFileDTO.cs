@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace IsoPlan.Data.DTOs
 {
-    public class FileDTO
+    public class EmployeeFileDTO
     {
-        public string Name { get; set; }
         public IFormFile File { get; set; }
+        public int EmployeeId { get; set; }
     }
 }
