@@ -1,8 +1,11 @@
 ﻿using IsoPlan.Data;
 using IsoPlan.Data.Entities;
 using IsoPlan.Exceptions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,7 +18,7 @@ namespace IsoPlan.Services
         void Create(Employee employee);
         void CreateFile(EmployeeFile employeeFile);
         EmployeeFile GetFile(int id);
-        void DeleteFile(EmployeeFile employeeFile);
+        void DeleteFile(int id);
         List<EmployeeFile> GetFiles(int employeeId);
         void Update(Employee employee);
         void Delete(int id);
@@ -23,10 +26,12 @@ namespace IsoPlan.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly AppDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public EmployeeService(AppDbContext context)
+        public EmployeeService(AppDbContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         public IEnumerable<Employee> GetAll()
@@ -36,7 +41,7 @@ namespace IsoPlan.Services
 
         public Employee GetById(int id)
         {
-            return _context.Employees.Find(id);
+            return _context.Employees.Include(e => e.Files).SingleOrDefault(e => e.Id == id);
         }
 
         public void Create(Employee employee)
@@ -60,9 +65,17 @@ namespace IsoPlan.Services
             return _context.EmployeeFiles.Find(id);
         }
 
-        public void DeleteFile(EmployeeFile employeeFile)
+        public void DeleteFile(int id)
         {
-            _context.EmployeeFiles.Remove(employeeFile);
+            EmployeeFile file = GetFile(id);
+            if (file == null)
+            {
+                throw new AppException("File not found in database.");
+            }
+            string webRootPath = _env.WebRootPath;
+            string fullPath = Path.Combine(webRootPath, "..\\Files\\" + file.Path);
+            System.IO.File.Delete(fullPath);
+            _context.EmployeeFiles.Remove(file);
             _context.SaveChanges();
         }
 
@@ -116,11 +129,18 @@ namespace IsoPlan.Services
 
         public void Delete(int id)
         {
-            var employee = _context.Employees.Find(id);
+            var employee = GetById(id);
 
             if (employee == null)
             {
                 throw new AppException("Employee not found");
+            }
+
+            List<EmployeeFile> files = new List<EmployeeFile>(employee.Files);
+
+            for (int i = 0; i < files.Count; i++)
+            {
+                DeleteFile(files[i].Id);
             }
 
             _context.Employees.Remove(employee);

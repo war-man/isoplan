@@ -18,7 +18,7 @@ namespace IsoPlan.Helpers
 
             // employee mapping
             CreateMap<Employee, EmployeeDTO>();
-            CreateMap<EmployeeDTO, Employee>();
+            CreateMap<EmployeeDTO, Employee>().ForMember(e => e.Files, opt => opt.Ignore());
 
             // construction site mapping
             CreateMap<Job, JobDTO>();

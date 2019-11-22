@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 function Files(props) {
     const classes = useStyles();
 
-    const { files, uploadFile, deleteFile, to} = props
+    const { files, to, uploadFile, deleteFile} = props
 
     const handleFileSubmit = (event) => {
         var formData = new FormData();

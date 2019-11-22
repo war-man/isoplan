@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 
 namespace IsoPlan.Controllers
-{    
+{
     [ApiController]
     [Route("api/[controller]")]
     public class EmployeesController : ControllerBase
@@ -153,28 +153,14 @@ namespace IsoPlan.Controllers
                 await stream.CopyToAsync(memory);
             }
             memory.Position = 0;
-            return File(memory, contentType, fileName);
+
+            return File(memory, contentType, fileName);          
         }
 
         [HttpDelete("files/{id}")]
         public IActionResult DeleteEmployeeFile(int id)
         {
-            EmployeeFile file = _employeeService.GetFile(id);
-
-            if (file == null)
-            {
-                throw new AppException("File not found in database.");
-            }
-
-            string webRootPath = _env.WebRootPath;
-
-
-            string fullPath = Path.Combine(webRootPath, "..\\Files\\" + file.Path);
-
-            System.IO.File.Delete(fullPath);
-
-            _employeeService.DeleteFile(file);
-
+            _employeeService.DeleteFile(id);
             return NoContent();
         }
 

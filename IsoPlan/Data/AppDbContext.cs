@@ -14,6 +14,11 @@ namespace IsoPlan.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<EmployeeFile>()
+               .HasOne(ef => ef.Employee)
+               .WithMany(e => e.Files)
+               .HasForeignKey(ef => ef.EmployeeId);
+
             modelBuilder.Entity<Schedule>()
                 .HasKey(s => new { s.JobId, s.EmployeeId, s.Date });
 

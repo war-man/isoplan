@@ -17,5 +17,6 @@ namespace IsoPlan.Data.Entities
         public DateTime? WorkEnd { get; set; }
         public string Status { get; set; }
         public string Note { get; set; }
+        public List<EmployeeFile> Files { get; set; }
     }
 }

@@ -100,13 +100,10 @@ function EmployeeDetails() {
                 alert(err)
             })
     }
-    const getFile = fileId => {
-        employeeService.getFile(fileId)           
-            .catch(err => {
-                alert(err)
-            })
-    }
     const uploadFile = id => formData => {
+        if(formData.get('file') === 'undefined'){
+            return
+        }
         employeeService.uploadFile(id, formData)
             .then(() => {
                 getFiles(id)
@@ -239,10 +236,9 @@ function EmployeeDetails() {
                 <Grid item sm={12} md={4}>
                     <Files 
                         files={files} 
-                        getFile={getFile}
                         uploadFile={uploadFile(id)}    
                         deleteFile={deleteFile}  
-                        to={'/api/employees/files'}                 
+                        to={'/api/employees/files'}
                     />
                 </Grid>
             </Grid>
