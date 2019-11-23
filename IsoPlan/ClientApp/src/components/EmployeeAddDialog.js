@@ -4,6 +4,8 @@ import { TextField, DialogTitle, DialogContent, DialogActions, Button, FormContr
 import CloseIcon from '@material-ui/icons/Close';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { EmployeeStatusFR } from '../helpers/employeeStatus';
+import { ContractTypeFR } from '../helpers/contractType';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -83,7 +85,7 @@ function EmployeeAddDialog(props) {
                             onChange={handleChange('status')}                            
                         >
                             {employeeStatusList.map((status, i) =>
-                                <MenuItem key={i} value={status}>{status}</MenuItem>
+                                <MenuItem key={i} value={status}>{EmployeeStatusFR[status]}</MenuItem>
                             )}
                         </Select>
                     </FormControl>
@@ -112,7 +114,7 @@ function EmployeeAddDialog(props) {
                             onChange={handleChange('contractType')}                            
                         >
                             {contractTypeList.map((contract, i) =>
-                                <MenuItem key={i} value={contract}>{contract}</MenuItem>
+                                <MenuItem key={i} value={contract}>{ContractTypeFR[contract]}</MenuItem>
                             )}
                         </Select>
                     </FormControl>

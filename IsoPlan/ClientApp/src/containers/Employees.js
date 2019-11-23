@@ -4,8 +4,8 @@ import MaterialTable from 'material-table';
 import { employeeService } from '../services/employeeService';
 import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog';
 import EmployeeAddDialog from '../components/EmployeeAddDialog';
-import { EmployeeStatus, EmployeeStatusList } from '../helpers/employeeStatus';
-import { ContractType, ContractTypeList } from '../helpers/contractType';
+import { EmployeeStatus, EmployeeStatusList, EmployeeStatusFR } from '../helpers/employeeStatus';
+import { ContractType, ContractTypeList, ContractTypeFR } from '../helpers/contractType';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
 
@@ -13,10 +13,10 @@ function Employees(){
     const columns = [
         { title: 'Prénom', field: 'firstName', cellStyle: {maxWidth: '150px', overflowWrap: 'break-word'}},
         { title: 'Nom', field: 'lastName', cellStyle: {maxWidth: '150px', overflowWrap: 'break-word'}},
-        { title: 'Statut', field: 'status'},
+        { title: 'Statut', field: 'status', render: rowData => <div>{EmployeeStatusFR[rowData.status]}</div>},
         { title: 'Per diem', field: 'salary', type: 'currency', currencySetting: {currencyCode: 'EUR', locale: 'fr-FR'}},
         { title: 'Numéro de compte', field: 'accountNumber', sorting: false},
-        { title: 'Contrat', field: 'contractType' },
+        { title: 'Contrat', field: 'contractType', render: rowData => <div>{ContractTypeFR[rowData.contractType]}</div> },
         { title: 'Commencé', field: 'workStart', render: rowData => {return rowData.workStart && <div>{moment(rowData.workStart).format('DD.MM.YYYY')}</div>}},
         { title: 'Arrêté', field: 'workEnd', render: rowData => {return rowData.workEnd && <div>{moment(rowData.workEnd).format('DD.MM.YYYY')}</div>}},
     ];

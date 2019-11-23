@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Dashboard from '../components/Dashboard';
 import { useParams } from 'react-router-dom';
 import { employeeService } from '../services/employeeService';
-import { EmployeeStatus, EmployeeStatusList } from '../helpers/employeeStatus';
-import { ContractType, ContractTypeList } from '../helpers/contractType';
+import { EmployeeStatus, EmployeeStatusList, EmployeeStatusFR } from '../helpers/employeeStatus';
+import { ContractType, ContractTypeList, ContractTypeFR } from '../helpers/contractType';
 import { Grid, Paper, TextField, FormControl, MenuItem, Button, InputLabel, Select, makeStyles } from '@material-ui/core';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -152,7 +152,7 @@ function EmployeeDetails() {
                                     onChange={handleChange('status')}
                                 >
                                     {EmployeeStatusList.map((status, i) =>
-                                        <MenuItem key={i} value={status}>{status}</MenuItem>
+                                        <MenuItem key={i} value={status}>{EmployeeStatusFR[status]}</MenuItem>
                                     )}
                                 </Select>
                             </FormControl>
@@ -181,7 +181,7 @@ function EmployeeDetails() {
                                     onChange={handleChange('contractType')}
                                 >
                                     {ContractTypeList.map((contract, i) =>
-                                        <MenuItem key={i} value={contract}>{contract}</MenuItem>
+                                        <MenuItem key={i} value={contract}>{ContractTypeFR[contract]}</MenuItem>
                                     )}
                                 </Select>
                             </FormControl>

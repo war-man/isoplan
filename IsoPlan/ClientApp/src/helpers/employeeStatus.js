@@ -5,4 +5,11 @@ export const EmployeeStatus = {
     Sick: 'Sick'
 }
 
+export const EmployeeStatusFR = {
+    Active: 'Actif',
+    Inactive: 'Inactif',
+    Vacation: 'Vacance',
+    Sick: 'Malade'
+}
+
 export const EmployeeStatusList = [EmployeeStatus.Active, EmployeeStatus.Inactive, EmployeeStatus.Sick, EmployeeStatus.Vacation]
