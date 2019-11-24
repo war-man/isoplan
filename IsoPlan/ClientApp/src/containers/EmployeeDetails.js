@@ -8,6 +8,8 @@ import { Grid, Paper, TextField, FormControl, MenuItem, Button, InputLabel, Sele
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import Files from '../components/Files';
+import Snackbar from '@material-ui/core/Snackbar';
+import CustomSnackbarContent from '../components/CustomSnackbarContent';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -36,6 +38,9 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         textAlign: 'right',
     },
+    snackbar: {
+        margin: theme.spacing(1),
+    },
 }));
 
 function EmployeeDetails() {
@@ -57,6 +62,7 @@ function EmployeeDetails() {
         employeeService.update(employee)
             .then(() => {
                 getEmployee(id);
+                setOpenSnackbar(true);
             })
             .catch(err => {
                 alert(err);
@@ -121,6 +127,15 @@ function EmployeeDetails() {
                 alert(err)
             })
     }
+
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackbar(false);
+    };
+
 
     return (
         <Dashboard>
@@ -242,6 +257,22 @@ function EmployeeDetails() {
                     />
                 </Grid>
             </Grid>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+                open={openSnackbar}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+            >
+                <CustomSnackbarContent
+                    onClose={handleCloseSnackbar}
+                    variant="success"
+                    className={classes.snackbar}
+                    message="Enregistrement réussi"
+                />
+            </Snackbar>
         </Dashboard>
     )
 }

@@ -9,9 +9,9 @@ import LinkListItem from './LinkListItem';
 function LinkList() {
     return (
         <List>
-            <LinkListItem text="Home" icon={<DashboardIcon />} to='/'/>
-            <LinkListItem text="Jobs" icon={<ApartmentIcon />} to='/jobs/'/>
-            <LinkListItem text="Employees" icon={<PeopleIcon />} to='/employees/'/>
+            <LinkListItem text="Accueil" icon={<DashboardIcon />} to='/'/>
+            <LinkListItem text="Travaux" icon={<ApartmentIcon />} to='/travaux/'/>
+            <LinkListItem text="Personnel" icon={<PeopleIcon />} to='/personnel/'/>
             <LinkListItem text="Users" icon={<AccountBoxIcon />} to='/users/'/>
         </List>
     )

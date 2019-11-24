@@ -13,9 +13,9 @@ function App() {
         <div>
             <Route path="/login" component={Login} />
             <PrivateRoute exact path="/" component={Home} roles={['Admin', 'Manager']}/>
-            <PrivateRoute exact path="/jobs/" component={Jobs} roles={['Admin', 'Manager']}/>
-            <PrivateRoute exact path="/employees/" component={Employees} roles={['Admin', 'Manager']}/>
-            <PrivateRoute exact path="/employees/:id" component ={EmployeeDetails} roles={['Admin', 'Manager']} />
+            <PrivateRoute exact path="/travaux/" component={Jobs} roles={['Admin', 'Manager']}/>
+            <PrivateRoute exact path="/personnel/" component={Employees} roles={['Admin', 'Manager']}/>
+            <PrivateRoute exact path="/personnel/:id" component ={EmployeeDetails} roles={['Admin', 'Manager']} />
             <PrivateRoute exact path="/users/" component={Users} roles={['Admin']}/>
         </div>
     );
