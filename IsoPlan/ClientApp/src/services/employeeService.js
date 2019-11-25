@@ -44,6 +44,7 @@ function create(employee) {
 }
 
 function update(employee) {
+    employee.salary = parseFloat(employee.salary);
     const requestOptions =
     {
         method: 'PUT',

@@ -4,8 +4,8 @@ import MaterialTable from 'material-table';
 import { employeeService } from '../services/employeeService';
 import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog';
 import EmployeeAddDialog from '../components/EmployeeAddDialog';
-import { EmployeeStatus, EmployeeStatusList, EmployeeStatusFR } from '../helpers/employeeStatus';
-import { ContractType, ContractTypeList, ContractTypeFR } from '../helpers/contractType';
+import { EmployeeStatus, EmployeeStatusFR } from '../helpers/employeeStatus';
+import { ContractType, ContractTypeFR } from '../helpers/contractType';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
 
@@ -25,6 +25,7 @@ function Employees(){
         actionsColumnIndex: -1,
         pageSizeOptions: [],
         paging: false,
+        search: false,
     }
     const actions = [
         {
@@ -145,9 +146,7 @@ function Employees(){
                 handleClose={handleCloseAdd}
                 handleAdd={handleAddEmployee}
                 employeeToAdd={employeeToAdd}
-                setEmployeeToAdd={setEmployeeToAdd}          
-                employeeStatusList={EmployeeStatusList}
-                contractTypeList={ContractTypeList}
+                setEmployeeToAdd={setEmployeeToAdd} 
             />
             <ConfirmDeleteDialog
                 open={confirmOpen}

@@ -36,6 +36,11 @@ namespace IsoPlan.Services
 
         public void Create(Job job)
         {
+            if (!ValidateJobData(job))
+            {
+                throw new AppException("Some required fields are empty");
+            }
+
             _context.Jobs.Add(job);
             _context.SaveChanges();
         }
@@ -52,8 +57,9 @@ namespace IsoPlan.Services
             job.Name = jobParam.Name;
             job.Address = jobParam.Address;
             job.ClientName = jobParam.ClientName;
-            job.ClientNumber = jobParam.ClientNumber;
-            job.ClientEmail = jobParam.ClientEmail;
+            job.ClientContact = jobParam.ClientContact;
+            job.DevisStatus = jobParam.DevisStatus;
+            job.DevisDate = jobParam.DevisDate;
             job.StartDate = jobParam.StartDate;
             job.EndDate = jobParam.EndDate;
             job.RGDate = jobParam.RGDate;
@@ -74,6 +80,16 @@ namespace IsoPlan.Services
 
             _context.Jobs.Remove(constructionSite);
             _context.SaveChanges();
-        }     
+        }
+
+        private bool ValidateJobData(Job job)
+        {
+            return (
+                !string.IsNullOrWhiteSpace(job.ClientName) &&
+                !string.IsNullOrWhiteSpace(job.Name) &&
+                JobStatus.JobStatusList.Contains(job.Status) &&
+                DevisStatus.DevisStatusList.Contains(job.DevisStatus)
+            );
+        }
     }
 }

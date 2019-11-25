@@ -16,61 +16,61 @@ namespace IsoPlan.Controllers
     [Route("api/[controller]")]
     public class JobsController : ControllerBase
     {
-        private readonly IJobService _constructionSiteService;
+        private readonly IJobService _jobService;
         private readonly IMapper _mapper;
 
         public JobsController(
-            IJobService constructionSiteService,
+            IJobService jobService,
             IMapper mapper)
         {
-            _constructionSiteService = constructionSiteService;
+            _jobService = jobService;
             _mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            IEnumerable<JobDTO> constructionSiteDtos = _mapper.Map<List<JobDTO>>(_constructionSiteService.GetAll());
-            return Ok(constructionSiteDtos);
+            IEnumerable<JobDTO> jobDtos = _mapper.Map<List<JobDTO>>(_jobService.GetAll());
+            return Ok(jobDtos);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            Job constructionSite = _constructionSiteService.GetById(id);
+            Job job = _jobService.GetById(id);
 
-            if (constructionSite == null)
+            if (job == null)
             {
                 return NotFound("Construction site not found");
             }
 
-            var constructionSiteDto = _mapper.Map<JobDTO>(constructionSite);
-            return Ok(constructionSiteDto);
+            var jobDto = _mapper.Map<JobDTO>(job);
+            return Ok(jobDto);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] JobDTO constructionSiteDto)
+        public IActionResult Create([FromBody] JobDTO jobDto)
         {
-            var constructionSite = _mapper.Map<Job>(constructionSiteDto);
-            _constructionSiteService.Create(constructionSite);
+            var constructionSite = _mapper.Map<Job>(jobDto);
+            _jobService.Create(constructionSite);
             return StatusCode(201);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] JobDTO constructionSiteDto)
+        public IActionResult Update(int id, [FromBody] JobDTO jobDto)
         {
-            var constructionSite = _mapper.Map<Job>(constructionSiteDto);
-            constructionSite.Id = id;
+            var job = _mapper.Map<Job>(jobDto);
+            job.Id = id;
             
             // save 
-            _constructionSiteService.Update(constructionSite);
+            _jobService.Update(job);
             return NoContent();          
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {            
-            _constructionSiteService.Delete(id);
+            _jobService.Delete(id);
             return NoContent();            
         }
     }

@@ -99,6 +99,9 @@ export default function Dashboard(props) {
         localStorage.setItem('openDrawer', 'true');
         setOpen(true);
     };
+
+    const { maxWidth } = props;
+    
     const handleDrawerClose = () => {
         localStorage.setItem('openDrawer', 'false');
         setOpen(false);
@@ -146,7 +149,7 @@ export default function Dashboard(props) {
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
-                <Container maxWidth="lg" className={classes.container}>
+                <Container className={classes.container} maxWidth={maxWidth === 0 ? 'lg' : maxWidth}>
                     {props.children}
                 </Container>
             </main>

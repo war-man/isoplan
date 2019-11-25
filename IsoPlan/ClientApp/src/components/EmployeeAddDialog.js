@@ -4,8 +4,8 @@ import { TextField, DialogTitle, DialogContent, DialogActions, Button, FormContr
 import CloseIcon from '@material-ui/icons/Close';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { EmployeeStatusFR } from '../helpers/employeeStatus';
-import { ContractTypeFR } from '../helpers/contractType';
+import { EmployeeStatusFR, EmployeeStatusList } from '../helpers/employeeStatus';
+import { ContractTypeFR, ContractTypeList } from '../helpers/contractType';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 function EmployeeAddDialog(props) {
     const classes = useStyles();
 
-    const { open, handleClose, handleAdd, employeeToAdd, setEmployeeToAdd, employeeStatusList, contractTypeList } = props;
+    const { open, handleClose, handleAdd, employeeToAdd, setEmployeeToAdd } = props;
 
     const handleChange = name => event => {
         var value;
@@ -84,7 +84,7 @@ function EmployeeAddDialog(props) {
                             value={employeeToAdd.status}
                             onChange={handleChange('status')}                            
                         >
-                            {employeeStatusList.map((status, i) =>
+                            {EmployeeStatusList.map((status, i) =>
                                 <MenuItem key={i} value={status}>{EmployeeStatusFR[status]}</MenuItem>
                             )}
                         </Select>
@@ -113,7 +113,7 @@ function EmployeeAddDialog(props) {
                             value={employeeToAdd.contractType}
                             onChange={handleChange('contractType')}                            
                         >
-                            {contractTypeList.map((contract, i) =>
+                            {ContractTypeList.map((contract, i) =>
                                 <MenuItem key={i} value={contract}>{ContractTypeFR[contract]}</MenuItem>
                             )}
                         </Select>
@@ -152,7 +152,6 @@ function EmployeeAddDialog(props) {
                     </Button>
                 </DialogActions>
             </form>
-
         </Dialog>
     );
 }

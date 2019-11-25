@@ -11,11 +11,15 @@ namespace IsoPlan.Data.Entities
         public string Name { get; set; }
         public string Address { get; set; }
         public string ClientName { get; set; }
-        public string ClientNumber { get; set; }
-        public string ClientEmail { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public DateTime RGDate { get; set; }
+        public string ClientContact { get; set; }
+        public string DevisStatus { get; set; }
+        public float TotalBuy { get; set; }
+        public float TotalSell { get; set; }
+        public float TotalProfit { get; set; }
+        public DateTime? DevisDate { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public DateTime? RGDate { get; set; }
         public bool RGCollected { get; set; }        
         public string Status { get; set; }
 
