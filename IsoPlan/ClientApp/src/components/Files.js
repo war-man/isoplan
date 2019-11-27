@@ -6,22 +6,29 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles(theme => ({
     paper: {
-        padding: theme.spacing(2),
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2),
         textAlign: 'center',
+        overflow: 'auto',
+        maxHeight: '240px'
     },
     header: {
         paddingLeft: 0,
-        paddingRight: 0
+        paddingRight: 0,
+        backgroundColor: 'white'
     },
     headerText: {
         fontSize: 16
+    },
+    listText: {
+        wordWrap: 'break-word'
     }
 }));
 
 function Files(props) {
     const classes = useStyles();
 
-    const { files, to, uploadFile, deleteFile} = props
+    const { files, to, uploadFile, deleteFile } = props
 
     const handleFileSubmit = (event) => {
         var formData = new FormData();
@@ -33,50 +40,59 @@ function Files(props) {
         deleteFile(id)
     }
 
+    const clearInput = event => {
+        event.target.value = ''
+    }
+
     return (
         <Paper className={classes.paper}>
             <form>
-                <List dense={true}
-                    subheader={
-                        <ListSubheader component="div" className={classes.header}>
-                            <Grid
-                                justify="space-between"
-                                container
-                            >
-                                <Grid item className={classes.headerText}>
-                                    Fichiers
-                                </Grid>
-                                <Grid>
-                                    <IconButton
-                                        variant="contained"
-                                        component="label"
+                <List dense={true}>
+                    {                                               
+                        files.map(({ header, items }, i) =>
+                            <div key={i}>
+                                <ListSubheader component="div" className={classes.header}>
+                                    <Grid
+                                        justify="space-between"
+                                        container
                                     >
-                                        <AddBoxIcon />
-                                        <input
-                                            type="file"
-                                            style={{ display: "none" }}
-                                            onChange={handleFileSubmit}
-                                        />
-                                    </IconButton>
-                                </Grid>
-                            </Grid>
-                        </ListSubheader>
-                    }>
-                    {
-                        files.map(file =>
-                            <ListItem key={file.id} component={'a'} href={`${to}/${file.id}`} target='_blank'>
-                                <ListItemIcon>
-                                    <DescriptionIcon />
-                                </ListItemIcon>
-                                <ListItemText 
-                                    primary={file.name}
-                                />
-                                <ListItemSecondaryAction>
-                                    <IconButton edge="end" onClick={handleFileDelete(file.id)}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </ListItemSecondaryAction>
-                            </ListItem>
+                                        <Grid item className={classes.headerText}>
+                                            {header}
+                                        </Grid>
+                                        <Grid>
+                                            <IconButton
+                                                variant="contained"
+                                                component="label"
+                                                onClick={clearInput}
+                                            >
+                                                <AddBoxIcon />
+                                                <input
+                                                    type="file"
+                                                    style={{ display: "none" }}
+                                                    onChange={handleFileSubmit}
+                                                />
+                                            </IconButton>
+                                        </Grid>
+                                    </Grid>
+                                </ListSubheader>
+                                {
+                                    items.map(item =>
+                                        <ListItem key={item.id} component={'a'} href={`${to}/${item.id}`} target='_blank'>
+                                            <ListItemIcon>
+                                                <DescriptionIcon />
+                                            </ListItemIcon>
+                                            <ListItemText className={classes.listText}
+                                                primary={item.name}
+                                            />
+                                            <ListItemSecondaryAction>
+                                                <IconButton edge="end" onClick={handleFileDelete(item.id)}>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </ListItemSecondaryAction>
+                                        </ListItem>
+                                    )
+                                }
+                            </div>
                         )
                     }
                 </List>

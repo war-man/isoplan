@@ -10,18 +10,16 @@ import DateFnsUtils from '@date-io/date-fns';
 import Files from '../components/Files';
 import Snackbar from '@material-ui/core/Snackbar';
 import CustomSnackbarContent from '../components/CustomSnackbarContent';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
     paper: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
         textAlign: 'center',
     },
     container: {
-        paddingLeft: theme.spacing(4),
-        paddingRight: theme.spacing(4),
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'center',
@@ -29,11 +27,11 @@ const useStyles = makeStyles(theme => ({
     textField: {
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
-        width: 220,
+        width: 200,
         textAlign: 'left',
     },
     actions: {
-        marginLeft: theme.spacing(12),
+        marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
         width: '100%',
         textAlign: 'right',
@@ -50,7 +48,7 @@ function EmployeeDetails() {
     const handleChange = name => (event) => {
         var value;
         if (name === 'workStart' || name === 'workEnd') {
-            value = event;
+            value = moment(event).format("YYYY-MM-DD");
         } else {
             value = event.target.value;
         }
@@ -107,7 +105,7 @@ function EmployeeDetails() {
             })
     }
     const uploadFile = id => formData => {
-        if(formData.get('file') === 'undefined'){
+        if (formData.get('file') === 'undefined') {
             return
         }
         employeeService.uploadFile(id, formData)
@@ -139,8 +137,8 @@ function EmployeeDetails() {
 
     return (
         <Dashboard>
-            <Grid container spacing={3} className={classes.root}>
-                <Grid item sm={12} md={8}>
+            <Grid container spacing={3}>
+                <Grid item sm={12} md={5}>
                     <Paper className={classes.paper}>
                         <form autoComplete="off" onSubmit={handleSubmit} className={classes.container}>
                             <TextField
@@ -249,10 +247,10 @@ function EmployeeDetails() {
                     </Paper>
                 </Grid>
                 <Grid item sm={12} md={4}>
-                    <Files 
-                        files={files} 
-                        uploadFile={uploadFile(id)}    
-                        deleteFile={deleteFile}  
+                    <Files
+                        files={files}
+                        uploadFile={uploadFile(id)}
+                        deleteFile={deleteFile}
                         to={'/api/employees/files'}
                     />
                 </Grid>

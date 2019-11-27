@@ -11,12 +11,12 @@ import { JobStatus, JobStatusFR } from '../helpers/jobStatus';
 
 function Jobs() {
     const columns = [
-        { title: 'Date devis', field: 'devisDate', render: rowData => { return rowData.devisDate && <div>{moment(rowData.devisDate).format('DD.MM.YYYY')}</div> } },
+        { title: 'Date devis', field: 'devisDate', render: rowData => { return rowData.devisDate && <div>{moment(rowData.devisDate).format('DD.MM.YYYY.')}</div> } },
         { title: 'Devis statut', field: 'devisStatus', render: rowData => <div>{DevisStatusFR[rowData.devisStatus]}</div>},
         { title: 'Client', field: 'clientName', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
         { title: 'Affaire', field: 'name', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
-        { title: 'Date debut', field: 'startDate', render: rowData => { return rowData.startDate && <div>{moment(rowData.startDate).format('DD.MM.YYYY')}</div> } },
-        { title: 'Date fin', field: 'endDate', render: rowData => { return rowData.endDate && <div>{moment(rowData.endDate).format('DD.MM.YYYY')}</div> } },
+        { title: 'Début', field: 'startDate', render: rowData => { return rowData.startDate && <div>{moment(rowData.startDate).format('DD.MM.YYYY.')}</div> } },
+        { title: 'Fin', field: 'endDate', render: rowData => { return rowData.endDate && <div>{moment(rowData.endDate).format('DD.MM.YYYY.')}</div> } },
         { title: 'Statut', field: 'status', render: rowData => <div>{JobStatusFR[rowData.status]}</div>},
         { title: 'Achat', field: 'totalBuy', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
         { title: 'Vente', field: 'totalSell', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
@@ -43,9 +43,8 @@ function Jobs() {
             icon: 'more_horiz',
             tooltip: 'Détails',
             onClick: (event, rowData) => {
-                //setRedirectId(rowData.id);
-                //setRedirect(true);
-                alert("DETAILS")
+                setRedirectId(rowData.id);
+                setRedirect(true);
             }
         }),
         rowData => ({

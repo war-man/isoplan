@@ -41,7 +41,7 @@ namespace IsoPlan.Controllers
 
             if (job == null)
             {
-                return NotFound("Construction site not found");
+                return NotFound("Job not found");
             }
 
             var jobDto = _mapper.Map<JobDTO>(job);
@@ -51,8 +51,8 @@ namespace IsoPlan.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] JobDTO jobDto)
         {
-            var constructionSite = _mapper.Map<Job>(jobDto);
-            _jobService.Create(constructionSite);
+            var job = _mapper.Map<Job>(jobDto);
+            _jobService.Create(job);
             return StatusCode(201);
         }
 
@@ -72,6 +72,32 @@ namespace IsoPlan.Controllers
         {            
             _jobService.Delete(id);
             return NoContent();            
+        }
+
+        [HttpPost("item")]
+        public IActionResult CreateJobItem([FromBody] JobItemDTO jobItemDTO)
+        {
+            var jobItem = _mapper.Map<JobItem>(jobItemDTO);
+            _jobService.CreateJobItem(jobItem);
+            return StatusCode(201);
+        }
+
+        [HttpPut("item/{id}")]
+        public IActionResult UpdateJobItem(int id, [FromBody] JobItemDTO jobItemDTO)
+        {
+            var jobItem = _mapper.Map<JobItem>(jobItemDTO);
+            jobItem.Id = id;
+
+            // save 
+            _jobService.UpdateJobItem(jobItem);
+            return NoContent();
+        }
+
+        [HttpDelete("item/{id}")]
+        public IActionResult DeleteJobItem(int id)
+        {
+            _jobService.DeleteJobItem(id);
+            return NoContent();
         }
     }
 }

@@ -167,7 +167,14 @@ namespace IsoPlan.Controllers
         [HttpGet("{employeeId}/files")]
         public IActionResult GetEmployeeFiles(int employeeId)
         {
-            return Ok(_employeeService.GetFiles(employeeId));
+            return Ok(new[]
+            {
+                new 
+                {
+                    Header="Fichiers",
+                    Items=_employeeService.GetFiles(employeeId) 
+                }
+            });
         }
     }
 }

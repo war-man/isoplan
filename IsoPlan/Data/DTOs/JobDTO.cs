@@ -22,5 +22,6 @@ namespace IsoPlan.Data.DTOs
         public DateTime? RGDate { get; set; }
         public bool RGCollected { get; set; }        
         public string Status { get; set; }
+        public List<JobItemDTO> JobItems { get; set; }
     }
 }

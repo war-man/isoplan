@@ -6,6 +6,7 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import DateFnsUtils from '@date-io/date-fns';
 import { EmployeeStatusFR, EmployeeStatusList } from '../helpers/employeeStatus';
 import { ContractTypeFR, ContractTypeList } from '../helpers/contractType';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -39,7 +40,7 @@ function EmployeeAddDialog(props) {
     const handleChange = name => event => {
         var value;
         if(name === 'workStart' || name === 'workEnd'){
-            value = event;
+            value = moment(event).format("YYYY-MM-DD");
         }else{
             value = event.target.value;
         } 

@@ -4,6 +4,7 @@ export const jobService = {
     get,
     getAll,
     create,
+    update,
     deleteJob,
 }
 
@@ -36,6 +37,19 @@ function create(job) {
         body: JSON.stringify(job)
     };
     return fetch(`${process.env.REACT_APP_API_URL}api/Jobs`, requestOptions).then(handleResponse)        
+}
+
+function update(job) {
+    const requestOptions =
+    {
+        method: 'PUT',
+        headers: {
+            ...authHeader(),
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(job)
+    };
+    return fetch(`${process.env.REACT_APP_API_URL}api/Jobs/${job.id}`, requestOptions).then(handleResponse)        
 }
 
 function deleteJob(id) {

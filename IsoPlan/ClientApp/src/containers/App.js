@@ -7,6 +7,7 @@ import Users from './Users';
 import Jobs from './Jobs';
 import Employees from './Employees';
 import EmployeeDetails from './EmployeeDetails';
+import JobDetails from './JobDetails';
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
             <Route path="/login" component={Login} />
             <PrivateRoute exact path="/" component={Home} roles={['Admin', 'Manager']}/>
             <PrivateRoute exact path="/travaux/" component={Jobs} roles={['Admin', 'Manager']}/>
+            <PrivateRoute exact path="/travaux/:id" component={JobDetails} roles={['Admin', 'Manager']}/>
             <PrivateRoute exact path="/personnel/" component={Employees} roles={['Admin', 'Manager']}/>
             <PrivateRoute exact path="/personnel/:id" component ={EmployeeDetails} roles={['Admin', 'Manager']} />
             <PrivateRoute exact path="/users/" component={Users} roles={['Admin']}/>

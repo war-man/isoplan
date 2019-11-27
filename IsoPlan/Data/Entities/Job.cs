@@ -22,6 +22,6 @@ namespace IsoPlan.Data.Entities
         public DateTime? RGDate { get; set; }
         public bool RGCollected { get; set; }        
         public string Status { get; set; }
-
+        public List<JobItem> JobItems { get; set; }
     }
 }
