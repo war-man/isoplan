@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,8 +8,10 @@ using IsoPlan.Data.DTOs;
 using IsoPlan.Data.Entities;
 using IsoPlan.Exceptions;
 using IsoPlan.Services;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace IsoPlan.Controllers
 {    
@@ -18,13 +21,16 @@ namespace IsoPlan.Controllers
     {
         private readonly IJobService _jobService;
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _env;
 
         public JobsController(
             IJobService jobService,
-            IMapper mapper)
+            IMapper mapper,
+            IWebHostEnvironment env)
         {
             _jobService = jobService;
             _mapper = mapper;
+            _env = env;
         }
 
         [HttpGet]
@@ -74,7 +80,7 @@ namespace IsoPlan.Controllers
             return NoContent();            
         }
 
-        [HttpPost("item")]
+        [HttpPost("Items")]
         public IActionResult CreateJobItem([FromBody] JobItemDTO jobItemDTO)
         {
             var jobItem = _mapper.Map<JobItem>(jobItemDTO);
@@ -82,7 +88,7 @@ namespace IsoPlan.Controllers
             return StatusCode(201);
         }
 
-        [HttpPut("item/{id}")]
+        [HttpPut("Items/{id}")]
         public IActionResult UpdateJobItem(int id, [FromBody] JobItemDTO jobItemDTO)
         {
             var jobItem = _mapper.Map<JobItem>(jobItemDTO);
@@ -93,11 +99,104 @@ namespace IsoPlan.Controllers
             return NoContent();
         }
 
-        [HttpDelete("item/{id}")]
+        [HttpDelete("Items/{id}")]
         public IActionResult DeleteJobItem(int id)
         {
             _jobService.DeleteJobItem(id);
             return NoContent();
+        }
+
+        [HttpPost("Files")]
+        public ActionResult UploadJobFile([FromForm]JobFileDTO jobFileDTO)
+        {
+            Job job = _jobService.GetById(jobFileDTO.JobId);
+
+            if (job == null)
+            {
+                throw new AppException("Job not found");
+            }
+
+            if (!JobFolder.JobFolderList.Contains(jobFileDTO.Folder))
+            {
+                throw new AppException("Folder not found in predefined folders.");
+            }
+
+            string guid = Guid.NewGuid().ToString();
+
+            var file = jobFileDTO.File;
+
+            string root = _env.WebRootPath;
+
+            string path = Path.Combine(guid + "_" + file.FileName);
+
+            string fullPath = Path.Combine(root, "..\\Files\\" + path);
+
+            if (file.Length > 0)
+            {
+                JobFile jobFile = new JobFile
+                {
+                    Name = jobFileDTO.File.FileName,
+                    Path = path,
+                    JobId = job.Id,
+                    Job = job,
+                    Folder = jobFileDTO.Folder
+                };
+                _jobService.CreateFile(jobFile);
+                using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(fileStream);
+                }
+            }
+
+            return Ok();
+        }
+
+        [HttpGet("Files/{id}")]
+        async public Task<ActionResult> DownloadJobFile(int id)
+        {
+            JobFile file = _jobService.GetFile(id);
+
+            if (file == null)
+            {
+                throw new AppException("File not found in database.");
+            }
+
+            string fileName = file.Name;
+
+            string filePath = file.Path;
+
+            string webRootPath = _env.WebRootPath;
+
+            string fullPath = Path.Combine(webRootPath, "..\\Files\\" + filePath);
+
+            var provider = new FileExtensionContentTypeProvider();
+            string contentType;
+            if (!provider.TryGetContentType(fileName, out contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(fullPath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+
+            return File(memory, contentType);
+        }
+
+        [HttpDelete("Files/{id}")]
+        public IActionResult DeleteJobFile(int id)
+        {
+            _jobService.DeleteFile(id);
+            return NoContent();
+        }
+
+        [HttpGet("{jobId}/Files")]
+        public IActionResult GetJobFiles(int jobId)
+        {
+            return Ok(_jobService.GetFiles(jobId));
         }
     }
 }

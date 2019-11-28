@@ -122,7 +122,7 @@ function Login() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign in
+                        Se connecter
                     </Typography>
                     <form className={classes.form} onSubmit={handleSubmit}>
                         <TextField
@@ -147,10 +147,6 @@ function Login() {
                             id="password"
                             autoComplete="current-password"
                         />
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
-                        />
                         <Button
                             type="submit"
                             fullWidth
@@ -158,7 +154,7 @@ function Login() {
                             color="primary"
                             className={classes.submit}
                         >
-                            Sign In
+                            Se connecter
                         </Button>
                     </form>
                 </div>

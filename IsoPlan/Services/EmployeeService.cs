@@ -74,7 +74,7 @@ namespace IsoPlan.Services
             }
             string webRootPath = _env.WebRootPath;
             string fullPath = Path.Combine(webRootPath, "..\\Files\\" + file.Path);
-            System.IO.File.Delete(fullPath);
+            File.Delete(fullPath);
             _context.EmployeeFiles.Remove(file);
             _context.SaveChanges();
         }

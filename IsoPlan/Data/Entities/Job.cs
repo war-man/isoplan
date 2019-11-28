@@ -23,5 +23,6 @@ namespace IsoPlan.Data.Entities
         public bool RGCollected { get; set; }        
         public string Status { get; set; }
         public List<JobItem> JobItems { get; set; }
+        public List<JobFile> Files { get; set; }
     }
 }

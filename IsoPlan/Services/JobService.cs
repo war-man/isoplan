@@ -1,9 +1,11 @@
 ﻿using IsoPlan.Data;
 using IsoPlan.Data.Entities;
 using IsoPlan.Exceptions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,14 +21,20 @@ namespace IsoPlan.Services
         void CreateJobItem(JobItem jobItem);
         void UpdateJobItem(JobItem jobItem);
         void DeleteJobItem(int id);
+        void CreateFile(JobFile jobFile);
+        JobFile GetFile(int id);
+        void DeleteFile(int id);
+        List<JobFilePair> GetFiles(int jobId);
     }
     public class JobService : IJobService
     {
         private readonly AppDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public JobService(AppDbContext context)
+        public JobService(AppDbContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
         public IEnumerable<Job> GetAll()
         {
@@ -82,11 +90,20 @@ namespace IsoPlan.Services
 
         public void Delete(int id)
         {
-            var job = _context.Jobs.Find(id);
+            var job = _context.Jobs
+                .Include(j => j.Files)
+                .FirstOrDefault(j => j.Id == id);
 
             if (job == null)
             {
                 throw new AppException("Job not found");
+            }
+
+            List<JobFile> files = new List<JobFile>(job.Files);
+
+            for (int i = 0; i < files.Count; i++)
+            {
+                DeleteFile(files[i].Id);
             }
 
             _context.Jobs.Remove(job);
@@ -103,7 +120,7 @@ namespace IsoPlan.Services
             );
         }
 
-        private void recalculate(Job job)
+        private void Recalculate(Job job)
         {
             job.TotalBuy = job.JobItems.Sum(ji => ji.Buy);
             job.TotalSell = job.JobItems.Sum(ji => ji.Sell);
@@ -121,10 +138,11 @@ namespace IsoPlan.Services
             }
 
             // needs validation for empty fields
+            jobItem.Profit = jobItem.Sell - jobItem.Buy;
             _context.JobItems.Add(jobItem);
             _context.SaveChanges();
 
-            recalculate(job);
+            Recalculate(job);
         }
 
         public void UpdateJobItem(JobItem jobItemParam)
@@ -148,10 +166,10 @@ namespace IsoPlan.Services
             jobItem.Quantity = jobItemParam.Quantity;
             jobItem.Buy = jobItemParam.Buy;
             jobItem.Sell = jobItemParam.Sell;
-            jobItem.Profit = jobItemParam.Profit;
+            jobItem.Profit = jobItem.Sell - jobItem.Buy;
             _context.SaveChanges();
 
-            recalculate(job);
+            Recalculate(job);
         }
 
         public void DeleteJobItem(int id)
@@ -173,7 +191,66 @@ namespace IsoPlan.Services
             _context.JobItems.Remove(jobItem);
             _context.SaveChanges();
 
-            recalculate(job);
+            Recalculate(job);
+        }
+
+        public void CreateFile(JobFile jobFile)
+        {
+            _context.JobFiles.Add(jobFile);
+            _context.SaveChanges();
+        }
+
+        public JobFile GetFile(int id)
+        {
+            return _context.JobFiles.Find(id);
+        }
+
+        public void DeleteFile(int id)
+        {
+            JobFile file = GetFile(id);
+            if (file == null)
+            {
+                throw new AppException("File not found in database.");
+            }
+            string webRootPath = _env.WebRootPath;
+            string fullPath = Path.Combine(webRootPath, "..\\Files\\" + file.Path);
+            File.Delete(fullPath);
+            _context.JobFiles.Remove(file);
+            _context.SaveChanges();
+        }
+
+        public List<JobFilePair> GetFiles(int jobId)
+        {
+            var job = _context.Jobs.Find(jobId);
+
+            if(job == null)
+            {
+                throw new AppException("Job not found");
+            }
+
+            List<JobFilePair> files = new List<JobFilePair>();
+
+            foreach (string folder in JobFolder.JobFolderList)
+            {
+                files.Add(new JobFilePair
+                    {
+                        Header = folder,
+                        Items = _context.JobFiles
+                            .Select(jf => new JobFile
+                                {
+                                   Id = jf.Id,
+                                   JobId = jf.JobId,
+                                   Name = jf.Name,
+                                   Folder = jf.Folder                                   
+                                }
+                            )
+                            .Where(jf => jf.Folder == folder && jf.JobId == jobId)
+                            .ToList()
+                    }
+                );
+            }
+
+            return files;
         }
     }
 }

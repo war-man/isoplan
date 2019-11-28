@@ -76,8 +76,10 @@ function JobDetails() {
         event.preventDefault();
         jobService.update(job)
             .then(() => {
-                getJob(id);
+                setVariant('success')
+                setMessage('Enregistrement réussi')
                 setOpenSnackbar(true);
+                getJob(id);
             })
             .catch(err => {
                 alert(err);
@@ -85,11 +87,11 @@ function JobDetails() {
     }
 
     const columns = [
-        { title: 'Type de travail', field: 'name'},
-        { title: 'Quantité', field: 'quantity', type: 'number' },
+        { title: 'Type de travail', field: 'name' },
+        { title: 'Quantité', field: 'quantity', type: 'numeric' },
         { title: 'Achat', field: 'buy', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
         { title: 'Vente', field: 'sell', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
-        { title: 'Marge', field: 'profit', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
+        { title: 'Marge', field: 'profit', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' }, editable: 'never' },
     ];
 
     const options = {
@@ -98,6 +100,67 @@ function JobDetails() {
         pageSizeOptions: [],
         paging: false,
         search: false,
+        addRowPosition: 'first',
+    }
+
+    const editable = {
+        onRowAdd: newData =>
+            new Promise((resolve, reject) => {
+                const item = {
+                    jobId: job.id,
+                    name: newData.name,
+                    quantity: parseInt(newData.quantity),
+                    buy: parseFloat(newData.buy),
+                    sell: parseFloat(newData.sell),
+                }
+                jobService.createItem(item)
+                    .then(() => {
+                        getJob(id)
+                        resolve()
+                    })
+                    .catch(() => {
+                        setVariant('error')
+                        setMessage('Entrée invalide')
+                        setOpenSnackbar(true)
+                        reject()
+                    })
+            }),
+        onRowUpdate: (newData, oldData) =>
+            new Promise((resolve, reject) => {
+                const item = {
+                    id: newData.id,
+                    jobId: job.id,
+                    name: newData.name,
+                    quantity: parseInt(newData.quantity),
+                    buy: parseFloat(newData.buy),
+                    sell: parseFloat(newData.sell),
+                }
+                jobService.updateItem(item)
+                    .then(() => {
+                        getJob(id)
+                        resolve()
+                    })
+                    .catch(() => {
+                        setVariant('error')
+                        setMessage('Entrée invalide')
+                        setOpenSnackbar(true)
+                        reject()
+                    })
+            }),
+        onRowDelete: oldData =>
+            new Promise((resolve, reject) => {
+                jobService.deleteItem(oldData.id)
+                    .then(() => {
+                        getJob(id)
+                        resolve()
+                    })
+                    .catch(() => {
+                        setVariant('error')
+                        setMessage('Erreur')
+                        setOpenSnackbar(true)
+                        reject()
+                    })
+            }),
     }
 
     const [job, setJob] = useState({
@@ -128,11 +191,46 @@ function JobDetails() {
             })
     }
 
+    const [files, setFiles] = useState([])
+    const getFiles = id => {
+        jobService.getFiles(id)
+            .then(res => {
+                setFiles(res)
+            })
+            .catch(err => {
+                alert(err)
+            })
+    }
+    const uploadFile = id => formData => {
+        if (formData.get('file') === 'undefined') {
+            return
+        }
+        jobService.uploadFile(id, formData)
+            .then(() => {
+                getFiles(id)
+            })
+            .catch(err => {
+                alert(err)
+            })
+    }
+    const deleteFile = fileId => {
+        jobService.deleteFile(fileId)
+            .then(() => {
+                getFiles(id)
+            })
+            .catch(err => {
+                alert(err)
+            })
+    }
+
     useEffect(() => {
         getJob(id)
+        getFiles(id)
     }, [id]);
 
-    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+    const [variant, setVariant] = useState('success');
+    const [message, setMessage] = useState('');
+    const [openSnackbar, setOpenSnackbar] = useState(false);
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -297,11 +395,15 @@ function JobDetails() {
                             columns={columns}
                             options={options}
                             title={'Travaux'}
+                            editable={editable}
                         />
                     </Grid>
                     <Grid item xs={12} md={8}>
                         <Files
-                            files={[]}
+                            files={files}
+                            uploadFile={uploadFile(id)}
+                            deleteFile={deleteFile}
+                            to={'/api/Jobs/Files'}
                         />
                     </Grid>
                 </Grid>
@@ -317,9 +419,9 @@ function JobDetails() {
             >
                 <CustomSnackbarContent
                     onClose={handleCloseSnackbar}
-                    variant="success"
+                    variant={variant}
                     className={classes.snackbar}
-                    message="Enregistrement réussi"
+                    message={message}
                 />
             </Snackbar>
         </Dashboard>

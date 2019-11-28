@@ -37,16 +37,16 @@ function Users() {
                 setOpenEdit(true)
                 setUserToEdit({...rowData})
             }
-        },
+        },        
         rowData => ({
             icon: 'delete',
             tooltip: 'Delete User',
-            disabled: rowData.id === getCurrentUser().id,
+            disabled: getCurrentUser().id === rowData.id,
             onClick: (event, rowData) => {
                 setUserToEdit({...rowData})
                 setConfirmOpen(true)
             }
-        })
+        })                         
     ]
 
     const roleList = [...AllRoles]

@@ -82,7 +82,7 @@ namespace IsoPlan.Controllers
             return NoContent();
         }
 
-        [HttpPost("files")]
+        [HttpPost("Files")]
         public ActionResult UploadEmployeeFile([FromForm]EmployeeFileDTO employeeFileDTO)
         {
             Employee employee = _employeeService.GetById(employeeFileDTO.EmployeeId);
@@ -92,7 +92,7 @@ namespace IsoPlan.Controllers
                 throw new AppException("Employee not found");
             }
 
-            string guid = System.Guid.NewGuid().ToString();
+            string guid = Guid.NewGuid().ToString();
 
             var file = employeeFileDTO.File;
 
@@ -122,7 +122,7 @@ namespace IsoPlan.Controllers
             return Ok();
         }
 
-        [HttpGet("files/{id}")]
+        [HttpGet("Files/{id}")]
         async public Task<ActionResult> DownloadEmployeeFile(int id)
         {
             EmployeeFile file = _employeeService.GetFile(id);
@@ -154,17 +154,17 @@ namespace IsoPlan.Controllers
             }
             memory.Position = 0;
 
-            return File(memory, contentType, fileName);          
+            return File(memory, contentType);          
         }
 
-        [HttpDelete("files/{id}")]
+        [HttpDelete("Files/{id}")]
         public IActionResult DeleteEmployeeFile(int id)
         {
             _employeeService.DeleteFile(id);
             return NoContent();
         }
 
-        [HttpGet("{employeeId}/files")]
+        [HttpGet("{employeeId}/Files")]
         public IActionResult GetEmployeeFiles(int employeeId)
         {
             return Ok(new[]

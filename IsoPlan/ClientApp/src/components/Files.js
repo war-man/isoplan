@@ -22,6 +22,9 @@ const useStyles = makeStyles(theme => ({
     },
     listText: {
         wordWrap: 'break-word'
+    },
+    emptyText: {
+        color: 'rgba(0, 0, 0, 0.54)'
     }
 }));
 
@@ -30,9 +33,10 @@ function Files(props) {
 
     const { files, to, uploadFile, deleteFile } = props
 
-    const handleFileSubmit = (event) => {
+    const handleFileSubmit = header => event => {
         var formData = new FormData();
         formData.append("file", event.target.files[0])
+        formData.append("folder", header)
         uploadFile(formData)
     }
 
@@ -69,28 +73,33 @@ function Files(props) {
                                                 <input
                                                     type="file"
                                                     style={{ display: "none" }}
-                                                    onChange={handleFileSubmit}
+                                                    onChange={handleFileSubmit(header)}
                                                 />
                                             </IconButton>
                                         </Grid>
                                     </Grid>
                                 </ListSubheader>
                                 {
-                                    items.map(item =>
-                                        <ListItem key={item.id} component={'a'} href={`${to}/${item.id}`} target='_blank'>
-                                            <ListItemIcon>
-                                                <DescriptionIcon />
-                                            </ListItemIcon>
-                                            <ListItemText className={classes.listText}
-                                                primary={item.name}
-                                            />
-                                            <ListItemSecondaryAction>
-                                                <IconButton edge="end" onClick={handleFileDelete(item.id)}>
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                            </ListItemSecondaryAction>
+                                    items.length === 0 ?
+                                        <ListItem className={classes.emptyText}>
+                                            Ce dossier est vide
                                         </ListItem>
-                                    )
+                                    :
+                                        items.map(item =>
+                                            <ListItem key={item.id} component={'a'} href={`${to}/${item.id}`} target='_blank'>
+                                                <ListItemIcon>
+                                                    <DescriptionIcon />
+                                                </ListItemIcon>
+                                                <ListItemText className={classes.listText}
+                                                    primary={item.name}
+                                                />
+                                                <ListItemSecondaryAction>
+                                                    <IconButton edge="end" onClick={handleFileDelete(item.id)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </ListItemSecondaryAction>
+                                            </ListItem>
+                                        )
                                 }
                             </div>
                         )

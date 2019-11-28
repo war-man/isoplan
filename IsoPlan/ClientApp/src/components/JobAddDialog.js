@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     },
     actions: {
         width: '100%'
-    }
+    },
 }));
 
 function JobAddDialog(props) {

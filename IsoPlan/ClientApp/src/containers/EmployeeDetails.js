@@ -251,7 +251,7 @@ function EmployeeDetails() {
                         files={files}
                         uploadFile={uploadFile(id)}
                         deleteFile={deleteFile}
-                        to={'/api/employees/files'}
+                        to={'/api/Employees/Files'}
                     />
                 </Grid>
             </Grid>

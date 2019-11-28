@@ -28,7 +28,6 @@ function Jobs() {
         actionsColumnIndex: -1,
         pageSizeOptions: [],
         paging: false,
-        search: false,
     }
     const actions = [
         {

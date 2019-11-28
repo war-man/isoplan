@@ -74,7 +74,7 @@ function getFiles(id) {
         method: 'GET',
         headers: authHeader()
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/Employees/${id}/files`, requestOptions).then(handleResponse)     
+    return fetch(`${process.env.REACT_APP_API_URL}api/Employees/${id}/Files`, requestOptions).then(handleResponse)     
 }
 
 function uploadFile(id, formData) {
@@ -85,7 +85,7 @@ function uploadFile(id, formData) {
         headers: authHeader(),
         body: formData
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/Employees/files`, requestOptions).then(handleResponse)     
+    return fetch(`${process.env.REACT_APP_API_URL}api/Employees/Files`, requestOptions).then(handleResponse)     
 }
 
 function deleteFile(id) {
@@ -94,5 +94,5 @@ function deleteFile(id) {
         method: 'DELETE',
         headers: authHeader()
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/Employees/files/${id}`, requestOptions).then(handleResponse)     
+    return fetch(`${process.env.REACT_APP_API_URL}api/Employees/Files/${id}`, requestOptions).then(handleResponse)     
 }
