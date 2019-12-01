@@ -1,44 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using IsoPlan.Data.DTOs;
 using IsoPlan.Data.Entities;
 using IsoPlan.Exceptions;
 using IsoPlan.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace IsoPlan.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin, Manager")]
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
+        private readonly ICustomAuthService _customAuthService;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _env;
 
         public EmployeesController(
             IEmployeeService employeeService,
             IMapper mapper,
-            IWebHostEnvironment env)
+            IWebHostEnvironment env,
+            ICustomAuthService customAuthService)
         {
             _employeeService = employeeService;
             _mapper = mapper;
             _env = env;
-
+            _customAuthService = customAuthService;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(string status)
         {
-            IEnumerable<EmployeeDTO> employeeDtos = _mapper.Map<List<EmployeeDTO>>(_employeeService.GetAll());
+            IEnumerable<EmployeeDTO> employeeDtos = _mapper.Map<List<EmployeeDTO>>(_employeeService.GetAll(status));
             return Ok(employeeDtos);
         }
 
@@ -69,10 +70,10 @@ namespace IsoPlan.Controllers
         {
             var employee = _mapper.Map<Employee>(employeeDto);
             employee.Id = id;
-           
+
             // save 
             _employeeService.Update(employee);
-            return NoContent();            
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -123,14 +124,20 @@ namespace IsoPlan.Controllers
         }
 
         [HttpGet("Files/{id}")]
-        async public Task<ActionResult> DownloadEmployeeFile(int id)
+        [AllowAnonymous]
+        async public Task<ActionResult> DownloadEmployeeFile(int id, string token)
         {
+            if (!_customAuthService.CheckToken(token))
+            {
+                return Unauthorized();
+            }
+
             EmployeeFile file = _employeeService.GetFile(id);
 
-            if(file == null)
+            if (file == null)
             {
                 throw new AppException("File not found in database.");
-            }            
+            }
 
             string fileName = file.Name;
 
@@ -154,7 +161,7 @@ namespace IsoPlan.Controllers
             }
             memory.Position = 0;
 
-            return File(memory, contentType);          
+            return File(memory, contentType);
         }
 
         [HttpDelete("Files/{id}")]
@@ -169,10 +176,10 @@ namespace IsoPlan.Controllers
         {
             return Ok(new[]
             {
-                new 
+                new
                 {
                     Header="Fichiers",
-                    Items=_employeeService.GetFiles(employeeId) 
+                    Items=_employeeService.GetFiles(employeeId)
                 }
             });
         }

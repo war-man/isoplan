@@ -3,17 +3,15 @@ using IsoPlan.Data.Entities;
 using IsoPlan.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace IsoPlan.Services
 {
     public interface IEmployeeService
     {
-        IEnumerable<Employee> GetAll();
+        IEnumerable<Employee> GetAll(string status);
         Employee GetById(int id);
         void Create(Employee employee);
         void CreateFile(EmployeeFile employeeFile);
@@ -34,9 +32,11 @@ namespace IsoPlan.Services
             _env = env;
         }
 
-        public IEnumerable<Employee> GetAll()
+        public IEnumerable<Employee> GetAll(string status)
         {
-            return _context.Employees.ToList();
+            return _context.Employees
+                .Where(e => string.IsNullOrWhiteSpace(status) || e.Status.Equals(status))
+                .ToList();
         }
 
         public Employee GetById(int id)
@@ -145,7 +145,7 @@ namespace IsoPlan.Services
 
             _context.Employees.Remove(employee);
             _context.SaveChanges();
-           
+
         }
 
         private bool ValidateEmployeeData(Employee employee)
@@ -157,7 +157,7 @@ namespace IsoPlan.Services
                 !string.IsNullOrWhiteSpace(employee.AccountNumber) &&
                 ContractType.ContractTypeList.Contains(employee.ContractType) &&
                 (employee.WorkStart != null) &&
-                EmployeeStatus.EmployeeStatusList.Contains(employee.Status) 
+                EmployeeStatus.EmployeeStatusList.Contains(employee.Status)
             );
         }
     }

@@ -30,6 +30,17 @@ namespace IsoPlan
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000", "http://192.168.1.7:3000")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+
             services.AddControllersWithViews();
 
             // In production, the React files will be served from this directory
@@ -89,14 +100,14 @@ namespace IsoPlan
 
             services.AddSwaggerGen(c =>
             {
-                { 
+                {
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = "IsoPlan API", Version = "v1" });
                     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-                    { 
-                        In = ParameterLocation.Header, 
-                        Description = "Please insert JWT with Bearer into field", 
-                        Name = "Authorization", 
-                        Type = SecuritySchemeType.ApiKey 
+                    {
+                        In = ParameterLocation.Header,
+                        Description = "Please insert JWT with Bearer into field",
+                        Name = "Authorization",
+                        Type = SecuritySchemeType.ApiKey
                     });
                     c.AddSecurityRequirement(new OpenApiSecurityRequirement { { new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { } } });
                 }
@@ -106,6 +117,7 @@ namespace IsoPlan
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IJobService, JobService>();
+            services.AddScoped<ICustomAuthService, CustomAuthService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -122,6 +134,7 @@ namespace IsoPlan
                 app.UseHsts();
             }
 
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
@@ -129,7 +142,8 @@ namespace IsoPlan
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => {
+            app.UseSwaggerUI(c =>
+            {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "IsoPlan API V1");
             });
 
@@ -143,7 +157,7 @@ namespace IsoPlan
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
-            });            
+            });
 
             app.UseSpa(spa =>
             {
@@ -151,9 +165,10 @@ namespace IsoPlan
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    //spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
                 }
-            });            
+            });
         }
     }
 }

@@ -1,12 +1,9 @@
 ﻿using IsoPlan.Data;
 using IsoPlan.Data.Entities;
 using IsoPlan.Exceptions;
-using System;
+using IsoPlan.Helpers;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using IsoPlan.Helpers;
-using IsoPlan.Data.DTOs;
 
 namespace IsoPlan.Services
 {
@@ -148,7 +145,7 @@ namespace IsoPlan.Services
 
             _context.Users.Remove(user);
             _context.SaveChanges();
-        }  
+        }
         private bool ValidateUserData(User user)
         {
             return (

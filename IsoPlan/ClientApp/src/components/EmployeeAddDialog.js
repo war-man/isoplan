@@ -123,7 +123,6 @@ function EmployeeAddDialog(props) {
                         <KeyboardDatePicker
                             required={true}
                             margin="normal"
-                            id="date-picker-dialog"
                             label="Commencé le travail"
                             format="dd.MM.yyyy"
                             value={employeeToAdd.workStart}
@@ -135,7 +134,6 @@ function EmployeeAddDialog(props) {
                         />
                         <KeyboardDatePicker
                             margin="normal"
-                            id="date-picker-dialog"
                             label="Arrêté le travail"
                             format="dd.MM.yyyy"
                             value={employeeToAdd.workEnd}

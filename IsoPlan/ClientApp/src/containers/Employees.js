@@ -112,15 +112,18 @@ function Employees(){
         employeeService.getAll()
             .then(res => {
                 setData(res)
+                setLoading(false)
             })
             .catch(err => {
                 alert(err)
             })
     }
     useEffect(() => {
+        setLoading(true)
         getEmployees()
     }, [])
 
+    const [loading, setLoading] = useState(false)
     const [redirect, setRedirect] = useState(false);
     const [redirectId, setRedirectId] = useState(0);
 
@@ -139,6 +142,7 @@ function Employees(){
                 options={options}
                 actions={actions}
                 title="Personnel"
+                isLoading={loading}
             />
             <EmployeeAddDialog
                 open={openAdd}

@@ -3,6 +3,7 @@ import { Grid, Paper, makeStyles, List, ListSubheader, IconButton, ListItem, Lis
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import DescriptionIcon from '@material-ui/icons/Description';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { getCurrentUser } from '../helpers/authentication';
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -10,7 +11,7 @@ const useStyles = makeStyles(theme => ({
         paddingRight: theme.spacing(2),
         textAlign: 'center',
         overflow: 'auto',
-        maxHeight: '240px'
+        maxHeight: '320px'
     },
     header: {
         paddingLeft: 0,
@@ -21,7 +22,9 @@ const useStyles = makeStyles(theme => ({
         fontSize: 16
     },
     listText: {
-        wordWrap: 'break-word'
+        wordWrap: 'break-word',
+        paddingTop: '8px',
+        paddingBottom: '8px'
     },
     emptyText: {
         color: 'rgba(0, 0, 0, 0.54)'
@@ -40,7 +43,7 @@ function Files(props) {
         uploadFile(formData)
     }
 
-    const handleFileDelete = (id) => () => {
+    const handleFileDelete = (id) => (event) => {
         deleteFile(id)
     }
 
@@ -81,12 +84,12 @@ function Files(props) {
                                 </ListSubheader>
                                 {
                                     items.length === 0 ?
-                                        <ListItem className={classes.emptyText}>
+                                        <ListItem className={`${classes.emptyText} ${classes.listText}`}>
                                             Ce dossier est vide
                                         </ListItem>
                                     :
                                         items.map(item =>
-                                            <ListItem key={item.id} component={'a'} href={`${to}/${item.id}`} target='_blank'>
+                                            <ListItem key={item.id} component={'a'} href={`${process.env.REACT_APP_API_URL}${to}/${item.id}?token=${getCurrentUser().token}`} target='_blank'>
                                                 <ListItemIcon>
                                                     <DescriptionIcon />
                                                 </ListItemIcon>

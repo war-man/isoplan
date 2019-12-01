@@ -14,6 +14,7 @@ import MaterialTable from 'material-table';
 import { jobService } from '../services/jobService';
 import CustomSnackbarContent from '../components/CustomSnackbarContent';
 import moment from 'moment';
+import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog';
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -62,7 +63,10 @@ function JobDetails() {
     const handleChange = name => event => {
         var value;
         if (name === 'devisDate' || name === 'startDate' || name === 'endDate' || name === 'rgDate') {
-            value = moment(event).format("YYYY-MM-DD");
+            value = moment(event).isValid()
+                    ? moment(event).format('YYYY-MM-DD')
+                    : null                    
+
         } else if (name === 'rgCollected') {
             value = event.target.checked;
         }
@@ -185,6 +189,7 @@ function JobDetails() {
         jobService.get(id)
             .then(res => {
                 setJob({ ...res })
+                setLoading(false)
             })
             .catch(err => {
                 alert(err)
@@ -213,8 +218,10 @@ function JobDetails() {
                 alert(err)
             })
     }
-    const deleteFile = fileId => {
-        jobService.deleteFile(fileId)
+    const [deleteId, setDeleteId] = useState(0)
+    const deleteFile = () => {
+        setConfirmOpen(false);
+        jobService.deleteFile(deleteId)
             .then(() => {
                 getFiles(id)
             })
@@ -224,9 +231,12 @@ function JobDetails() {
     }
 
     useEffect(() => {
+        setLoading(true)
         getJob(id)
         getFiles(id)
     }, [id]);
+
+    const [loading, setLoading] = useState(false)
 
     const [variant, setVariant] = useState('success');
     const [message, setMessage] = useState('');
@@ -237,6 +247,11 @@ function JobDetails() {
         }
         setOpenSnackbar(false);
     };
+
+    const [confirmOpen, setConfirmOpen] = useState(false)
+    const handleConfirmClose = () => {
+        setConfirmOpen(false)
+    }
 
     return (
         <Dashboard>
@@ -301,7 +316,6 @@ function JobDetails() {
                                 </FormControl>
                                 <KeyboardDatePicker
                                     margin="normal"
-                                    id="date-picker-dialog"
                                     label="Date devis"
                                     format="dd.MM.yyyy"
                                     value={job.devisDate}
@@ -313,7 +327,6 @@ function JobDetails() {
                                 />
                                 <KeyboardDatePicker
                                     margin="normal"
-                                    id="date-picker-dialog"
                                     label="Date debut"
                                     format="dd.MM.yyyy"
                                     value={job.startDate}
@@ -325,7 +338,6 @@ function JobDetails() {
                                 />
                                 <KeyboardDatePicker
                                     margin="normal"
-                                    id="date-picker-dialog"
                                     label="Date fin"
                                     format="dd.MM.yyyy"
                                     value={job.endDate}
@@ -337,7 +349,6 @@ function JobDetails() {
                                 />
                                 <KeyboardDatePicker
                                     margin="normal"
-                                    id="date-picker-dialog"
                                     label="RG date"
                                     format="dd.MM.yyyy"
                                     value={job.rgDate}
@@ -396,14 +407,18 @@ function JobDetails() {
                             options={options}
                             title={'Travaux'}
                             editable={editable}
+                            isLoading={loading}
                         />
                     </Grid>
                     <Grid item xs={12} md={8}>
                         <Files
                             files={files}
                             uploadFile={uploadFile(id)}
-                            deleteFile={deleteFile}
-                            to={'/api/Jobs/Files'}
+                            deleteFile={(id) => {
+                                setConfirmOpen(true); 
+                                setDeleteId(id);
+                            }}
+                            to={'api/Jobs/Files'}
                         />
                     </Grid>
                 </Grid>
@@ -424,6 +439,12 @@ function JobDetails() {
                     message={message}
                 />
             </Snackbar>
+            <ConfirmDeleteDialog
+                open={confirmOpen}
+                handleClose={handleConfirmClose}
+                handleDelete={deleteFile}
+                text={'Confirmer la suppression de fichier?'}
+            />
         </Dashboard>
     )
 }

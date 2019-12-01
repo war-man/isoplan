@@ -118,14 +118,18 @@ function Jobs() {
         jobService.getAll()
             .then(res => {
                 setData(res)
+                setLoading(false)
             })
             .catch(err => {
                 alert(err)
             })
     }
     useEffect(() => {
+        setLoading(true)
         getJobs()
     }, [])
+
+    const [loading, setLoading] = useState(false)
 
     const [redirect, setRedirect] = useState(false);
     const [redirectId, setRedirectId] = useState(0);
@@ -145,6 +149,7 @@ function Jobs() {
                 options={options}
                 actions={actions}
                 title="Travaux"
+                isLoading={loading}
             />
             <JobAddDialog
                 open={openAdd}

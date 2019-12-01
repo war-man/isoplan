@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IsoPlan.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20191127171521_job-items")]
-    partial class jobitems
+    [Migration("20191201201519_schedule-composite-key")]
+    partial class schedulecompositekey
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -137,6 +137,32 @@ namespace IsoPlan.Migrations
                     b.ToTable("Jobs");
                 });
 
+            modelBuilder.Entity("IsoPlan.Data.Entities.JobFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Folder")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobId");
+
+                    b.ToTable("JobFiles");
+                });
+
             modelBuilder.Entity("IsoPlan.Data.Entities.JobItem", b =>
                 {
                     b.Property<int>("Id")
@@ -166,7 +192,7 @@ namespace IsoPlan.Migrations
 
                     b.HasIndex("JobId");
 
-                    b.ToTable("JobItem");
+                    b.ToTable("JobItems");
                 });
 
             modelBuilder.Entity("IsoPlan.Data.Entities.Schedule", b =>
@@ -185,9 +211,6 @@ namespace IsoPlan.Migrations
 
                     b.Property<double>("Salary")
                         .HasColumnType("float");
-
-                    b.Property<int>("Team")
-                        .HasColumnType("int");
 
                     b.HasKey("JobId", "EmployeeId", "Date");
 
@@ -235,8 +258,8 @@ namespace IsoPlan.Migrations
                             Id = 1,
                             FirstName = "Milan",
                             LastName = "Milovanovic",
-                            PasswordHash = new byte[] { 174, 107, 45, 208, 126, 6, 176, 52, 185, 158, 166, 255, 189, 238, 10, 161, 248, 5, 238, 19, 198, 54, 74, 103, 83, 187, 130, 30, 51, 42, 131, 52, 18, 226, 198, 122, 182, 34, 156, 69, 120, 255, 83, 238, 85, 92, 244, 215, 203, 50, 65, 104, 128, 16, 43, 236, 170, 199, 91, 130, 233, 251, 58, 75 },
-                            PasswordSalt = new byte[] { 198, 22, 132, 196, 205, 92, 250, 242, 49, 149, 198, 194, 4, 61, 17, 235, 27, 39, 240, 72, 211, 136, 152, 102, 192, 101, 174, 120, 214, 188, 65, 10, 28, 193, 51, 107, 118, 185, 151, 99, 120, 37, 254, 197, 8, 212, 156, 31, 207, 234, 192, 52, 91, 178, 185, 186, 4, 25, 86, 191, 35, 58, 93, 210, 3, 36, 167, 155, 50, 183, 128, 130, 180, 229, 104, 146, 112, 27, 54, 97, 181, 80, 166, 143, 48, 47, 113, 146, 74, 147, 96, 157, 60, 103, 9, 229, 43, 31, 195, 1, 9, 184, 231, 193, 239, 185, 9, 149, 148, 67, 149, 5, 49, 3, 39, 108, 78, 45, 123, 140, 240, 246, 53, 11, 158, 140, 41, 99 },
+                            PasswordHash = new byte[] { 224, 40, 59, 31, 21, 87, 174, 33, 76, 83, 191, 145, 125, 28, 122, 223, 64, 29, 80, 212, 146, 42, 143, 157, 192, 142, 220, 194, 154, 146, 74, 67, 78, 94, 196, 236, 36, 204, 61, 132, 8, 209, 173, 200, 216, 126, 246, 201, 208, 35, 120, 6, 176, 111, 218, 192, 98, 113, 36, 70, 54, 57, 169, 185 },
+                            PasswordSalt = new byte[] { 35, 112, 26, 205, 77, 89, 13, 28, 84, 203, 212, 146, 111, 24, 39, 221, 64, 152, 47, 241, 194, 97, 235, 157, 145, 131, 243, 180, 9, 243, 188, 217, 15, 99, 249, 201, 120, 188, 122, 1, 107, 237, 47, 45, 59, 215, 190, 26, 171, 95, 72, 230, 80, 122, 9, 114, 7, 66, 85, 249, 168, 140, 201, 39, 104, 118, 68, 60, 95, 206, 244, 142, 90, 151, 179, 129, 114, 166, 130, 108, 118, 158, 16, 135, 106, 240, 60, 194, 146, 201, 240, 83, 242, 40, 175, 201, 87, 54, 237, 237, 155, 145, 148, 245, 65, 231, 229, 77, 181, 254, 191, 226, 101, 23, 211, 183, 87, 64, 11, 162, 242, 144, 33, 222, 97, 133, 55, 100 },
                             Role = "Admin",
                             Username = "milan"
                         });
@@ -247,6 +270,15 @@ namespace IsoPlan.Migrations
                     b.HasOne("IsoPlan.Data.Entities.Employee", "Employee")
                         .WithMany("Files")
                         .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("IsoPlan.Data.Entities.JobFile", b =>
+                {
+                    b.HasOne("IsoPlan.Data.Entities.Job", "Job")
+                        .WithMany("Files")
+                        .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

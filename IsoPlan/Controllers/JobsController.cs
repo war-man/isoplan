@@ -1,36 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using IsoPlan.Data.DTOs;
 using IsoPlan.Data.Entities;
 using IsoPlan.Exceptions;
 using IsoPlan.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace IsoPlan.Controllers
-{    
+{
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin, Manager")]
     public class JobsController : ControllerBase
     {
         private readonly IJobService _jobService;
+        private readonly ICustomAuthService _customAuthService;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _env;
 
         public JobsController(
             IJobService jobService,
             IMapper mapper,
-            IWebHostEnvironment env)
+            IWebHostEnvironment env,
+            ICustomAuthService customAuthService)
         {
             _jobService = jobService;
             _mapper = mapper;
             _env = env;
+            _customAuthService = customAuthService;
         }
 
         [HttpGet]
@@ -67,17 +70,17 @@ namespace IsoPlan.Controllers
         {
             var job = _mapper.Map<Job>(jobDto);
             job.Id = id;
-            
+
             // save 
             _jobService.Update(job);
-            return NoContent();          
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
-        {            
+        {
             _jobService.Delete(id);
-            return NoContent();            
+            return NoContent();
         }
 
         [HttpPost("Items")]
@@ -152,8 +155,14 @@ namespace IsoPlan.Controllers
         }
 
         [HttpGet("Files/{id}")]
-        async public Task<ActionResult> DownloadJobFile(int id)
+        [AllowAnonymous]
+        async public Task<ActionResult> DownloadJobFile(int id, string token)
         {
+            if (!_customAuthService.CheckToken(token))
+            {
+                return Unauthorized();
+            }
+
             JobFile file = _jobService.GetFile(id);
 
             if (file == null)

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace IsoPlan.Data.Entities
 {
@@ -20,7 +18,7 @@ namespace IsoPlan.Data.Entities
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public DateTime? RGDate { get; set; }
-        public bool RGCollected { get; set; }        
+        public bool RGCollected { get; set; }
         public string Status { get; set; }
         public List<JobItem> JobItems { get; set; }
         public List<JobFile> Files { get; set; }

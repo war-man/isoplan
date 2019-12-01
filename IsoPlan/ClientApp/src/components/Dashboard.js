@@ -13,13 +13,14 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { Link } from 'react-router-dom';
 import LinkList from './LinkList';
+import { getCurrentUser } from '../helpers/authentication';
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
-        backgroundImage: 'url(https://www.isoplast-menuiseries.com/s/img/background.jpg?1554045078)',
+        backgroundImage: `url(${process.env.PUBLIC_URL}/background.jpg)`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -112,6 +113,8 @@ export default function Dashboard(props) {
         setOpen(false);
     };
 
+    const user = getCurrentUser();
+
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -150,7 +153,7 @@ export default function Dashboard(props) {
                         <ChevronLeftIcon />
                     </IconButton>
                 </div>
-                <LinkList />
+                <LinkList user={user} />
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />

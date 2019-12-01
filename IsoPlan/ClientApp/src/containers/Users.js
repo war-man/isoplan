@@ -116,6 +116,7 @@ function Users() {
         userService.getAll()
             .then(res => {
                 setData(res)
+                setLoading(false)
             })
             .catch(err => {
                 alert(err)
@@ -123,8 +124,11 @@ function Users() {
     }
 
     useEffect(() => {
+        setLoading(true)
         getUsers()
     }, [])
+
+    const [loading, setLoading] = useState(false)
 
     return (
         <Dashboard>
@@ -134,6 +138,7 @@ function Users() {
                 options={options}
                 actions={actions}
                 title="Users"
+                isLoading={loading}
             />
             <UserAddDialog
                 open={openAdd}

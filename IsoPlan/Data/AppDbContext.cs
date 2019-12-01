@@ -1,10 +1,6 @@
 ﻿using IsoPlan.Data.Entities;
 using IsoPlan.Helpers;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace IsoPlan.Data
 {
@@ -29,10 +25,9 @@ namespace IsoPlan.Data
               .WithMany(j => j.JobItems)
               .HasForeignKey(ji => ji.JobId);
 
-            modelBuilder.Entity<Schedule>()
-                .HasKey(s => new { s.JobId, s.EmployeeId, s.Date });
-
             modelBuilder.Entity<User>().HasAlternateKey(u => u.Username).HasName("AlternateKey_Username");
+
+            modelBuilder.Entity<Schedule>().HasKey(s => new { s.JobId, s.EmployeeId, s.Date });
 
             Hash.CreatePasswordHash("milan", out byte[] passwordHash, out byte[] passwordSalt);
 

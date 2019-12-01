@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -33,7 +31,7 @@ namespace IsoPlan.Helpers
         {
             var code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
-            if (ex is AppException) code = HttpStatusCode.BadRequest;            
+            if (ex is AppException) code = HttpStatusCode.BadRequest;
 
             var result = JsonConvert.SerializeObject(new { error = ex.Message });
             context.Response.ContentType = "application/json";

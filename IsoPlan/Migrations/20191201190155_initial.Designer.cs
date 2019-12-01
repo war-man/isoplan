@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IsoPlan.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20191122131924_files")]
-    partial class files
+    [Migration("20191201190155_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -93,16 +93,19 @@ namespace IsoPlan.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ClientEmail")
+                    b.Property<string>("ClientContact")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClientName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ClientNumber")
+                    b.Property<DateTime?>("DevisDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DevisStatus")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -111,30 +114,102 @@ namespace IsoPlan.Migrations
                     b.Property<bool>("RGCollected")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("RGDate")
+                    b.Property<DateTime?>("RGDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("TotalBuy")
+                        .HasColumnType("real");
+
+                    b.Property<float>("TotalProfit")
+                        .HasColumnType("real");
+
+                    b.Property<float>("TotalSell")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
                     b.ToTable("Jobs");
                 });
 
-            modelBuilder.Entity("IsoPlan.Data.Entities.Schedule", b =>
+            modelBuilder.Entity("IsoPlan.Data.Entities.JobFile", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Folder")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("JobId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobId");
+
+                    b.ToTable("JobFiles");
+                });
+
+            modelBuilder.Entity("IsoPlan.Data.Entities.JobItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<float>("Buy")
+                        .HasColumnType("real");
+
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Profit")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Sell")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobId");
+
+                    b.ToTable("JobItems");
+                });
+
+            modelBuilder.Entity("IsoPlan.Data.Entities.Schedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
@@ -142,12 +217,11 @@ namespace IsoPlan.Migrations
                     b.Property<double>("Salary")
                         .HasColumnType("float");
 
-                    b.Property<int>("Team")
-                        .HasColumnType("int");
-
-                    b.HasKey("JobId", "EmployeeId", "Date");
+                    b.HasKey("Id");
 
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex("JobId");
 
                     b.ToTable("Schedules");
                 });
@@ -191,8 +265,8 @@ namespace IsoPlan.Migrations
                             Id = 1,
                             FirstName = "Milan",
                             LastName = "Milovanovic",
-                            PasswordHash = new byte[] { 51, 111, 110, 247, 184, 221, 110, 232, 211, 120, 41, 249, 107, 169, 16, 116, 192, 226, 195, 216, 242, 184, 134, 5, 22, 160, 52, 145, 149, 161, 112, 226, 227, 160, 113, 218, 33, 111, 5, 218, 163, 197, 171, 31, 83, 224, 140, 114, 142, 108, 0, 55, 9, 53, 216, 120, 154, 204, 29, 37, 47, 102, 82, 72 },
-                            PasswordSalt = new byte[] { 238, 144, 22, 160, 229, 217, 176, 0, 226, 185, 127, 213, 183, 246, 185, 97, 43, 101, 133, 6, 121, 169, 169, 78, 162, 204, 39, 215, 125, 250, 232, 33, 252, 70, 9, 69, 15, 61, 13, 96, 124, 180, 139, 229, 132, 151, 171, 107, 164, 103, 218, 203, 187, 199, 167, 59, 94, 115, 242, 79, 163, 136, 154, 80, 175, 0, 77, 140, 17, 50, 2, 204, 169, 169, 13, 89, 205, 101, 217, 249, 134, 107, 59, 83, 145, 194, 129, 196, 219, 18, 216, 238, 138, 181, 44, 30, 217, 59, 231, 102, 205, 152, 242, 15, 25, 162, 246, 107, 91, 40, 148, 224, 207, 175, 167, 180, 100, 167, 173, 108, 184, 49, 191, 51, 112, 76, 233, 104 },
+                            PasswordHash = new byte[] { 11, 124, 238, 249, 88, 224, 8, 197, 111, 160, 157, 166, 150, 251, 194, 213, 67, 58, 35, 175, 240, 137, 55, 15, 203, 27, 125, 96, 212, 29, 226, 174, 208, 63, 76, 165, 106, 140, 91, 133, 99, 45, 116, 129, 59, 167, 207, 110, 254, 25, 59, 141, 204, 148, 16, 119, 207, 183, 249, 246, 247, 19, 167, 140 },
+                            PasswordSalt = new byte[] { 121, 45, 200, 99, 38, 204, 175, 4, 12, 211, 94, 108, 69, 91, 112, 198, 180, 156, 165, 231, 118, 248, 82, 29, 135, 34, 216, 28, 23, 210, 172, 198, 110, 44, 189, 184, 118, 219, 98, 67, 137, 164, 105, 90, 251, 66, 30, 69, 238, 127, 29, 100, 181, 47, 32, 52, 205, 170, 38, 104, 59, 135, 28, 255, 199, 226, 111, 200, 201, 159, 178, 136, 171, 229, 116, 209, 221, 127, 44, 110, 66, 99, 34, 146, 166, 20, 2, 90, 139, 203, 144, 79, 196, 130, 143, 91, 181, 31, 56, 148, 35, 130, 23, 53, 89, 91, 15, 165, 12, 85, 32, 217, 70, 59, 88, 143, 102, 76, 19, 141, 113, 135, 184, 154, 254, 245, 32, 143 },
                             Role = "Admin",
                             Username = "milan"
                         });
@@ -203,6 +277,24 @@ namespace IsoPlan.Migrations
                     b.HasOne("IsoPlan.Data.Entities.Employee", "Employee")
                         .WithMany("Files")
                         .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("IsoPlan.Data.Entities.JobFile", b =>
+                {
+                    b.HasOne("IsoPlan.Data.Entities.Job", "Job")
+                        .WithMany("Files")
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("IsoPlan.Data.Entities.JobItem", b =>
+                {
+                    b.HasOne("IsoPlan.Data.Entities.Job", "Job")
+                        .WithMany("JobItems")
+                        .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

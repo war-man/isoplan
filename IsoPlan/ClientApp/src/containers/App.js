@@ -11,12 +11,15 @@ import JobDetails from './JobDetails';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { lightGreen } from '@material-ui/core/colors';
+import Schedules from './Schedules';
+import { frFR } from '@material-ui/core/locale';
+
 
 const theme = createMuiTheme({
     palette: {
         primary: { main: lightGreen[500], contrastText: "#fff" },        
     },
-});
+}, frFR);
 
 function App() {
     return (
@@ -24,11 +27,12 @@ function App() {
             <div>
                 <Route path="/login" component={Login} />
                 <PrivateRoute exact path="/" component={Home} roles={['Admin', 'Manager']} />
+                <PrivateRoute exact path="/planning" component={Schedules} roles={['Admin', 'Manager']} />
                 <PrivateRoute exact path="/travaux/" component={Jobs} roles={['Admin', 'Manager']} />
                 <PrivateRoute exact path="/travaux/:id" component={JobDetails} roles={['Admin', 'Manager']} />
                 <PrivateRoute exact path="/personnel/" component={Employees} roles={['Admin', 'Manager']} />
                 <PrivateRoute exact path="/personnel/:id" component={EmployeeDetails} roles={['Admin', 'Manager']} />
-                <PrivateRoute exact path="/users/" component={Users} roles={['Admin']} />
+                <PrivateRoute exact path="/usagers/" component={Users} roles={['Admin']} />
             </div>
         </ThemeProvider>
     );

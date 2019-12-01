@@ -3,11 +3,9 @@ using IsoPlan.Data.Entities;
 using IsoPlan.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace IsoPlan.Services
 {
@@ -46,7 +44,7 @@ namespace IsoPlan.Services
             return _context.Jobs
                 .Include(j => j.JobItems)
                 .FirstOrDefault(j => j.Id == id);
-        }        
+        }
 
         public void Create(Job job)
         {
@@ -132,12 +130,16 @@ namespace IsoPlan.Services
         {
             var job = GetById(jobItem.JobId);
 
-            if(job == null)
+            if (job == null)
             {
                 throw new AppException("Job not found");
             }
 
-            // needs validation for empty fields
+            if (string.IsNullOrWhiteSpace(jobItem.Name))
+            {
+                throw new AppException("Name is empty");
+            }
+
             jobItem.Profit = jobItem.Sell - jobItem.Buy;
             _context.JobItems.Add(jobItem);
             _context.SaveChanges();
@@ -161,7 +163,11 @@ namespace IsoPlan.Services
                 throw new AppException("Job not found");
             }
 
-            // needs validation for empty fields
+            if (string.IsNullOrWhiteSpace(jobItemParam.Name))
+            {
+                throw new AppException("Name is empty");
+            }
+
             jobItem.Name = jobItemParam.Name;
             jobItem.Quantity = jobItemParam.Quantity;
             jobItem.Buy = jobItemParam.Buy;
@@ -223,7 +229,7 @@ namespace IsoPlan.Services
         {
             var job = _context.Jobs.Find(jobId);
 
-            if(job == null)
+            if (job == null)
             {
                 throw new AppException("Job not found");
             }
@@ -233,20 +239,20 @@ namespace IsoPlan.Services
             foreach (string folder in JobFolder.JobFolderList)
             {
                 files.Add(new JobFilePair
-                    {
-                        Header = folder,
-                        Items = _context.JobFiles
+                {
+                    Header = folder,
+                    Items = _context.JobFiles
                             .Select(jf => new JobFile
-                                {
-                                   Id = jf.Id,
-                                   JobId = jf.JobId,
-                                   Name = jf.Name,
-                                   Folder = jf.Folder                                   
-                                }
+                            {
+                                Id = jf.Id,
+                                JobId = jf.JobId,
+                                Name = jf.Name,
+                                Folder = jf.Folder
+                            }
                             )
                             .Where(jf => jf.Folder == folder && jf.JobId == jobId)
                             .ToList()
-                    }
+                }
                 );
             }
 

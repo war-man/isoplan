@@ -11,6 +11,7 @@ import Files from '../components/Files';
 import Snackbar from '@material-ui/core/Snackbar';
 import CustomSnackbarContent from '../components/CustomSnackbarContent';
 import moment from 'moment';
+import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog';
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -116,9 +117,12 @@ function EmployeeDetails() {
                 alert(err)
             })
     }
-    const deleteFile = fileId => {
-        employeeService.deleteFile(fileId)
-            .then(() => {
+
+    const [deleteId, setDeleteId] = useState(0)
+    const deleteFile = () => {
+        setConfirmOpen(false)
+        employeeService.deleteFile(deleteId)
+            .then(() => {                
                 getFiles(id)
             })
             .catch(err => {
@@ -134,6 +138,10 @@ function EmployeeDetails() {
         setOpenSnackbar(false);
     };
 
+    const [confirmOpen, setConfirmOpen] = useState(false)
+    const handleConfirmClose = () => {
+        setConfirmOpen(false)
+    }
 
     return (
         <Dashboard>
@@ -202,7 +210,6 @@ function EmployeeDetails() {
                                 <KeyboardDatePicker
                                     required={true}
                                     margin="normal"
-                                    id="date-picker-dialog"
                                     label="Commencé le travail"
                                     format="dd.MM.yyyy"
                                     value={employee.workStart}
@@ -213,8 +220,7 @@ function EmployeeDetails() {
                                     }}
                                 />
                                 <KeyboardDatePicker
-                                    margin="normal"
-                                    id="date-picker-dialog"
+                                    margin="normal"                                    
                                     label="Arrêté le travail"
                                     format="dd.MM.yyyy"
                                     value={employee.workEnd}
@@ -250,8 +256,11 @@ function EmployeeDetails() {
                     <Files
                         files={files}
                         uploadFile={uploadFile(id)}
-                        deleteFile={deleteFile}
-                        to={'/api/Employees/Files'}
+                        deleteFile={(id) => {
+                            setConfirmOpen(true); 
+                            setDeleteId(id);
+                        }}
+                        to={'api/Employees/Files'}
                     />
                 </Grid>
             </Grid>
@@ -271,6 +280,12 @@ function EmployeeDetails() {
                     message="Enregistrement réussi"
                 />
             </Snackbar>
+            <ConfirmDeleteDialog
+                open={confirmOpen}
+                handleClose={handleConfirmClose}
+                handleDelete={deleteFile}
+                text={'Confirmer la suppression de fichier?'}
+            />
         </Dashboard>
     )
 }

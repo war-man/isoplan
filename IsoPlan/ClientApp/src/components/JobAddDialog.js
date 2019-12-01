@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'flex-end'
     },
-    checkboxLabel:{
+    checkboxLabel: {
         marginBottom: '8px',
     },
     closeButton: {
@@ -134,7 +134,6 @@ function JobAddDialog(props) {
                         </FormControl>
                         <KeyboardDatePicker
                             margin="normal"
-                            id="date-picker-dialog"
                             label="Date devis"
                             format="dd.MM.yyyy"
                             value={jobToAdd.devisDate}
@@ -146,7 +145,6 @@ function JobAddDialog(props) {
                         />
                         <KeyboardDatePicker
                             margin="normal"
-                            id="date-picker-dialog"
                             label="Date debut"
                             format="dd.MM.yyyy"
                             value={jobToAdd.startDate}
@@ -158,7 +156,6 @@ function JobAddDialog(props) {
                         />
                         <KeyboardDatePicker
                             margin="normal"
-                            id="date-picker-dialog"
                             label="Date fin"
                             format="dd.MM.yyyy"
                             value={jobToAdd.endDate}
@@ -170,7 +167,6 @@ function JobAddDialog(props) {
                         />
                         <KeyboardDatePicker
                             margin="normal"
-                            id="date-picker-dialog"
                             label="RG date"
                             format="dd.MM.yyyy"
                             value={jobToAdd.rgDate}

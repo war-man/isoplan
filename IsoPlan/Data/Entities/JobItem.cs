@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace IsoPlan.Data.Entities
+﻿namespace IsoPlan.Data.Entities
 {
     public class JobItem
     {
@@ -14,6 +9,6 @@ namespace IsoPlan.Data.Entities
         public float Sell { get; set; }
         public float Profit { get; set; }
         public int JobId { get; set; }
-        public Job Job { get; set; }       
+        public Job Job { get; set; }
     }
 }
