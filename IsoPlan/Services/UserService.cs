@@ -12,18 +12,21 @@ namespace IsoPlan.Services
         User Authenticate(string username, string password);
         IEnumerable<User> GetAll();
         User GetById(int id);
+        User GetByUsername(string username);
         User Create(User user, string password);
         void Update(User user, string password = null);
-        void Delete(int id);
+        void Delete(int id, string jwt);
     }
 
     public class UserService : IUserService
     {
         private readonly AppDbContext _context;
+        private readonly ICustomAuthService _customAuthService;
 
-        public UserService(AppDbContext context)
+        public UserService(AppDbContext context, ICustomAuthService customAuthService)
         {
             _context = context;
+            _customAuthService = customAuthService;
         }
 
         public User Authenticate(string username, string password)
@@ -100,6 +103,11 @@ namespace IsoPlan.Services
                 throw new AppException("User not found");
             }
 
+            if (user.Username == "super_admin")
+            {
+                throw new AppException("Can't update super admin");
+            }
+
             if (!ValidateUserData(userParam))
             {
                 throw new AppException("Some required fields are empty");
@@ -134,14 +142,23 @@ namespace IsoPlan.Services
             _context.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(int id, string jwt)
         {
+            if (id == _customAuthService.GetIdFromToken(jwt))
+            {
+                throw new AppException("Can't delete logged in admin");
+            }
             var user = _context.Users.Find(id);
 
             if (user == null)
             {
                 throw new AppException("User not found");
             }
+
+            if (user.Username == "super_admin")
+            {
+                throw new AppException("Can't delete super admin");
+            }      
 
             _context.Users.Remove(user);
             _context.SaveChanges();
@@ -157,5 +174,9 @@ namespace IsoPlan.Services
             );
         }
 
+        public User GetByUsername(string username)
+        {
+            return _context.Users.SingleOrDefault(x => x.Username == username);
+        }
     }
 }

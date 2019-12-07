@@ -8,16 +8,27 @@ import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog';
 import JobAddDialog from '../components/JobAddDialog';
 import { DevisStatus, DevisStatusFR } from '../helpers/devisStatus';
 import { JobStatus, JobStatusFR } from '../helpers/jobStatus';
+import { Localization } from '../helpers/localization';
 
 function Jobs() {
     const columns = [
         { title: 'Date devis', field: 'devisDate', render: rowData => { return rowData.devisDate && <div>{moment(rowData.devisDate).format('DD.MM.YYYY.')}</div> } },
-        { title: 'Devis statut', field: 'devisStatus', render: rowData => <div>{DevisStatusFR[rowData.devisStatus]}</div>},
+        { 
+            title: 'Devis statut', 
+            field: 'devisStatus', 
+            render: rowData => <div>{DevisStatusFR[rowData.devisStatus]}</div>,
+            customFilterAndSearch: (term, rowData) => DevisStatusFR[rowData.devisStatus].toUpperCase().includes(term.toUpperCase())
+        },
         { title: 'Client', field: 'clientName', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
         { title: 'Affaire', field: 'name', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
         { title: 'Début', field: 'startDate', render: rowData => { return rowData.startDate && <div>{moment(rowData.startDate).format('DD.MM.YYYY.')}</div> } },
         { title: 'Fin', field: 'endDate', render: rowData => { return rowData.endDate && <div>{moment(rowData.endDate).format('DD.MM.YYYY.')}</div> } },
-        { title: 'Statut', field: 'status', render: rowData => <div>{JobStatusFR[rowData.status]}</div>},
+        { 
+            title: 'Statut', 
+            field: 'status', 
+            render: rowData => <div>{JobStatusFR[rowData.status]}</div>,
+            customFilterAndSearch: (term, rowData) => JobStatusFR[rowData.status].toUpperCase().includes(term.toUpperCase())
+        },
         { title: 'Achat', field: 'totalBuy', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
         { title: 'Vente', field: 'totalSell', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
         { title: 'Marge', field: 'totalProfit', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
@@ -28,6 +39,13 @@ function Jobs() {
         actionsColumnIndex: -1,
         pageSizeOptions: [],
         paging: false,
+        rowStyle: (rowData) => {
+            if(rowData.rgCollected === false && moment(rowData.rgDate).isValid() && moment(rowData.rgDate).isBefore(moment(new Date()))){
+                return {
+                    backgroundColor: '#FF9800',
+                }
+            }            
+        }
     }
     const actions = [
         {
@@ -150,6 +168,7 @@ function Jobs() {
                 actions={actions}
                 title="Travaux"
                 isLoading={loading}
+                localization={Localization}
             />
             <JobAddDialog
                 open={openAdd}

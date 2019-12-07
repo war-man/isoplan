@@ -138,6 +138,7 @@ function JobAddDialog(props) {
                         <KeyboardDatePicker                            
                             margin="normal"
                             label="Date devis"
+                            cancelLabel="Annuler"
                             format="dd.MM.yyyy"
                             value={jobToAdd.devisDate}
                             className={classes.textField}
@@ -149,6 +150,7 @@ function JobAddDialog(props) {
                         <KeyboardDatePicker
                             margin="normal"
                             label="Date debut"
+                            cancelLabel="Annuler"
                             format="dd.MM.yyyy"
                             value={jobToAdd.startDate}
                             className={classes.textField}
@@ -160,6 +162,7 @@ function JobAddDialog(props) {
                         <KeyboardDatePicker
                             margin="normal"
                             label="Date fin"
+                            cancelLabel="Annuler"
                             format="dd.MM.yyyy"
                             value={jobToAdd.endDate}
                             className={classes.textField}
@@ -171,6 +174,7 @@ function JobAddDialog(props) {
                         <KeyboardDatePicker
                             margin="normal"
                             label="RG date"
+                            cancelLabel="Annuler"
                             format="dd.MM.yyyy"
                             value={jobToAdd.rgDate}
                             className={classes.textField}

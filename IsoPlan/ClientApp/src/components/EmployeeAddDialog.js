@@ -127,6 +127,7 @@ function EmployeeAddDialog(props) {
                             required={true}
                             margin="normal"
                             label="Commencé le travail"
+                            cancelLabel="Annuler"
                             format="dd.MM.yyyy"
                             value={employeeToAdd.workStart}
                             className={classes.textField}
@@ -138,6 +139,7 @@ function EmployeeAddDialog(props) {
                         <KeyboardDatePicker
                             margin="normal"
                             label="Arrêté le travail"
+                            cancelLabel="Annuler"
                             format="dd.MM.yyyy"
                             value={employeeToAdd.workEnd}
                             className={classes.textField}

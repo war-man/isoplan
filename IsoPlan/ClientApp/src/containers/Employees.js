@@ -8,17 +8,28 @@ import { EmployeeStatus, EmployeeStatusFR } from '../helpers/employeeStatus';
 import { ContractType, ContractTypeFR } from '../helpers/contractType';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
+import { Localization } from '../helpers/localization';
 
-function Employees(){
+function Employees() {
     const columns = [
-        { title: 'Prénom', field: 'firstName', cellStyle: {maxWidth: '150px', overflowWrap: 'break-word'}},
-        { title: 'Nom', field: 'lastName', cellStyle: {maxWidth: '150px', overflowWrap: 'break-word'}},
-        { title: 'Statut', field: 'status', render: rowData => <div>{EmployeeStatusFR[rowData.status]}</div>},
-        { title: 'Per diem', field: 'salary', type: 'currency', currencySetting: {currencyCode: 'EUR', locale: 'fr-FR'}},
-        { title: 'Numéro de compte', field: 'accountNumber', sorting: false, cellStyle: {maxWidth: '200px', overflowWrap: 'break-word'}},
-        { title: 'Contrat', field: 'contractType', render: rowData => <div>{ContractTypeFR[rowData.contractType]}</div> },
-        { title: 'Commencé', field: 'workStart', render: rowData => {return rowData.workStart && <div>{moment(rowData.workStart).format('DD.MM.YYYY')}</div>}},
-        { title: 'Arrêté', field: 'workEnd', render: rowData => {return rowData.workEnd && <div>{moment(rowData.workEnd).format('DD.MM.YYYY')}</div>}},
+        { title: 'Prénom', field: 'firstName', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
+        { title: 'Nom', field: 'lastName', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
+        {
+            title: 'Statut',
+            field: 'status',
+            render: rowData => <div>{EmployeeStatusFR[rowData.status]}</div>,
+            customFilterAndSearch: (term, rowData) => EmployeeStatusFR[rowData.status].toUpperCase().includes(term.toUpperCase())
+        },
+        { title: 'Per diem', field: 'salary', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
+        { title: 'Numéro de compte', field: 'accountNumber', sorting: false, cellStyle: { maxWidth: '200px', overflowWrap: 'break-word' } },
+        { 
+            title: 'Contrat', 
+            field: 'contractType', 
+            render: rowData => <div>{ContractTypeFR[rowData.contractType]}</div>,
+            customFilterAndSearch: (term, rowData) => ContractTypeFR[rowData.contractType].toUpperCase().includes(term.toUpperCase())
+        },
+        { title: 'Commencé', field: 'workStart', render: rowData => { return rowData.workStart && <div>{moment(rowData.workStart).format('DD.MM.YYYY')}</div> } },
+        { title: 'Arrêté', field: 'workEnd', render: rowData => { return rowData.workEnd && <div>{moment(rowData.workEnd).format('DD.MM.YYYY')}</div> } },
     ];
     const options = {
         draggable: false,
@@ -50,7 +61,7 @@ function Employees(){
                 setDeleteId(rowData.id);
                 setConfirmOpen(true);
             }
-        }),        
+        }),
     ]
 
     const [employeeToAdd, setEmployeeToAdd] = useState({
@@ -88,9 +99,9 @@ function Employees(){
             workEnd: null,
             status: EmployeeStatus.Active,
             note: '',
-        }) ;
+        });
     }
-    
+
     const [deleteId, setDeleteId] = useState(0)
     const [confirmOpen, setConfirmOpen] = useState(false)
     const handleConfirmClose = () => {
@@ -100,7 +111,7 @@ function Employees(){
         employeeService.deleteEmployee(deleteId)
             .then(() => {
                 handleConfirmClose()
-                getEmployees()               
+                getEmployees()
             })
             .catch(err => {
                 alert(err)
@@ -129,7 +140,7 @@ function Employees(){
 
     const renderRedirect = () => {
         if (redirect) {
-          return <Redirect push to={`${redirectId}`} />
+            return <Redirect push to={`${redirectId}`} />
         }
     }
 
@@ -143,13 +154,14 @@ function Employees(){
                 actions={actions}
                 title="Personnel"
                 isLoading={loading}
+                localization={Localization}
             />
             <EmployeeAddDialog
                 open={openAdd}
                 handleClose={handleCloseAdd}
                 handleAdd={handleAddEmployee}
                 employeeToAdd={employeeToAdd}
-                setEmployeeToAdd={setEmployeeToAdd} 
+                setEmployeeToAdd={setEmployeeToAdd}
             />
             <ConfirmDeleteDialog
                 open={confirmOpen}

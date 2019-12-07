@@ -54,9 +54,16 @@ namespace IsoPlan.Services
                     JobId = job.Id,
                     Date = date,
                     Salary = e.Salary                    
-                });
+                });                
             }
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                throw new AppException("One of the schedules already exists");
+            }
         }
 
         public Schedule GetById(int jobId, int employeeId, DateTime date)

@@ -214,6 +214,7 @@ function EmployeeDetails() {
                                     required={true}
                                     margin="normal"
                                     label="Commencé le travail"
+                                    cancelLabel="Annuler"
                                     format="dd.MM.yyyy"
                                     value={employee.workStart}
                                     className={classes.textField}
@@ -225,6 +226,7 @@ function EmployeeDetails() {
                                 <KeyboardDatePicker
                                     margin="normal"                                    
                                     label="Arrêté le travail"
+                                    cancelLabel="Annuler"
                                     format="dd.MM.yyyy"
                                     value={employee.workEnd}
                                     className={classes.textField}

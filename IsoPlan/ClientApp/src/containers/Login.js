@@ -110,7 +110,7 @@ function Login() {
                     onClose={handleClose}
                     variant="error"
                     className={classes.snackbar}
-                    message="Username or password are incorrect"
+                    message="Échec de la connexion"
                 />
             </Snackbar>
             <Grid item xs={false} sm={4} md={7} className={classes.image} />
@@ -128,7 +128,6 @@ function Login() {
                             margin="normal"
                             required
                             fullWidth
-                            id="email"
                             label="Username"
                             name="username"
                             autoComplete="username"

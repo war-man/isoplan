@@ -16,6 +16,7 @@ import { jobService } from '../services/jobService';
 import CustomSnackbarContent from '../components/CustomSnackbarContent';
 import moment from 'moment';
 import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog';
+import { Localization } from '../helpers/localization';
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -318,6 +319,7 @@ function JobDetails() {
                                 <KeyboardDatePicker
                                     margin="normal"
                                     label="Date devis"
+                                    cancelLabel="Annuler"
                                     format="dd.MM.yyyy"
                                     value={job.devisDate}
                                     className={classes.textField}
@@ -329,6 +331,7 @@ function JobDetails() {
                                 <KeyboardDatePicker
                                     margin="normal"
                                     label="Date debut"
+                                    cancelLabel="Annuler"
                                     format="dd.MM.yyyy"
                                     value={job.startDate}
                                     className={classes.textField}
@@ -340,6 +343,7 @@ function JobDetails() {
                                 <KeyboardDatePicker
                                     margin="normal"
                                     label="Date fin"
+                                    cancelLabel="Annuler"
                                     format="dd.MM.yyyy"
                                     value={job.endDate}
                                     className={classes.textField}
@@ -351,6 +355,7 @@ function JobDetails() {
                                 <KeyboardDatePicker
                                     margin="normal"
                                     label="RG date"
+                                    cancelLabel="Annuler"
                                     format="dd.MM.yyyy"
                                     value={job.rgDate}
                                     className={classes.textField}
@@ -409,6 +414,7 @@ function JobDetails() {
                             title={'Travaux'}
                             editable={editable}
                             isLoading={loading}
+                            localization={Localization}
                         />
                     </Grid>
                     <Grid item xs={12} md={8}>

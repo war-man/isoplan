@@ -24,7 +24,6 @@ namespace IsoPlan.Controllers
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly AppSettings _appSettings;
-
         public UsersController(
             IUserService userService,
             IMapper mapper,
@@ -123,7 +122,9 @@ namespace IsoPlan.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _userService.Delete(id);
+            // get tokenString from "Bearer tokenString"
+            string jwt = Request.Headers["Authorization"][0].Split(" ")[1];
+            _userService.Delete(id, jwt);
             return NoContent();
         }
     }

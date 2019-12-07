@@ -2,6 +2,7 @@ import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import { TextField, DialogTitle, DialogContent, DialogActions, Button, FormControl, MenuItem, InputLabel, Select, makeStyles, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import { RoleFR } from '../helpers/role';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -54,7 +55,7 @@ function UserAddDialog(props) {
                 <DialogContent className={classes.container}>
                     <TextField
                         autoFocus
-                        label="First Name"
+                        label="Prénom"
                         required
                         defaultValue={userToAdd.firstName}
                         className={classes.textField}
@@ -62,7 +63,7 @@ function UserAddDialog(props) {
                         margin="normal"
                     />
                     <TextField
-                        label="Last Name"
+                        label="Nom"
                         required
                         defaultValue={userToAdd.lastName}
                         className={classes.textField}
@@ -88,13 +89,13 @@ function UserAddDialog(props) {
                         autoComplete="nope"
                     /> 
                     <FormControl margin="normal" className={classes.textField}>
-                        <InputLabel>Role</InputLabel>
+                        <InputLabel>Rôle</InputLabel>
                         <Select                            
                             value={userToAdd.role}
                             onChange={handleChange('role')}                            
                         >
                             {roleList.map((role, i) =>
-                                <MenuItem key={i} value={role}>{role}</MenuItem>
+                                <MenuItem key={i} value={role}>{RoleFR[role]}</MenuItem>
                             )}
                         </Select>
                     </FormControl>

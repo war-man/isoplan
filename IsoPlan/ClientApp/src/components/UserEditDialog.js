@@ -1,8 +1,9 @@
-import React from 'react'
-import Dialog from '@material-ui/core/Dialog'
-import { TextField, DialogTitle, DialogContent, DialogActions, Button, FormControl, MenuItem, InputLabel, Select, makeStyles, IconButton } from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close'
-import { getCurrentUser } from '../helpers/authentication'
+import React from 'react';
+import Dialog from '@material-ui/core/Dialog';
+import { TextField, DialogTitle, DialogContent, DialogActions, Button, FormControl, MenuItem, InputLabel, Select, makeStyles, IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import { getCurrentUser } from '../helpers/authentication';
+import { RoleFR } from '../helpers/role';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -53,7 +54,7 @@ function UserEditDialog(props) {
                 <DialogContent className={classes.container} >
                     <TextField
                         autoFocus
-                        label="First Name"
+                        label="Prénom"
                         required
                         defaultValue={userToEdit.firstName}
                         className={classes.textField}
@@ -61,7 +62,7 @@ function UserEditDialog(props) {
                         margin="normal"
                     />
                     <TextField
-                        label="Last Name"
+                        label="Nom"
                         required
                         defaultValue={userToEdit.lastName}
                         className={classes.textField}
@@ -86,15 +87,15 @@ function UserEditDialog(props) {
                         autoComplete="nope"
                     />
                     <FormControl margin="normal" className={classes.textField}>
-                        <InputLabel>Role</InputLabel>
+                        <InputLabel>Rôle</InputLabel>
                         <Select
                             value={userToEdit.role}
                             onChange={handleChange('role')}
                             disabled={getCurrentUser().id === userToEdit.id}
                         >
-                            <MenuItem value="" disabled>Role</MenuItem>
+                            <MenuItem value="" disabled>Rôle</MenuItem>
                             {roleList.map((role, i) =>
-                                <MenuItem key={i} value={role}>{role}</MenuItem>
+                                <MenuItem key={i} value={role}>{RoleFR[role]}</MenuItem>
                             )}
                         </Select>
                     </FormControl>

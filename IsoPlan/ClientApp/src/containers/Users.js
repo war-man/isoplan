@@ -4,16 +4,22 @@ import { userService } from '../services/userService';
 import MaterialTable from 'material-table';
 import UserAddDialog from '../components/UserAddDialog';
 import UserEditDialog from '../components/UserEditDialog';
-import { Role, AllRoles } from '../helpers/role';
+import { Role, AllRoles, RoleFR } from '../helpers/role';
 import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog';
 import { getCurrentUser } from '../helpers/authentication';
+import { Localization } from '../helpers/localization';
 
 function Users() {
     const columns = [
-        { title: 'First name', field: 'firstName' },
-        { title: 'Last name', field: 'lastName' },
+        { title: 'Prénom', field: 'firstName' },
+        { title: 'Nom', field: 'lastName' },
         { title: 'Username', field: 'username' },
-        { title: 'Role', field: 'role' },
+        {
+            title: 'Rôle',
+            field: 'role',
+            render: rowData => <div>{RoleFR[rowData.role]}</div>,
+            customFilterAndSearch: (term, rowData) => RoleFR[rowData.role].toUpperCase().includes(term.toUpperCase())
+        },
     ]
     const options = {
         draggable: false,
@@ -24,7 +30,7 @@ function Users() {
     const actions = [
         {
             icon: 'add_box',
-            tooltip: 'Add User',
+            tooltip: 'Ajouter',
             isFreeAction: true,
             onClick: (event) => {
                 setOpenAdd(true)
@@ -32,21 +38,21 @@ function Users() {
         },
         {
             icon: 'edit',
-            tooltip: 'Edit User',
+            tooltip: 'Détails',
             onClick: (event, rowData) => {
                 setOpenEdit(true)
-                setUserToEdit({...rowData})
+                setUserToEdit({ ...rowData })
             }
-        },        
+        },
         rowData => ({
             icon: 'delete',
-            tooltip: 'Delete User',
+            tooltip: 'Supprimer',
             disabled: getCurrentUser().id === rowData.id,
             onClick: (event, rowData) => {
-                setUserToEdit({...rowData})
+                setUserToEdit({ ...rowData })
                 setConfirmOpen(true)
             }
-        })                         
+        })
     ]
 
     const roleList = [...AllRoles]
@@ -77,7 +83,7 @@ function Users() {
             username: '',
             password: '',
             role: Role.User,
-        })        
+        })
     }
 
     const [openEdit, setOpenEdit] = useState(false)
@@ -96,7 +102,7 @@ function Users() {
         userService.deleteUser(userToEdit.id)
             .then(() => {
                 handleConfirmClose()
-                getUsers()               
+                getUsers()
             })
             .catch(err => {
                 alert(err)
@@ -137,8 +143,9 @@ function Users() {
                 data={data}
                 options={options}
                 actions={actions}
-                title="Users"
+                title="Usagers"
                 isLoading={loading}
+                localization={Localization}
             />
             <UserAddDialog
                 open={openAdd}
@@ -161,7 +168,7 @@ function Users() {
                 open={confirmOpen}
                 handleClose={handleConfirmClose}
                 handleDelete={handleDeleteUser}
-                text={'Are you sure you want to delete this user?'}
+                text={'Confirmer la suppression de usager?'}
             />
         </Dashboard>
     )

@@ -11,7 +11,7 @@ import { EmployeeStatus } from '../helpers/employeeStatus';
 import { JobStatus } from '../helpers/jobStatus';
 import ScheduleEditDialog from '../components/ScheduleEditDialog';
 import moment from 'moment';
-import { makeStyles, Button, Paper, Typography } from '@material-ui/core';
+import { makeStyles, Button, Paper } from '@material-ui/core';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { Link, Redirect } from 'react-router-dom';

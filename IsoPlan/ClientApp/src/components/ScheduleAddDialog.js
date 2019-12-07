@@ -92,6 +92,7 @@ function ScheduleAddDialog(props) {
                             required={true}
                             margin="normal"
                             label="Date"
+                            cancelLabel="Annuler"
                             format="dd.MM.yyyy"
                             className={classes.textField}
                             onChange={handleChange('date')}

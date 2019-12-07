@@ -73,7 +73,6 @@ function ScheduleEditDialog(props) {
             </DialogTitle>
             <form autoComplete="off" onSubmit={handleSubmitForm} >
                 <DialogContent className={classes.container} >
-
                     <TextField
                         label='Travail'
                         value={scheduleToEdit.jobName}

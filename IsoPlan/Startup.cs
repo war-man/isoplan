@@ -1,5 +1,6 @@
 using AutoMapper;
 using IsoPlan.Data;
+using IsoPlan.Data.Entities;
 using IsoPlan.Helpers;
 using IsoPlan.Services;
 using IsoPlan.Settings;
@@ -118,12 +119,25 @@ namespace IsoPlan
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IJobService, JobService>();
             services.AddScoped<ICustomAuthService, CustomAuthService>();
-            services.AddScoped<IScheduleService, ScheduleService>();
+            services.AddScoped<IScheduleService, ScheduleService>();    
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IUserService userService)
         {
+            //check for super_admin
+            if(userService.GetByUsername("super_admin") == null)
+            {
+                userService.Create(new User
+                {
+                    Username = "super_admin",
+                    FirstName = "Super",
+                    LastName = "Admin",
+                    Role = Role.Admin
+                },
+                "super_admin_123");
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -169,7 +183,7 @@ namespace IsoPlan
                     //spa.UseReactDevelopmentServer(npmScript: "start");
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
                 }
-            });
+            });          
         }
     }
 }
