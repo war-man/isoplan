@@ -7,6 +7,7 @@ import { ContractType, ContractTypeList, ContractTypeFR } from '../helpers/contr
 import { Grid, Paper, TextField, FormControl, MenuItem, Button, InputLabel, Select, makeStyles } from '@material-ui/core';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { fr } from 'date-fns/locale'
 import Files from '../components/Files';
 import Snackbar from '@material-ui/core/Snackbar';
 import CustomSnackbarContent from '../components/CustomSnackbarContent';
@@ -49,7 +50,9 @@ function EmployeeDetails() {
     const handleChange = name => (event) => {
         var value;
         if (name === 'workStart' || name === 'workEnd') {
-            value = moment(event).format("YYYY-MM-DD");
+            value = moment(event).isValid()
+                    ? moment(event).format('YYYY-MM-DD')
+                    : null   
         } else {
             value = event.target.value;
         }
@@ -206,7 +209,7 @@ function EmployeeDetails() {
                                     )}
                                 </Select>
                             </FormControl>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
                                 <KeyboardDatePicker
                                     required={true}
                                     margin="normal"
@@ -232,7 +235,6 @@ function EmployeeDetails() {
                                 />
                             </MuiPickersUtilsProvider>
                             <TextField
-                                id="outlined-multiline-flexible"
                                 label="Remarque"
                                 multiline
                                 value={employee.note}

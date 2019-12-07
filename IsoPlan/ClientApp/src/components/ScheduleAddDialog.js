@@ -4,6 +4,7 @@ import { DialogTitle, DialogContent, DialogActions, Button, makeStyles, IconButt
 import CloseIcon from '@material-ui/icons/Close';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { fr } from 'date-fns/locale'
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import moment from 'moment';
 
@@ -40,7 +41,7 @@ const useStyles = makeStyles(theme => ({
 function ScheduleAddDialog(props) {
     const classes = useStyles();
 
-    const { open, handleClose, handleAdd, jobs, employees } = props;
+    const { open, handleClose, jobs, employees, handleCreate } = props;
 
     const handleChange = name => (event, newValue) => {
         var value;
@@ -57,7 +58,8 @@ function ScheduleAddDialog(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        handleAdd()
+        handleCreate(schedule)
+        handleCloseAdd()
     }
 
     const handleCloseAdd = () => {
@@ -85,7 +87,7 @@ function ScheduleAddDialog(props) {
             </DialogTitle>
             <form autoComplete="off" onSubmit={handleSubmit}>
                 <DialogContent className={classes.container}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
                         <KeyboardDatePicker
                             required={true}
                             margin="normal"
@@ -94,6 +96,7 @@ function ScheduleAddDialog(props) {
                             className={classes.textField}
                             onChange={handleChange('date')}
                             value={schedule.date}
+                            shouldDisableDate={date => date.getUTCDay() === 6}
                             KeyboardButtonProps={{
                                 'aria-label': 'Changer la date',
                             }}
@@ -119,7 +122,7 @@ function ScheduleAddDialog(props) {
                         className={classes.autocomplete}
                         multiple
                         options={employees}
-                        getOptionLabel={option => option.name}
+                        getOptionLabel={employee => `${employee.firstName} ${employee.lastName}`}
                         onChange={handleChange('employees')}
                         value={schedule.employees}
                         renderInput={params => (
@@ -127,7 +130,6 @@ function ScheduleAddDialog(props) {
                                 {...params}
                                 variant="standard"
                                 label="Personnel"
-                                placeholder="Personnel"
                                 margin="normal"
                                 fullWidth
                             />

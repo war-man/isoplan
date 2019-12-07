@@ -17,7 +17,7 @@ function LinkList(props) {
                 (user.role === "Admin" || user.role === "Manager") && <LinkListItem text="Accueil" icon={<DashboardIcon />} to='/'/>
             }
             {
-                (user.role === "Admin" || user.role === "Manager") && <LinkListItem text="Planning" icon={<TodayIcon />} to='/planning'/>
+                (user.role === "Admin" || user.role === "Manager") && <LinkListItem text="Planning" icon={<TodayIcon />} to='/planning/'/>
             }
             {
                 (user.role === "Admin" || user.role === "Manager") && <LinkListItem text="Travaux" icon={<ApartmentIcon />} to='/travaux/'/>

@@ -1,35 +1,78 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Dashboard from '../components/Dashboard';
+import { useParams } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import ScheduleItem from '../components/ScheduleItem';
 import ScheduleAddDialog from '../components/ScheduleAddDialog';
+import { scheduleService } from '../services/scheduleService';
+import { employeeService } from '../services/employeeService';
+import { jobService } from '../services/jobService';
+import { EmployeeStatus } from '../helpers/employeeStatus';
+import { JobStatus } from '../helpers/jobStatus';
+import ScheduleEditDialog from '../components/ScheduleEditDialog';
+import moment from 'moment';
+import { makeStyles, Button, Paper, Typography } from '@material-ui/core';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import { Link, Redirect } from 'react-router-dom';
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import { fr } from 'date-fns/locale'
+
+const useStyles = makeStyles(theme => ({
+    button: {
+        margin: theme.spacing(1),
+        height: '32px',
+        '&:hover': {
+            color: theme.palette.primary.contrastText,
+        },
+    },
+    toolbarTop: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        margin: `0px 0px ${theme.spacing(1)}px`
+    }
+}));
+
+const headerStyle = {
+    textAlign: 'center',
+    minWidth: '140px',
+    maxWidth: '140px',
+}
 
 function Schedules() {
-    const headerStyle = {
-        textAlign: 'center',
-        minWidth: '140px',
-        maxWidth: '140px',
-    }
+    const { date } = useParams();
+    const classes = useStyles();
 
-    const [titles, setTitles] = useState(
-        ["02.12.", "03.12.", "04.12.", "05.12.", "06.12.", "07.12."]
-    )
+    const parsedDate = (date !== undefined && moment(date, "DD-MM-YYYY").isValid()) ? moment(date, "DD-MM-YYYY") : moment(new Date())
 
-    const renderItems = (rowData, attr) => {
-        return rowData[attr].map((item, i) =>
-            <ScheduleItem text={item} note={'THIS IS A CUSTOM NOTE'} key={i} />
-        )
-    }
+    const startOfWeek = parsedDate.startOf('isoWeek')
+    const startOfWeekString = startOfWeek.format("DD-MM-YYYY")
+
+    const nextStartOfWeekString = moment(startOfWeek).add(1, 'isoWeek').format("DD-MM-YYYY")
+    const prevStartOfWeekString = moment(startOfWeek).subtract(1, 'isoWeek').format("DD-MM-YYYY")
+
+    const startOfWeekDisplay = startOfWeek.format('DD.MM.YYYY')
+    const endOfWeekDisplay = moment(startOfWeek).add(5, 'days').format('DD.MM.YYYY')
+
+    const titles = [
+        moment(startOfWeek).format("DD.MM."),
+        moment(startOfWeek).add(1, 'days').format("DD.MM."),
+        moment(startOfWeek).add(2, 'days').format("DD.MM."),
+        moment(startOfWeek).add(3, 'days').format("DD.MM."),
+        moment(startOfWeek).add(4, 'days').format("DD.MM."),
+        moment(startOfWeek).add(5, 'days').format("DD.MM."),
+    ]
 
     const columns = [
-        { 
-            title: 'Personne', field: 'name', headerStyle: headerStyle 
+        {
+            title: 'Nom complet', field: 'name', headerStyle: headerStyle
         },
         {
             title: `Lundi ${titles[0]}`, field: 'date1', headerStyle: headerStyle, render: rowData => renderItems(rowData, 'date1')
         },
         {
-            title: `Mardi ${titles[1]}`, field: 'date2', headerStyle: headerStyle, render: rowData => renderItems(rowData, 'date2')            
+            title: `Mardi ${titles[1]}`, field: 'date2', headerStyle: headerStyle, render: rowData => renderItems(rowData, 'date2')
         },
         {
             title: `Mercredi ${titles[2]}`, field: 'date3', headerStyle: headerStyle, render: rowData => renderItems(rowData, 'date3')
@@ -64,34 +107,157 @@ function Schedules() {
         }
     ]
 
-    const data = [
-        { name: 'MAMADU', 'date1': ['NANTERRE', 'PARIS 17'], 'date2': ['NANTERRE'], 'date3': ['NANTERRE'], 'date4': ['NANTERRE'], 'date5': ['NANTERRE'], 'date6': [] },
-        { name: 'AMADU', 'date1': ['PARIS 17'], 'date2': [], 'date3': ['NANTERRE'], 'date4': [], 'date5': [], 'date6': [] },
-        { name: 'BUBACAR', 'date1': [], 'date2': [], 'date3': [], 'date4': [], 'date5': [], 'date6': [] },
-        { name: 'DUSAN', 'date1': ['POASSY'], 'date2': [], 'date3': [], 'date4': [], 'date5': [], 'date6': ['PARIS 13'] },
-        { name: 'VICTOR', 'date1': [], 'date2': [], 'date3': [], 'date4': [], 'date5': [], 'date6': [] },
-    ]
+    const renderItems = (rowData, attr) => {
+        return rowData[attr].map((item, i) =>
+            <ScheduleItem job={item} key={i} openDialog={openDialog(item)} />
+        )
+    }
 
+    const [openEdit, setOpenEdit] = useState(false)
+    const handleCloseEdit = () => {
+        setOpenEdit(false)
+        setScheduleToEdit({
+            date: null,
+            employeeId: 0,
+            employeeName: '',
+            jobId: 0,
+            jobName: '',
+            note: '',
+            salary: 0,
+        })
+    }
+    const openDialog = item => event => {
+        setScheduleToEdit({ ...item })
+        setOpenEdit(true)
+    }
+
+    const [scheduleToEdit, setScheduleToEdit] = useState({
+        date: null,
+        employeeId: 0,
+        employeeName: '',
+        jobId: 0,
+        jobName: '',
+        note: '',
+        salary: 0,
+    })
+
+    const [data, setData] = useState([])
     const [openAdd, setOpenAdd] = useState(false)
     const handleCloseAdd = () => {
         setOpenAdd(false);
     }
 
+    const [employees, setEmployees] = useState([])
+    const [jobs, setJobs] = useState([])
+
+    const [loading, setLoading] = useState(false)
+
+    const getEverything = (date) => {
+        setLoading(true);
+        scheduleService.getAll(date)
+            .then(res => {
+                setData(res);
+                setLoading(false);
+            })
+            .catch(err => alert(err))
+        employeeService.getAll(EmployeeStatus.Active)
+            .then(res => setEmployees(res))
+            .catch(err => alert(err))
+        jobService.getAll(JobStatus.Started)
+            .then(res => setJobs(res))
+            .catch(err => alert(err))
+    }
+
+    const handleCreate = schedule => {
+        scheduleService.create(schedule)
+            .then(() => getEverything(startOfWeekString))
+            .catch((err) => alert(err))
+    }
+
+    const handleUpdate = () => {
+        scheduleService.update(scheduleToEdit)
+            .then(() => getEverything(startOfWeekString))
+    }
+
+    const handleDelete = () => {
+        scheduleService.deleteSchedule(scheduleToEdit)
+            .then(() => getEverything(startOfWeekString))
+    }
+
+    const [selectedDate, setSelectedDate] = useState(null)
+
+    const renderRedirect = () => {
+        if (selectedDate !== null) {
+            return <Redirect push to={`/planning/${moment(selectedDate).format("DD-MM-YYYY")}`} />
+        }
+    }
+
+    useEffect(() => {
+        getEverything(startOfWeekString)
+    }, [startOfWeekString])
+
     return (
         <Dashboard>
+            {renderRedirect()}
+            <Paper className={classes.toolbarTop}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    startIcon={<ChevronLeftIcon />}
+                    component={Link}
+                    to={`${prevStartOfWeekString}`}
+                >
+                    précédente
+                </Button>
+                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
+                    <div>
+                        <DatePicker
+                            showTodayButton={true}
+                            todayLabel="Aujourd'hui"
+                            cancelLabel="Annuler"
+                            labelFunc={() => `Semaine du ${moment(startOfWeek).format("MMM DD.YYYY")}`}
+                            variant="dialog"
+                            margin="dense"
+                            format="dd.MM.yyyy."
+                            value={startOfWeek}
+                            onChange={(date) => setSelectedDate(date)}
+                        />
+                    </div>
+                </MuiPickersUtilsProvider>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    endIcon={<ChevronRightIcon />}
+                    component={Link}
+                    to={`${nextStartOfWeekString}`}
+                >
+                    prochaine
+                </Button>
+            </Paper>
             <MaterialTable
                 columns={columns}
                 data={data}
                 options={options}
                 actions={actions}
-                title="Planning"
+                title={`Planning: ${startOfWeekDisplay} - ${endOfWeekDisplay}`}
+                isLoading={loading}
             />
             <ScheduleAddDialog
                 open={openAdd}
                 handleClose={handleCloseAdd}
-                handleAdd={() => alert("ADD")}
-                jobs={[{id:1, name: 'mile'}]}
-                employees={[{id:1, name: 'MAMADU'}, {id:2, name: 'AMADU'}, {id:3, name: 'BUBACAR'}]}
+                jobs={jobs}
+                employees={employees}
+                handleCreate={handleCreate}
+            />
+            <ScheduleEditDialog
+                open={openEdit}
+                handleClose={handleCloseEdit}
+                scheduleToEdit={scheduleToEdit}
+                setScheduleToEdit={setScheduleToEdit}
+                handleSave={handleUpdate}
+                handleDelete={handleDelete}
             />
         </Dashboard>
     )

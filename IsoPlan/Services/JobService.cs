@@ -11,7 +11,7 @@ namespace IsoPlan.Services
 {
     public interface IJobService
     {
-        IEnumerable<Job> GetAll();
+        IEnumerable<Job> GetAll(string status);
         Job GetById(int id);
         void Create(Job job);
         void Update(Job job);
@@ -34,9 +34,11 @@ namespace IsoPlan.Services
             _context = context;
             _env = env;
         }
-        public IEnumerable<Job> GetAll()
+        public IEnumerable<Job> GetAll(string status)
         {
-            return _context.Jobs.ToList();
+            return _context.Jobs
+                .Where(j => string.IsNullOrWhiteSpace(status) || j.Status.Equals(status))
+                .ToList();
         }
 
         public Job GetById(int id)

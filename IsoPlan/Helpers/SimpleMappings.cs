@@ -23,6 +23,16 @@ namespace IsoPlan.Helpers
             // job item mapping
             CreateMap<JobItem, JobItemDTO>();
             CreateMap<JobItemDTO, JobItem>();
+
+            // schedule week mapping
+            CreateMap<ScheduleWeek, ScheduleWeekDTO>();
+            CreateMap<ScheduleWeekDTO, ScheduleWeek>();
+
+            // schedule mapping
+            CreateMap<Schedule, ScheduleDTO>()
+                .ForMember(dest => dest.EmployeeName, 
+                           opts => opts.MapFrom(src => src.Employee.FirstName + " " + src.Employee.LastName));
+            CreateMap<ScheduleDTO, Schedule>();
         }
     }
 }

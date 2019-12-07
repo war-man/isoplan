@@ -4,6 +4,7 @@ import { TextField, DialogTitle, DialogContent, DialogActions, Button, FormContr
 import CloseIcon from '@material-ui/icons/Close';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { fr } from 'date-fns/locale'
 import { EmployeeStatusFR, EmployeeStatusList } from '../helpers/employeeStatus';
 import { ContractTypeFR, ContractTypeList } from '../helpers/contractType';
 import moment from 'moment';
@@ -40,7 +41,9 @@ function EmployeeAddDialog(props) {
     const handleChange = name => event => {
         var value;
         if(name === 'workStart' || name === 'workEnd'){
-            value = moment(event).format("YYYY-MM-DD");
+            value = moment(event).isValid()
+                    ? moment(event).format('YYYY-MM-DD')
+                    : null   
         }else{
             value = event.target.value;
         } 
@@ -119,7 +122,7 @@ function EmployeeAddDialog(props) {
                             )}
                         </Select>
                     </FormControl>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
                         <KeyboardDatePicker
                             required={true}
                             margin="normal"

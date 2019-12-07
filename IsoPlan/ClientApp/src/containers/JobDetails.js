@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { fr } from 'date-fns/locale'
 import { DevisStatusFR, DevisStatusList, DevisStatus } from '../helpers/devisStatus';
 import { JobStatusFR, JobStatusList, JobStatus } from '../helpers/jobStatus';
 import Files from '../components/Files';
@@ -259,7 +260,7 @@ function JobDetails() {
                 <Grid item xs={12} md={5}>
                     <Paper className={classes.paper}>
                         <form autoComplete="off" onSubmit={handleSubmit} className={classes.container}>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
                                 <TextField
                                     autoFocus
                                     label='Client'

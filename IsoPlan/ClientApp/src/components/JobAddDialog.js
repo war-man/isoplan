@@ -7,6 +7,7 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { fr } from 'date-fns/locale'
 import { DevisStatusFR, DevisStatusList } from '../helpers/devisStatus';
 import { JobStatusFR, JobStatusList } from '../helpers/jobStatus';
 import moment from 'moment';
@@ -52,7 +53,9 @@ function JobAddDialog(props) {
     const handleChange = name => event => {
         var value;
         if (name === 'devisDate' || name === 'startDate' || name === 'endDate' || name === 'rgDate') {
-            value = moment(event).format("YYYY-MM-DD");
+            value = moment(event).isValid()
+                    ? moment(event).format('YYYY-MM-DD')
+                    : null   
         } else if (name === 'rgCollected') {
             value = event.target.checked;
         }
@@ -76,7 +79,7 @@ function JobAddDialog(props) {
                 </IconButton>
             </DialogTitle>
             <form autoComplete="off" onSubmit={handleSubmit}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
                     <DialogContent className={classes.container} >
                         <TextField
                             autoFocus
@@ -132,7 +135,7 @@ function JobAddDialog(props) {
                                 )}
                             </Select>
                         </FormControl>
-                        <KeyboardDatePicker
+                        <KeyboardDatePicker                            
                             margin="normal"
                             label="Date devis"
                             format="dd.MM.yyyy"

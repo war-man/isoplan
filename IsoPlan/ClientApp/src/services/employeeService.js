@@ -20,13 +20,14 @@ function get(id) {
     return fetch(`${process.env.REACT_APP_API_URL}api/Employees/${id}`, requestOptions).then(handleResponse)     
 }
 
-function getAll() {
+function getAll(status) {
+    var statusParam = status === undefined ? '' : `status=${status}`
     const requestOptions =
     {
         method: 'GET',
         headers: authHeader()
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/Employees`, requestOptions).then(handleResponse)     
+    return fetch(`${process.env.REACT_APP_API_URL}api/Employees?${statusParam}`, requestOptions).then(handleResponse)     
 }
 
 function create(employee) {

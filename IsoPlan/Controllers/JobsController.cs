@@ -37,9 +37,9 @@ namespace IsoPlan.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(string status)
         {
-            IEnumerable<JobDTO> jobDtos = _mapper.Map<List<JobDTO>>(_jobService.GetAll());
+            IEnumerable<JobDTO> jobDtos = _mapper.Map<List<JobDTO>>(_jobService.GetAll(status));
             return Ok(jobDtos);
         }
 
