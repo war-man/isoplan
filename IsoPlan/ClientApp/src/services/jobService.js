@@ -3,6 +3,7 @@ import { authHeader, handleResponse } from '../helpers/authentication'
 export const jobService = {
     get,
     getAll,
+    getBySchedules,
     create,
     update,
     deleteJob,
@@ -23,14 +24,28 @@ function get(id) {
     return fetch(`${process.env.REACT_APP_API_URL}api/Jobs/${id}`, requestOptions).then(handleResponse)     
 }
 
-function getAll(status) {
-    var statusParam = status === undefined ? '' : `status=${status}`
+function getAll(params) {
+    var paramArray = params === undefined ? [] : params
+    var paramString = '?'
+    paramArray.forEach(p => paramString = (p.value !== null && p.value !== undefined) ? paramString.concat(`${p.name}=${p.value}&`) : paramString );
     const requestOptions =
     {
         method: 'GET',
         headers: authHeader()
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/Jobs?${statusParam}`, requestOptions).then(handleResponse)     
+    return fetch(`${process.env.REACT_APP_API_URL}api/Jobs${paramString}`, requestOptions).then(handleResponse)     
+}
+
+function getBySchedules(params) {
+    var paramArray = params === undefined ? [] : params
+    var paramString = '?'
+    paramArray.forEach(p => paramString = (p.value !== null && p.value !== undefined) ? paramString.concat(`${p.name}=${p.value}&`) : paramString );
+    const requestOptions =
+    {
+        method: 'GET',
+        headers: authHeader()
+    };
+    return fetch(`${process.env.REACT_APP_API_URL}api/Jobs/bySchedules${paramString}`, requestOptions).then(handleResponse)     
 }
 
 function create(job) {

@@ -1,6 +1,5 @@
 ﻿using IsoPlan.Exceptions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Net;

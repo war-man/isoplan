@@ -71,7 +71,7 @@ function UserAddDialog(props) {
                         margin="normal"
                     />
                     <TextField
-                        label="Username"
+                        label="Nom d'utilisateur"
                         required
                         defaultValue={userToAdd.username}
                         className={classes.textField}

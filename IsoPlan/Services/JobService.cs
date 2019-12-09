@@ -3,6 +3,7 @@ using IsoPlan.Data.Entities;
 using IsoPlan.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,7 +12,8 @@ namespace IsoPlan.Services
 {
     public interface IJobService
     {
-        IEnumerable<Job> GetAll(string status);
+        IEnumerable<Job> GetAll(string status, string startDate, string endDate);
+        IEnumerable<Job> GetbySchedules(DateTime startDate);
         Job GetById(int id);
         void Create(Job job);
         void Update(Job job);
@@ -34,10 +36,14 @@ namespace IsoPlan.Services
             _context = context;
             _env = env;
         }
-        public IEnumerable<Job> GetAll(string status)
+        public IEnumerable<Job> GetAll(string status, string startDate, string endDate)
         {
             return _context.Jobs
-                .Where(j => string.IsNullOrWhiteSpace(status) || j.Status.Equals(status))
+                .Where(j => (string.IsNullOrWhiteSpace(status) || j.Status.Equals(status)) &&
+                            (string.IsNullOrWhiteSpace(startDate) || j.StartDate >= DateTime.Parse(startDate)) &&
+                            (string.IsNullOrWhiteSpace(endDate) || j.StartDate < DateTime.Parse(endDate)))
+                .OrderBy(j => j.ClientName)
+                .ThenBy(j => j.Name)
                 .ToList();
         }
 
@@ -259,6 +265,19 @@ namespace IsoPlan.Services
             }
 
             return files;
+        }
+
+        public IEnumerable<Job> GetbySchedules(DateTime startDate)
+        {
+            return _context.Schedules
+                .Include(s => s.Job)
+                .Where(s => s.Date >= startDate && s.Date < startDate.AddMonths(1))
+                .AsEnumerable()
+                .GroupBy(s => s.Job)
+                .Select(group => group.Key)
+                .OrderBy(j => j.ClientName)
+                .ThenBy(j => j.Name)
+                .ToList();
         }
     }
 }

@@ -8,12 +8,21 @@ import { Role, AllRoles, RoleFR } from '../helpers/role';
 import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog';
 import { getCurrentUser } from '../helpers/authentication';
 import { Localization } from '../helpers/localization';
+import { Snackbar, makeStyles } from '@material-ui/core';
+import CustomSnackbarContent from '../components/CustomSnackbarContent';
+
+const useStyles = makeStyles(theme => ({
+    snackbar: {
+        margin: theme.spacing(1),
+    }
+}));
 
 function Users() {
+    const classes = useStyles();
     const columns = [
         { title: 'Prénom', field: 'firstName' },
         { title: 'Nom', field: 'lastName' },
-        { title: 'Username', field: 'username' },
+        { title: "Nom d'utilisateur", field: 'username' },
         {
             title: 'Rôle',
             field: 'role',
@@ -72,7 +81,9 @@ function Users() {
                 getUsers()
             })
             .catch(err => {
-                alert(err)
+                setVariant('error');
+                setMessage(err);
+                setOpenSnackbar(true);
             })
     }
     const handleCloseAdd = () => {
@@ -95,7 +106,9 @@ function Users() {
                 getUsers()
             })
             .catch(err => {
-                alert(err)
+                setVariant('error');
+                setMessage(err);
+                setOpenSnackbar(true);
             })
     }
     const handleDeleteUser = () => {
@@ -105,7 +118,9 @@ function Users() {
                 getUsers()
             })
             .catch(err => {
-                alert(err)
+                setVariant('error');
+                setMessage(err);
+                setOpenSnackbar(true);
             })
     }
     const handleCloseEdit = () => {
@@ -125,7 +140,9 @@ function Users() {
                 setLoading(false)
             })
             .catch(err => {
-                alert(err)
+                setVariant('error');
+                setMessage(err);
+                setOpenSnackbar(true);
             })
     }
 
@@ -135,6 +152,16 @@ function Users() {
     }, [])
 
     const [loading, setLoading] = useState(false)
+
+    const [variant, setVariant] = useState('success');
+    const [message, setMessage] = useState('');
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackbar(false);
+    };
 
     return (
         <Dashboard>
@@ -170,6 +197,22 @@ function Users() {
                 handleDelete={handleDeleteUser}
                 text={'Confirmer la suppression de usager?'}
             />
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+                open={openSnackbar}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+            >
+                <CustomSnackbarContent
+                    onClose={handleCloseSnackbar}
+                    variant={variant}
+                    className={classes.snackbar}
+                    message={message}
+                />
+            </Snackbar>
         </Dashboard>
     )
 }

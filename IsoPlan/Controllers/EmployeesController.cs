@@ -43,6 +43,14 @@ namespace IsoPlan.Controllers
             return Ok(employeeDtos);
         }
 
+        [HttpGet("bySchedules")]
+        public IActionResult GetbySchedules(string startDate)
+        {
+            IEnumerable<EmployeeDTO> employeeDtos =
+                _mapper.Map<List<EmployeeDTO>>(_employeeService.GetbySchedules(DateTime.Parse(startDate)));
+            return Ok(employeeDtos);
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {

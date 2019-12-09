@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using IsoPlan.Data.DTOs;
 using IsoPlan.Data.Entities;
 using IsoPlan.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace IsoPlan.Controllers
 {
@@ -18,11 +15,30 @@ namespace IsoPlan.Controllers
         private readonly IScheduleService _scheduleService;
         private readonly IMapper _mapper;
         public SchedulesController(
-            IScheduleService scheduleService, 
+            IScheduleService scheduleService,
             IMapper mapper)
         {
             _scheduleService = scheduleService;
             _mapper = mapper;
+        }
+
+
+        [HttpGet("total")]
+        public IActionResult GetTotalPerEmployee(string date)
+        {
+            return Ok(_scheduleService.GetTotalPerEmployee(DateTime.Parse(date)));
+        }
+
+        [HttpGet("employee/{id}")]
+        public IActionResult GetJobsPerEmployee(int id, string date)
+        {
+            return Ok(_scheduleService.GetJobsPerEmployee(id, DateTime.Parse(date)));
+        }
+
+        [HttpGet("job/{id}")]
+        public IActionResult GetEmployeesPerJob(int id, string date)
+        {
+            return Ok(_scheduleService.GetEmployeesPerJob(id, DateTime.Parse(date)));
         }
 
         [HttpGet]

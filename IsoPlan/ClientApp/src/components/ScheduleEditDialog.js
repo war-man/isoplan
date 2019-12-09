@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
-import { TextField, DialogTitle, DialogContent, DialogActions, Button, makeStyles, IconButton, InputAdornment } from '@material-ui/core';
+import { TextField, DialogTitle, DialogContent, DialogActions, Button, makeStyles, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import moment from 'moment';
 import 'moment/locale/fr'
@@ -92,15 +92,16 @@ function ScheduleEditDialog(props) {
                         }}
                     />
                     <TextField
-                        label='Salaire'
+                        label='Salaire (€)'
                         type='number'
-                        inputProps={{ min: 0, step: 0.01 }}
+                        required
                         defaultValue={scheduleToEdit.salary}
                         className={classes.textField}
                         onBlur={handleChange('salary')}
                         margin="normal"
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">€</InputAdornment>
+                        inputProps={{
+                            min: '0', 
+                            step: '0.01',                            
                         }}
                     />
                     <TextField

@@ -18,6 +18,7 @@ import moment from 'moment';
 import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog';
 import { Localization } from '../helpers/localization';
 
+
 const useStyles = makeStyles(theme => ({
     paper: {
         padding: theme.spacing(1),
@@ -55,6 +56,9 @@ const useStyles = makeStyles(theme => ({
     },
     totalRow: {
         fontWeight: 'bold',
+    },
+    button: {
+        marginRight: '8px'
     }
 }));
 
@@ -87,9 +91,7 @@ function JobDetails() {
                 setOpenSnackbar(true);
                 getJob(id);
             })
-            .catch(err => {
-                alert(err);
-            })
+            .catch(err => alert(err))
     }
 
     const columns = [
@@ -193,43 +195,29 @@ function JobDetails() {
                 setJob({ ...res })
                 setLoading(false)
             })
-            .catch(err => {
-                alert(err)
-            })
+            .catch(err => alert(err))
     }
 
     const [files, setFiles] = useState([])
     const getFiles = id => {
         jobService.getFiles(id)
-            .then(res => {
-                setFiles(res)
-            })
-            .catch(err => {
-                alert(err)
-            })
+            .then(res => setFiles(res))
+            .catch(err => alert(err))
     }
     const uploadFile = id => formData => {
         if (formData.get('file') === 'undefined') {
             return
         }
         jobService.uploadFile(id, formData)
-            .then(() => {
-                getFiles(id)
-            })
-            .catch(err => {
-                alert(err)
-            })
+            .then(() => getFiles(id))
+            .catch(err => alert(err))
     }
     const [deleteId, setDeleteId] = useState(0)
     const deleteFile = () => {
         setConfirmOpen(false);
         jobService.deleteFile(deleteId)
-            .then(() => {
-                getFiles(id)
-            })
-            .catch(err => {
-                alert(err)
-            })
+            .then(() => getFiles(id))
+            .catch(err => alert(err))
     }
 
     useEffect(() => {
@@ -381,9 +369,12 @@ function JobDetails() {
                                 />
                             </MuiPickersUtilsProvider>
                             <div className={classes.actions}>
+                                <Button variant="contained" color="primary" className={classes.button} onClick={() => getJob(id)}>
+                                    Annuler
+                                </Button>
                                 <Button variant="contained" type="submit" color="primary">
                                     Enregistrer
-                            </Button>
+                                </Button>
                             </div>
                         </form>
                     </Paper>

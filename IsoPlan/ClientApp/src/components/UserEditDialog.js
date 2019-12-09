@@ -70,7 +70,7 @@ function UserEditDialog(props) {
                         margin="normal"
                     />
                     <TextField
-                        label="Username"
+                        label="Nom d'utilisateur"
                         required
                         defaultValue={userToEdit.username}
                         className={classes.textField}

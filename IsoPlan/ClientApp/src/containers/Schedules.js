@@ -160,10 +160,16 @@ function Schedules() {
                 setLoading(false);
             })
             .catch(err => alert(err))
-        employeeService.getAll(EmployeeStatus.Active)
+        employeeService.getAll([{
+            name: 'status',
+            value: EmployeeStatus.Active
+        }])
             .then(res => setEmployees(res))
             .catch(err => alert(err))
-        jobService.getAll(JobStatus.Started)
+        jobService.getAll([{
+            name: 'status',
+            value: JobStatus.Started
+        }])
             .then(res => setJobs(res))
             .catch(err => alert(err))
     }

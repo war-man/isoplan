@@ -41,6 +41,9 @@ const useStyles = makeStyles(theme => ({
     snackbar: {
         margin: theme.spacing(1),
     },
+    button: {
+        marginRight: '8px'
+    }
 }));
 
 function EmployeeDetails() {
@@ -181,7 +184,7 @@ function EmployeeDetails() {
                                 </Select>
                             </FormControl>
                             <TextField
-                                label='Per diem'
+                                label='Per diem (€)'
                                 required
                                 type='number'
                                 inputProps={{ min: 0, step: 0.01 }}
@@ -249,6 +252,9 @@ function EmployeeDetails() {
                             />
                             <div className={classes.textField}></div>
                             <div className={classes.actions}>
+                                <Button variant="contained" color="primary" className={classes.button} onClick={() => getEmployee(id)}>
+                                    Annuler
+                                </Button>
                                 <Button variant="contained" type="submit" color="primary">
                                     Enregistrer
                                 </Button>

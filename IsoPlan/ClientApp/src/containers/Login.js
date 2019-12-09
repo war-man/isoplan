@@ -103,7 +103,7 @@ function Login() {
                     horizontal: 'center',
                 }}
                 open={open}
-                autoHideDuration={6000}
+                autoHideDuration={3000}
                 onClose={handleClose}
             >
                 <CustomSnackbarContent
@@ -128,7 +128,7 @@ function Login() {
                             margin="normal"
                             required
                             fullWidth
-                            label="Username"
+                            label="Nom d'utilisateur"
                             name="username"
                             autoComplete="username"
                             autoFocus

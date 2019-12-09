@@ -4,7 +4,10 @@ export const scheduleService = {
     getAll,
     create,
     update,
-    deleteSchedule
+    deleteSchedule,
+    getTotal,
+    getJobsPerEmployee,
+    getEmployeesPerJob
 }
 
 function getAll(date) {
@@ -55,4 +58,31 @@ function deleteSchedule(schedule) {
         body: JSON.stringify(schedule)
     };
     return fetch(`${process.env.REACT_APP_API_URL}api/Schedules`, requestOptions).then(handleResponse)        
+}
+
+function getTotal(date) {
+    const requestOptions =
+    {
+        method: 'GET',
+        headers: authHeader()
+    };
+    return fetch(`${process.env.REACT_APP_API_URL}api/Schedules/total?date=${date}`, requestOptions).then(handleResponse)
+}
+
+function getJobsPerEmployee(id, date) {
+    const requestOptions =
+    {
+        method: 'GET',
+        headers: authHeader()
+    };
+    return fetch(`${process.env.REACT_APP_API_URL}api/Schedules/employee/${id}?date=${date}`, requestOptions).then(handleResponse)
+}
+
+function getEmployeesPerJob(id, date) {
+    const requestOptions =
+    {
+        method: 'GET',
+        headers: authHeader()
+    };
+    return fetch(`${process.env.REACT_APP_API_URL}api/Schedules/job/${id}?date=${date}`, requestOptions).then(handleResponse)
 }

@@ -1,5 +1,4 @@
 ﻿using IsoPlan.Data.Entities;
-using IsoPlan.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace IsoPlan.Data
@@ -28,21 +27,6 @@ namespace IsoPlan.Data
             modelBuilder.Entity<User>().HasAlternateKey(u => u.Username).HasName("AlternateKey_Username");
 
             modelBuilder.Entity<Schedule>().HasKey(s => new { s.JobId, s.EmployeeId, s.Date });
-
-            Hash.CreatePasswordHash("milan", out byte[] passwordHash, out byte[] passwordSalt);
-
-            modelBuilder.Entity<User>().HasData(
-                new User
-                {
-                    Id = 1,
-                    FirstName = "Milan",
-                    LastName = "Milovanovic",
-                    Role = "Admin",
-                    Username = "milan",
-                    PasswordHash = passwordHash,
-                    PasswordSalt = passwordSalt
-                }
-            );
         }
 
         public DbSet<User> Users { get; set; }

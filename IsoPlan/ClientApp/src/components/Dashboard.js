@@ -59,6 +59,9 @@ const useStyles = makeStyles(theme => ({
     title: {
         flexGrow: 1,
     },
+    userFullname:{
+        marginRight: '16px',
+    },
     drawerPaper: {
         position: 'relative',
         whiteSpace: 'nowrap',
@@ -75,9 +78,6 @@ const useStyles = makeStyles(theme => ({
             duration: theme.transitions.duration.leavingScreen,
         }),
         width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-            width: theme.spacing(9),
-        },
     },
     appBarSpacer: theme.mixins.toolbar,
     content: {
@@ -131,6 +131,9 @@ export default function Dashboard(props) {
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         Isoplast Planner
                     </Typography>
+                    <Typography variant="body1" color="inherit" noWrap className={classes.userFullname}>
+                        {`${user.firstName} ${user.lastName}`}
+                    </Typography>                    
                     <IconButton 
                         edge="start"
                         className={classes.logoutButton}                        

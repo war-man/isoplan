@@ -37,9 +37,17 @@ namespace IsoPlan.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(string status)
+        public IActionResult Get(string status, string startDate, string endDate)
         {
-            IEnumerable<JobDTO> jobDtos = _mapper.Map<List<JobDTO>>(_jobService.GetAll(status));
+            IEnumerable<JobDTO> jobDtos = _mapper.Map<List<JobDTO>>(_jobService.GetAll(status, startDate, endDate));
+            return Ok(jobDtos);
+        }
+
+        [HttpGet("bySchedules")]
+        public IActionResult GetbySchedules(string startDate)
+        {
+            IEnumerable<JobDTO> jobDtos =
+                _mapper.Map<List<JobDTO>>(_jobService.GetbySchedules(DateTime.Parse(startDate)));
             return Ok(jobDtos);
         }
 

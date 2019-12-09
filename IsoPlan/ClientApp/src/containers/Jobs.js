@@ -9,13 +9,34 @@ import JobAddDialog from '../components/JobAddDialog';
 import { DevisStatus, DevisStatusFR } from '../helpers/devisStatus';
 import { JobStatus, JobStatusFR } from '../helpers/jobStatus';
 import { Localization } from '../helpers/localization';
+import { Paper, makeStyles, Typography } from '@material-ui/core';
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from '@date-io/date-fns';
+import { fr } from 'date-fns/locale';
+
+const useStyles = makeStyles(theme => ({
+    toolbarTop: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        margin: `0px 0px ${theme.spacing(1)}px`,
+        padding: theme.spacing(2)
+    },
+    toolbarText: {
+        fontWeight: 'bold'
+    },
+    datePicker: {
+        width: '150px'
+    }
+}));
 
 function Jobs() {
+    const classes = useStyles();
     const columns = [
         { title: 'Date devis', field: 'devisDate', render: rowData => { return rowData.devisDate && <div>{moment(rowData.devisDate).format('DD.MM.YYYY.')}</div> } },
-        { 
-            title: 'Devis statut', 
-            field: 'devisStatus', 
+        {
+            title: 'Devis statut',
+            field: 'devisStatus',
             render: rowData => <div>{DevisStatusFR[rowData.devisStatus]}</div>,
             customFilterAndSearch: (term, rowData) => DevisStatusFR[rowData.devisStatus].toUpperCase().includes(term.toUpperCase())
         },
@@ -23,9 +44,9 @@ function Jobs() {
         { title: 'Affaire', field: 'name', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
         { title: 'Début', field: 'startDate', render: rowData => { return rowData.startDate && <div>{moment(rowData.startDate).format('DD.MM.YYYY.')}</div> } },
         { title: 'Fin', field: 'endDate', render: rowData => { return rowData.endDate && <div>{moment(rowData.endDate).format('DD.MM.YYYY.')}</div> } },
-        { 
-            title: 'Statut', 
-            field: 'status', 
+        {
+            title: 'Statut',
+            field: 'status',
             render: rowData => <div>{JobStatusFR[rowData.status]}</div>,
             customFilterAndSearch: (term, rowData) => JobStatusFR[rowData.status].toUpperCase().includes(term.toUpperCase())
         },
@@ -40,11 +61,11 @@ function Jobs() {
         pageSizeOptions: [],
         paging: false,
         rowStyle: (rowData) => {
-            if(rowData.rgCollected === false && moment(rowData.rgDate).isValid() && moment(rowData.rgDate).isBefore(moment(new Date()))){
+            if (rowData.rgCollected === false && moment(rowData.rgDate).isValid() && moment(rowData.rgDate).isBefore(moment(new Date()))) {
                 return {
-                    backgroundColor: '#FF9800',
+                    backgroundColor: '#FFA726',
                 }
-            }            
+            }
         }
     }
     const actions = [
@@ -93,9 +114,7 @@ function Jobs() {
                 handleCloseAdd();
                 getJobs();
             })
-            .catch(err => {
-                alert(err);
-            })
+            .catch(err => alert(err))
     }
     const [openAdd, setOpenAdd] = useState(false)
     const handleCloseAdd = () => {
@@ -126,26 +145,33 @@ function Jobs() {
                 handleConfirmClose()
                 getJobs()
             })
-            .catch(err => {
-                alert(err)
-            })
+            .catch(err => alert(err))
     }
 
     const [data, setData] = useState([])
-    const getJobs = () => {
-        jobService.getAll()
+    const getJobs = (params) => {
+        setLoading(true)
+        jobService.getAll(params)
             .then(res => {
                 setData(res)
                 setLoading(false)
             })
-            .catch(err => {
-                alert(err)
-            })
+            .catch(err => alert(err))
     }
     useEffect(() => {
-        setLoading(true)
         getJobs()
     }, [])
+
+    useEffect(() => {
+        const recalculate = () => {
+            setTotal({
+                buy: data.map(x => x.totalBuy).reduce((a, b) => a + b, 0),
+                sell: data.map(x => x.totalSell).reduce((a, b) => a + b, 0),
+                profit: data.map(x => x.totalProfit).reduce((a, b) => a + b, 0),
+            })
+        }
+        recalculate()
+    }, [data])
 
     const [loading, setLoading] = useState(false)
 
@@ -158,9 +184,46 @@ function Jobs() {
         }
     }
 
+    const [date, setDate] = useState(null)
+    const [total, setTotal] = useState({
+        buy: 0,
+        sell: 0,
+        profit: 0
+    })
+
+    const handleDateChange = (date) => {
+        if(!moment(date).isValid()){            
+            getJobs();
+            setDate(null);
+        } else{
+            getJobs([{
+                name: 'startDate',
+                value: moment(date).format('01-MM-YYYY')
+            }]);
+            setDate(date);
+        }        
+    }
+
     return (
         <Dashboard maxWidth={false}>
             {renderRedirect()}
+            <Paper className={classes.toolbarTop}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
+                    <DatePicker
+                        clearable
+                        clearLabel='Supprimer'
+                        cancelLabel="Annuler"
+                        views={["month", "year"]}
+                        label="Début après:"
+                        className={classes.datePicker}
+                        value={date}
+                        onChange={(date) => handleDateChange(date)}
+                    />
+                </MuiPickersUtilsProvider>
+                <Typography className={classes.toolbarText}>
+                    {`Achat total: ${total.buy}€ | Vente total: ${total.sell}€ | Marge total: ${total.profit}€`}
+                </Typography>
+            </Paper>
             <MaterialTable
                 columns={columns}
                 data={data}

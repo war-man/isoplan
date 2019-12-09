@@ -7,7 +7,6 @@ using IsoPlan.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -119,14 +118,14 @@ namespace IsoPlan
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IJobService, JobService>();
             services.AddScoped<ICustomAuthService, CustomAuthService>();
-            services.AddScoped<IScheduleService, ScheduleService>();    
+            services.AddScoped<IScheduleService, ScheduleService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IUserService userService)
         {
             //check for super_admin
-            if(userService.GetByUsername("super_admin") == null)
+            if (userService.GetByUsername("super_admin") == null)
             {
                 userService.Create(new User
                 {
@@ -183,7 +182,7 @@ namespace IsoPlan
                     //spa.UseReactDevelopmentServer(npmScript: "start");
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
                 }
-            });          
+            });
         }
     }
 }

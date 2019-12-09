@@ -79,7 +79,7 @@ namespace IsoPlan.Services
 
             if (_context.Users.Any(x => x.Username == user.Username))
             {
-                throw new AppException("Username \"" + user.Username + "\" is already taken");
+                throw new AppException("Le nom d'utilisateur \"" + user.Username + "\" est pris");
             }
 
             byte[] passwordHash, passwordSalt;
@@ -105,7 +105,7 @@ namespace IsoPlan.Services
 
             if (user.Username == "super_admin")
             {
-                throw new AppException("Can't update super admin");
+                throw new AppException("Impossible de mettre à jour le super admin");
             }
 
             if (!ValidateUserData(userParam))
@@ -118,7 +118,7 @@ namespace IsoPlan.Services
                 // username has changed so check if the new username is already taken
                 if (_context.Users.Any(x => x.Username == userParam.Username))
                 {
-                    throw new AppException("Username " + userParam.Username + " is already taken");
+                    throw new AppException("Le nom d'utilisateur \"" + userParam.Username + "\" est pris");
                 }
             }
 
@@ -146,7 +146,7 @@ namespace IsoPlan.Services
         {
             if (id == _customAuthService.GetIdFromToken(jwt))
             {
-                throw new AppException("Can't delete logged in admin");
+                throw new AppException("Impossible de supprimer l'administrateur connecté");
             }
             var user = _context.Users.Find(id);
 
@@ -157,8 +157,8 @@ namespace IsoPlan.Services
 
             if (user.Username == "super_admin")
             {
-                throw new AppException("Can't delete super admin");
-            }      
+                throw new AppException("Impossible de supprimer le super admin");
+            }
 
             _context.Users.Remove(user);
             _context.SaveChanges();

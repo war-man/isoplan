@@ -30,7 +30,7 @@ namespace IsoPlan.Helpers
 
             // schedule mapping
             CreateMap<Schedule, ScheduleDTO>()
-                .ForMember(dest => dest.EmployeeName, 
+                .ForMember(dest => dest.EmployeeName,
                            opts => opts.MapFrom(src => src.Employee.FirstName + " " + src.Employee.LastName));
             CreateMap<ScheduleDTO, Schedule>();
         }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import Login from './Login';
-import Home from './Home';
+import Analysis from './Analysis';
 import { PrivateRoute } from './PrivateRoute';
 import Users from './Users';
 import Jobs from './Jobs';
@@ -32,7 +32,7 @@ function App() {
                 <PrivateRoute exact path="/personnel/" component={Employees} roles={['Admin', 'Manager']} />
                 <PrivateRoute exact path="/personnel/:id" component={EmployeeDetails} roles={['Admin', 'Manager']} />
                 <PrivateRoute exact path="/usagers/" component={Users} roles={['Admin']} />
-                <PrivateRoute exact path="/" component={Home} roles={['Admin', 'Manager']} />
+                <PrivateRoute exact path="/" component={Analysis} roles={['Admin', 'Manager']} />
             </div>
         </ThemeProvider>
     );

@@ -3,6 +3,7 @@ import { authHeader, handleResponse } from '../helpers/authentication'
 export const employeeService = {
     get,
     getAll,
+    getBySchedules,
     create,
     update,
     deleteEmployee,
@@ -20,14 +21,29 @@ function get(id) {
     return fetch(`${process.env.REACT_APP_API_URL}api/Employees/${id}`, requestOptions).then(handleResponse)     
 }
 
-function getAll(status) {
-    var statusParam = status === undefined ? '' : `status=${status}`
+function getAll(params) {
+    var paramArray = params === undefined ? [] : params
+    var paramString = '?'
+    paramArray.forEach(p => paramString = paramString.concat(`${p.name}=${p.value}&`) );
     const requestOptions =
     {
         method: 'GET',
         headers: authHeader()
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/Employees?${statusParam}`, requestOptions).then(handleResponse)     
+    return fetch(`${process.env.REACT_APP_API_URL}api/Employees${paramString}`, requestOptions).then(handleResponse)     
+}
+
+
+function getBySchedules(params) {
+    var paramArray = params === undefined ? [] : params
+    var paramString = '?'
+    paramArray.forEach(p => paramString = (p.value !== null && p.value !== undefined) ? paramString.concat(`${p.name}=${p.value}&`) : paramString );
+    const requestOptions =
+    {
+        method: 'GET',
+        headers: authHeader()
+    };
+    return fetch(`${process.env.REACT_APP_API_URL}api/Employees/bySchedules${paramString}`, requestOptions).then(handleResponse)     
 }
 
 function create(employee) {

@@ -3,6 +3,7 @@ using IsoPlan.Data.Entities;
 using IsoPlan.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace IsoPlan.Services
     public interface IEmployeeService
     {
         IEnumerable<Employee> GetAll(string status);
+        IEnumerable<Employee> GetbySchedules(DateTime startDate);
         Employee GetById(int id);
         void Create(Employee employee);
         void CreateFile(EmployeeFile employeeFile);
@@ -36,6 +38,8 @@ namespace IsoPlan.Services
         {
             return _context.Employees
                 .Where(e => string.IsNullOrWhiteSpace(status) || e.Status.Equals(status))
+                .OrderBy(e => e.FirstName)
+                .ThenBy(e => e.LastName)
                 .ToList();
         }
 
@@ -159,6 +163,19 @@ namespace IsoPlan.Services
                 (employee.WorkStart != null) &&
                 EmployeeStatus.EmployeeStatusList.Contains(employee.Status)
             );
+        }
+
+        public IEnumerable<Employee> GetbySchedules(DateTime startDate)
+        {
+            return _context.Schedules
+                .Include(s => s.Employee)
+                .Where(s => s.Date >= startDate && s.Date < startDate.AddMonths(1))
+                .AsEnumerable()
+                .GroupBy(s => s.Employee)
+                .Select(group => group.Key)
+                .OrderBy(e => e.FirstName)
+                .ThenBy(e => e.LastName)
+                .ToList();
         }
     }
 }
