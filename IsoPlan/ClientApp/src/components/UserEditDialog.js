@@ -103,7 +103,7 @@ function UserEditDialog(props) {
                 </DialogContent>
                 <DialogActions className={classes.actions}>                
                     <Button variant="contained" type="submit" color="primary">
-                        Save
+                        Enregistrer
                     </Button>
                 </DialogActions>
             </form>

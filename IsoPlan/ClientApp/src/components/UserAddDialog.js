@@ -45,8 +45,8 @@ function UserAddDialog(props) {
 
     return (
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>                
-                Add new user           
+            <DialogTitle>
+                Ajouter un usager          
                 <IconButton className={classes.closeButton} onClick={handleClose}>
                     <CloseIcon />
                 </IconButton>
@@ -103,7 +103,7 @@ function UserAddDialog(props) {
                 </DialogContent>
                 <DialogActions className={classes.actions}>
                     <Button variant="contained" type="submit" color="primary">
-                        Add
+                        Ajouter
                     </Button>
                 </DialogActions>
             </form>

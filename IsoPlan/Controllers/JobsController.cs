@@ -140,7 +140,7 @@ namespace IsoPlan.Controllers
 
             string path = Path.Combine(guid + "_" + file.FileName);
 
-            string fullPath = Path.Combine(root, "..\\Files\\" + path);
+            string fullPath = Path.Combine(root, "..\\..\\Files\\" + path);
 
             if (file.Length > 0)
             {
@@ -184,7 +184,7 @@ namespace IsoPlan.Controllers
 
             string webRootPath = _env.WebRootPath;
 
-            string fullPath = Path.Combine(webRootPath, "..\\Files\\" + filePath);
+            string fullPath = Path.Combine(webRootPath, "..\\..\\Files\\" + filePath);
 
             var provider = new FileExtensionContentTypeProvider();
             string contentType;

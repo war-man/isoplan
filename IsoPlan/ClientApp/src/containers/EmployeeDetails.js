@@ -104,12 +104,8 @@ function EmployeeDetails() {
     const [files, setFiles] = useState([])
     const getFiles = id => {
         employeeService.getFiles(id)
-            .then(res => {
-                setFiles(res)
-            })
-            .catch(err => {
-                alert(err)
-            })
+            .then(res => setFiles(res))
+            .catch(err => alert(err))
     }
     const uploadFile = id => formData => {
         if (formData.get('file') === 'undefined') {
@@ -156,7 +152,6 @@ function EmployeeDetails() {
                     <Paper className={classes.paper}>
                         <form autoComplete="off" onSubmit={handleSubmit} className={classes.container}>
                             <TextField
-                                autoFocus
                                 label='Prénom'
                                 required
                                 value={employee.firstName}

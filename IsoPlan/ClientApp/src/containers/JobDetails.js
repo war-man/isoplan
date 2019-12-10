@@ -251,7 +251,6 @@ function JobDetails() {
                         <form autoComplete="off" onSubmit={handleSubmit} className={classes.container}>
                             <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
                                 <TextField
-                                    autoFocus
                                     label='Client'
                                     required
                                     value={job.clientName}

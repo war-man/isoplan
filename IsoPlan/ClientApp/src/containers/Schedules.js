@@ -18,6 +18,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import { fr } from 'date-fns/locale'
+import { Localization } from '../helpers/localization';
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -44,13 +45,13 @@ function Schedules() {
     const { date } = useParams();
     const classes = useStyles();
 
-    const parsedDate = (date !== undefined && moment(date, "DD-MM-YYYY").isValid()) ? moment(date, "DD-MM-YYYY") : moment(new Date())
+    const parsedDate = (date !== undefined && moment(date, "YYYY-MM-DD").isValid()) ? moment(date, "YYYY-MM-DD") : moment(new Date())
 
     const startOfWeek = parsedDate.startOf('isoWeek')
-    const startOfWeekString = startOfWeek.format("DD-MM-YYYY")
+    const startOfWeekString = startOfWeek.format("YYYY-MM-DD")
 
-    const nextStartOfWeekString = moment(startOfWeek).add(1, 'isoWeek').format("DD-MM-YYYY")
-    const prevStartOfWeekString = moment(startOfWeek).subtract(1, 'isoWeek').format("DD-MM-YYYY")
+    const nextStartOfWeekString = moment(startOfWeek).add(1, 'isoWeek').format("YYYY-MM-DD")
+    const prevStartOfWeekString = moment(startOfWeek).subtract(1, 'isoWeek').format("YYYY-MM-DD")
 
     const startOfWeekDisplay = startOfWeek.format('DD.MM.YYYY')
     const endOfWeekDisplay = moment(startOfWeek).add(5, 'days').format('DD.MM.YYYY')
@@ -194,7 +195,7 @@ function Schedules() {
 
     const renderRedirect = () => {
         if (selectedDate !== null) {
-            return <Redirect push to={`/planning/${moment(selectedDate).format("DD-MM-YYYY")}`} />
+            return <Redirect push to={`/planning/${moment(selectedDate).format("YYYY-MM-DD")}`} />
         }
     }
 
@@ -249,6 +250,7 @@ function Schedules() {
                 actions={actions}
                 title={`Planning: ${startOfWeekDisplay} - ${endOfWeekDisplay}`}
                 isLoading={loading}
+                localization={Localization}
             />
             <ScheduleAddDialog
                 open={openAdd}

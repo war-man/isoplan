@@ -77,7 +77,7 @@ namespace IsoPlan.Services
                 throw new AppException("File not found in database.");
             }
             string webRootPath = _env.WebRootPath;
-            string fullPath = Path.Combine(webRootPath, "..\\Files\\" + file.Path);
+            string fullPath = Path.Combine(webRootPath, "..\\..\\Files\\" + file.Path);
             File.Delete(fullPath);
             _context.EmployeeFiles.Remove(file);
             _context.SaveChanges();

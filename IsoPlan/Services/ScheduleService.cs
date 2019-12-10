@@ -63,8 +63,8 @@ namespace IsoPlan.Services
                     Date = date,
                     Salary = e.Salary
                 });
-            }            
-            _context.SaveChanges();            
+            }
+            _context.SaveChanges();
         }
 
         public Schedule GetById(int jobId, int employeeId, DateTime date)
