@@ -205,7 +205,7 @@ function Jobs() {
     }
 
     return (
-        <Dashboard maxWidth={false}>
+        <Dashboard maxWidth={false} title={'Travaux'}>
             {renderRedirect()}
             <Paper className={classes.toolbarTop}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>

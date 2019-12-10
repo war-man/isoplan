@@ -164,7 +164,7 @@ function Users() {
     };
 
     return (
-        <Dashboard>
+        <Dashboard title={'Usagers'}>
             <MaterialTable
                 columns={columns}
                 data={data}

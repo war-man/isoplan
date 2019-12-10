@@ -139,7 +139,7 @@ function Employees() {
     }
 
     return (
-        <Dashboard>
+        <Dashboard title={'Personnel'}>
             {renderRedirect()}
             <MaterialTable
                 columns={columns}

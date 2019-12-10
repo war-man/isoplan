@@ -106,7 +106,7 @@ export default function Dashboard(props) {
         setOpen(true);
     };
 
-    const { maxWidth } = props;
+    const { maxWidth, title } = props;
     
     const handleDrawerClose = () => {
         localStorage.setItem('openDrawer', 'false');
@@ -129,7 +129,7 @@ export default function Dashboard(props) {
                         <MenuIcon />
                     </IconButton>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        Isoplast Planner
+                        {title}
                     </Typography>
                     <Typography variant="body1" color="inherit" noWrap className={classes.userFullname}>
                         {`${user.firstName} ${user.lastName}`}

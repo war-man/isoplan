@@ -204,7 +204,7 @@ function Schedules() {
     }, [startOfWeekString])
 
     return (
-        <Dashboard>
+        <Dashboard title={'Planning'}>
             {renderRedirect()}
             <Paper className={classes.toolbarTop}>
                 <Button

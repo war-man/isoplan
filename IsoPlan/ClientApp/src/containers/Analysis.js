@@ -195,7 +195,7 @@ function Analysis() {
     }, [dateString, job.id])
 
     return (
-        <Dashboard>
+        <Dashboard title={'Analyse'}>
             <Grid container spacing={3} alignItems="flex-start">
                 <Grid item xs={12} md={6}>
                     <Paper className={classes.toolbarTop}>
