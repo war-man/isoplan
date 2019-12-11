@@ -139,7 +139,7 @@ function Login() {
                             required
                             fullWidth
                             name="password"
-                            label="Password"
+                            label="Mot de passe"
                             type="password"
                             id="password"
                             autoComplete="current-password"

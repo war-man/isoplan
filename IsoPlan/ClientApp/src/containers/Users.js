@@ -164,13 +164,13 @@ function Users() {
     };
 
     return (
-        <Dashboard title={'Usagers'}>
+        <Dashboard title={'Utilisateurs'}>
             <MaterialTable
                 columns={columns}
                 data={data}
                 options={options}
                 actions={actions}
-                title="Usagers"
+                title="Utilisateurs"
                 isLoading={loading}
                 localization={Localization}
             />

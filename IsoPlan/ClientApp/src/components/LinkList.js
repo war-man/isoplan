@@ -26,7 +26,7 @@ function LinkList(props) {
                 (user.role === "Admin" || user.role === "Manager") && <LinkListItem text="Personnel" icon={<PeopleIcon />} to='/personnel/'/>
             }
             {
-                user.role === "Admin" && <LinkListItem text="Usagers" icon={<AccountBoxIcon />} to='/usagers/'/>
+                user.role === "Admin" && <LinkListItem text="Utilisateurs" icon={<AccountBoxIcon />} to='/utilisateurs/'/>
             }           
         </List>
     )

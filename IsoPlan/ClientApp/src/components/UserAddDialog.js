@@ -46,7 +46,7 @@ function UserAddDialog(props) {
     return (
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>
-                Ajouter un usager          
+                Ajouter un utilisateur        
                 <IconButton className={classes.closeButton} onClick={handleClose}>
                     <CloseIcon />
                 </IconButton>
@@ -79,7 +79,7 @@ function UserAddDialog(props) {
                         margin="normal"
                     />
                     <TextField
-                        label="Password"
+                        label="Mot de passe"
                         type="password"
                         required
                         defaultValue={userToAdd.password}

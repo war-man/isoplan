@@ -31,7 +31,7 @@ function App() {
                 <PrivateRoute exact path="/travaux/:id" component={JobDetails} roles={['Admin', 'Manager']} />
                 <PrivateRoute exact path="/personnel/" component={Employees} roles={['Admin', 'Manager']} />
                 <PrivateRoute exact path="/personnel/:id" component={EmployeeDetails} roles={['Admin', 'Manager']} />
-                <PrivateRoute exact path="/usagers/" component={Users} roles={['Admin']} />
+                <PrivateRoute exact path="/utilisateurs/" component={Users} roles={['Admin']} />
                 <PrivateRoute exact path="/" component={Analysis} roles={['Admin', 'Manager']} />
             </div>
         </ThemeProvider>

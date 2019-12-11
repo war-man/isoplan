@@ -45,7 +45,7 @@ function UserEditDialog(props) {
     return (
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>
-                Details
+                Détails
                 <IconButton className={classes.closeButton} onClick={handleClose}>
                     <CloseIcon />
                 </IconButton>
@@ -78,7 +78,7 @@ function UserEditDialog(props) {
                         margin="normal"
                     />
                     <TextField
-                        label="Password"
+                        label="Mot de passe"
                         type="password"
                         defaultValue={userToEdit.password}
                         className={classes.textField}
