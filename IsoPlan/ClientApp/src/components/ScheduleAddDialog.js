@@ -65,7 +65,7 @@ function ScheduleAddDialog(props) {
     const handleCloseAdd = () => {
         setSchedule({
             date: null,
-            job: {id: 0, name: ''},
+            job: {id: 0, name: '', clientName: ''},
             employees: [],
         });
         handleClose();
@@ -73,7 +73,7 @@ function ScheduleAddDialog(props) {
 
     const [schedule, setSchedule] = useState({
         date: null,
-        job: {id: 0, name: ''},
+        job: {id: 0, name: '' , clientName: ''},
         employees: [],
     })
 
@@ -106,7 +106,7 @@ function ScheduleAddDialog(props) {
                     <Autocomplete 
                         className={classes.textField}
                         options={jobs}
-                        getOptionLabel={job => job.name}
+                        getOptionLabel={job => job.id === 0 ? '' : `${job.name} (${job.clientName})`}
                         onChange={handleChange('job')}
                         value={schedule.job}
                         renderInput={params => (

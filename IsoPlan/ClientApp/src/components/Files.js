@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Paper, makeStyles, List, ListSubheader, IconButton, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction } from '@material-ui/core';
+import { Grid, Paper, makeStyles, List, ListSubheader, IconButton, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, CircularProgress } from '@material-ui/core';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import DescriptionIcon from '@material-ui/icons/Description';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 function Files(props) {
     const classes = useStyles();
 
-    const { files, to, uploadFile, deleteFile } = props
+    const { files, to, uploadFile, deleteFile, isLoading } = props
 
     const handleFileSubmit = header => event => {
         var formData = new FormData();
@@ -55,7 +55,9 @@ function Files(props) {
         <Paper className={classes.paper}>
             <form>
                 <List dense={true}>
-                    {                                               
+                    {   isLoading ? 
+                        <CircularProgress />
+                        :                                            
                         files.map(({ header, items }, i) =>
                             <div key={i}>
                                 <ListSubheader component="div" className={classes.header}>

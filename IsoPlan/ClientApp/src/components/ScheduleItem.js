@@ -45,7 +45,7 @@ function ScheduleItem(props) {
             :
             <div>
                 <div className={classes.item} onClick={handleClick}>
-                    {job.jobName}
+                    {`${job.jobName}`}
                     <div className={classes.itemNote}>
                         {job.note}
                     </div>

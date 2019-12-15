@@ -200,17 +200,28 @@ function JobDetails() {
 
     const [files, setFiles] = useState([])
     const getFiles = id => {
+        setFileLoading(true)
         jobService.getFiles(id)
-            .then(res => setFiles(res))
-            .catch(err => alert(err))
+            .then(res => {
+                setFiles(res)
+                setFileLoading(false)
+            })
+            .catch(err => {
+                alert(err)
+                setFileLoading(false)                
+            })
     }
     const uploadFile = id => formData => {
         if (formData.get('file') === 'undefined') {
             return
         }
+        setFileLoading(true)
         jobService.uploadFile(id, formData)
             .then(() => getFiles(id))
-            .catch(err => alert(err))
+            .catch(err => {
+                alert(err)
+                setFileLoading(false)                
+            })
     }
     const [deleteId, setDeleteId] = useState(0)
     const deleteFile = () => {
@@ -242,6 +253,8 @@ function JobDetails() {
     const handleConfirmClose = () => {
         setConfirmOpen(false)
     }
+
+    const [fileLoading, setFileLoading] = useState(false)
 
     return (
         <Dashboard>
@@ -416,6 +429,7 @@ function JobDetails() {
                                 setDeleteId(id);
                             }}
                             to={'api/Jobs/Files'}
+                            isLoading={fileLoading}
                         />
                     </Grid>
                 </Grid>

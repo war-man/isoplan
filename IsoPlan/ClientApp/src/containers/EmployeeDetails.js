@@ -103,14 +103,19 @@ function EmployeeDetails() {
 
     const [files, setFiles] = useState([])
     const getFiles = id => {
+        setLoadingFile(true)
         employeeService.getFiles(id)
-            .then(res => setFiles(res))
+            .then(res => {
+                setFiles(res)
+                setLoadingFile(false)
+            })
             .catch(err => alert(err))
     }
     const uploadFile = id => formData => {
         if (formData.get('file') === 'undefined') {
             return
         }
+        setLoadingFile(true)
         employeeService.uploadFile(id, formData)
             .then(() => {
                 getFiles(id)
@@ -144,6 +149,8 @@ function EmployeeDetails() {
     const handleConfirmClose = () => {
         setConfirmOpen(false)
     }
+
+    const [loadingFile, setLoadingFile] = useState(false)
 
     return (
         <Dashboard>
@@ -266,6 +273,7 @@ function EmployeeDetails() {
                             setDeleteId(id);
                         }}
                         to={'api/Employees/Files'}
+                        isLoading={loadingFile}
                     />
                 </Grid>
             </Grid>

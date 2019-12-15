@@ -69,7 +69,7 @@ function Analysis() {
     ]
 
     const [date, setDate] = useState(new Date())
-    const dateString = moment(date).format('MM-01-YYYY')
+    const dateString = moment(date).format('YYYY-MM-01')
     const dateDisplayString = moment(date).format('MMMM YYYY')
     const handleDateChange = (date) => {
         if (!moment(date).isValid()) {
