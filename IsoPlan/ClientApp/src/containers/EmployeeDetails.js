@@ -67,10 +67,14 @@ function EmployeeDetails() {
         employeeService.update(employee)
             .then(() => {
                 getEmployee(id);
+                setVariant("success");
+                setMessage("Enregistrement réussi");
                 setOpenSnackbar(true);
             })
             .catch(err => {
-                alert(err);
+                setVariant("error");
+                setMessage(err);
+                setOpenSnackbar(true);
             })
     }
 
@@ -92,7 +96,9 @@ function EmployeeDetails() {
                 setEmployee({ ...res })
             })
             .catch(err => {
-                alert(err)
+                setVariant("error");
+                setMessage(err);
+                setOpenSnackbar(true);
             })
     }
 
@@ -109,7 +115,12 @@ function EmployeeDetails() {
                 setFiles(res)
                 setLoadingFile(false)
             })
-            .catch(err => alert(err))
+            .catch(err => {
+                setVariant("error");
+                setMessage(err);
+                setOpenSnackbar(true);
+                setLoadingFile(false)
+            })
     }
     const uploadFile = id => formData => {
         if (formData.get('file') === 'undefined') {
@@ -121,7 +132,10 @@ function EmployeeDetails() {
                 getFiles(id)
             })
             .catch(err => {
-                alert(err)
+                setVariant("error");
+                setMessage(err);
+                setOpenSnackbar(true);
+                setLoadingFile(false);
             })
     }
 
@@ -133,11 +147,15 @@ function EmployeeDetails() {
                 getFiles(id)
             })
             .catch(err => {
-                alert(err)
+                setVariant("error");
+                setMessage(err);
+                setOpenSnackbar(true);
             })
     }
 
-    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+    const [variant, setVariant] = useState('success');
+    const [message, setMessage] = useState('');
+    const [openSnackbar, setOpenSnackbar] = useState(false);
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -288,9 +306,9 @@ function EmployeeDetails() {
             >
                 <CustomSnackbarContent
                     onClose={handleCloseSnackbar}
-                    variant="success"
+                    variant={variant}
                     className={classes.snackbar}
-                    message="Enregistrement réussi"
+                    message={message}
                 />
             </Snackbar>
             <ConfirmDeleteDialog
