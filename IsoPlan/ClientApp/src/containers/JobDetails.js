@@ -91,7 +91,11 @@ function JobDetails() {
                 setOpenSnackbar(true);
                 getJob(id);
             })
-            .catch(err => alert(err))
+            .catch(err => {
+                setVariant("error");
+                setMessage(err);
+                setOpenSnackbar(true);
+            })
     }
 
     const columns = [
@@ -195,7 +199,11 @@ function JobDetails() {
                 setJob({ ...res })
                 setLoading(false)
             })
-            .catch(err => alert(err))
+            .catch(err => {
+                setVariant("error");
+                setMessage(err);
+                setOpenSnackbar(true);
+            })
     }
 
     const [files, setFiles] = useState([])
@@ -207,20 +215,24 @@ function JobDetails() {
                 setFileLoading(false)
             })
             .catch(err => {
-                alert(err)
-                setFileLoading(false)                
+                setVariant("error");
+                setMessage(err);
+                setOpenSnackbar(true);
+                setFileLoading(false)
             })
     }
     const uploadFile = id => formData => {
         if (formData.get('file') === 'undefined') {
             return
         }
-        setFileLoading(true)
         jobService.uploadFile(id, formData)
-            .then(() => getFiles(id))
+            .then(() => {
+                getFiles(id);
+            })
             .catch(err => {
-                alert(err)
-                setFileLoading(false)                
+                setVariant("error");
+                setMessage(err);
+                setOpenSnackbar(true);
             })
     }
     const [deleteId, setDeleteId] = useState(0)
@@ -228,7 +240,11 @@ function JobDetails() {
         setConfirmOpen(false);
         jobService.deleteFile(deleteId)
             .then(() => getFiles(id))
-            .catch(err => alert(err))
+            .catch(err => {
+                setVariant("error");
+                setMessage(err);
+                setOpenSnackbar(true);
+            })
     }
 
     useEffect(() => {
@@ -255,6 +271,7 @@ function JobDetails() {
     }
 
     const [fileLoading, setFileLoading] = useState(false)
+    const [fileUploadLoading, setFileUploadLoading] = useState(false)
 
     return (
         <Dashboard>
@@ -430,6 +447,8 @@ function JobDetails() {
                             }}
                             to={'api/Jobs/Files'}
                             isLoading={fileLoading}
+                            isUploadLoading={fileUploadLoading}
+                            setUploadLoading={setFileUploadLoading}
                         />
                     </Grid>
                 </Grid>

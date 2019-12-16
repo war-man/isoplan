@@ -109,24 +109,23 @@ function EmployeeDetails() {
 
     const [files, setFiles] = useState([])
     const getFiles = id => {
-        setLoadingFile(true)
+        setFileLoading(true)
         employeeService.getFiles(id)
             .then(res => {
                 setFiles(res)
-                setLoadingFile(false)
+                setFileLoading(false)
             })
             .catch(err => {
                 setVariant("error");
                 setMessage(err);
                 setOpenSnackbar(true);
-                setLoadingFile(false)
+                setFileLoading(false)
             })
     }
     const uploadFile = id => formData => {
         if (formData.get('file') === 'undefined') {
             return
         }
-        setLoadingFile(true)
         employeeService.uploadFile(id, formData)
             .then(() => {
                 getFiles(id)
@@ -135,7 +134,6 @@ function EmployeeDetails() {
                 setVariant("error");
                 setMessage(err);
                 setOpenSnackbar(true);
-                setLoadingFile(false);
             })
     }
 
@@ -168,7 +166,8 @@ function EmployeeDetails() {
         setConfirmOpen(false)
     }
 
-    const [loadingFile, setLoadingFile] = useState(false)
+    const [fileLoading, setFileLoading] = useState(false)
+    const [fileUploadLoading, setFileUploadLoading] = useState(false)
 
     return (
         <Dashboard>
@@ -291,7 +290,9 @@ function EmployeeDetails() {
                             setDeleteId(id);
                         }}
                         to={'api/Employees/Files'}
-                        isLoading={loadingFile}
+                        isLoading={fileLoading}
+                        isUploadLoading={fileUploadLoading}
+                        setUploadLoading={setFileUploadLoading}
                     />
                 </Grid>
             </Grid>
