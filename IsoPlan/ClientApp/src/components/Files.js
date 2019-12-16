@@ -37,10 +37,13 @@ function Files(props) {
     const { files, to, uploadFile, deleteFile, isLoading } = props
 
     const handleFileSubmit = header => event => {
-        var formData = new FormData();
-        formData.append("file", event.target.files[0])
-        formData.append("folder", header)
-        uploadFile(formData)
+        for (let i = 0; i < event.target.files.length; i++) {
+            var formData = new FormData();
+            formData.append("file", event.target.files[i])
+            formData.append("folder", header)
+            uploadFile(formData)
+        }
+
     }
 
     const handleFileDelete = (id) => (event) => {
@@ -55,9 +58,9 @@ function Files(props) {
         <Paper className={classes.paper}>
             <form>
                 <List dense={true}>
-                    {   isLoading ? 
+                    {isLoading ?
                         <CircularProgress />
-                        :                                            
+                        :
                         files.map(({ header, items }, i) =>
                             <div key={i}>
                                 <ListSubheader component="div" className={classes.header}>
@@ -76,6 +79,7 @@ function Files(props) {
                                             >
                                                 <AddBoxIcon />
                                                 <input
+                                                    multiple
                                                     type="file"
                                                     style={{ display: "none" }}
                                                     onChange={handleFileSubmit(header)}
@@ -89,7 +93,7 @@ function Files(props) {
                                         <ListItem className={`${classes.emptyText} ${classes.listText}`}>
                                             Ce dossier est vide
                                         </ListItem>
-                                    :
+                                        :
                                         items.map(item =>
                                             <ListItem key={item.id} component={'a'} href={`${process.env.REACT_APP_API_URL}${to}/${item.id}?token=${getCurrentUser().token}`} target='_blank'>
                                                 <ListItemIcon>

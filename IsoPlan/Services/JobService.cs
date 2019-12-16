@@ -103,14 +103,7 @@ namespace IsoPlan.Services
             if (job == null)
             {
                 throw new AppException("Job not found");
-            }
-
-            List<JobFile> files = new List<JobFile>(job.Files);
-
-            for (int i = 0; i < files.Count; i++)
-            {
-                DeleteFile(files[i].Id);
-            }
+            }   
 
             _context.Jobs.Remove(job);
             _context.SaveChanges();
@@ -226,9 +219,6 @@ namespace IsoPlan.Services
             {
                 throw new AppException("File not found in database.");
             }
-            string webRootPath = _env.WebRootPath;
-            string fullPath = Path.Combine(webRootPath, "..\\..\\Files\\" + file.Path);
-            File.Delete(fullPath);
             _context.JobFiles.Remove(file);
             _context.SaveChanges();
         }

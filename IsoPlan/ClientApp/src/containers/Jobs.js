@@ -109,9 +109,9 @@ function Jobs() {
         rgCollected: false,
     })
     const handleAddJob = () => {
+        handleCloseAdd();
         jobService.create(jobToAdd)
             .then(() => {
-                handleCloseAdd();
                 getJobs();
             })
             .catch(err => alert(err))

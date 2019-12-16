@@ -26,12 +26,10 @@ namespace IsoPlan.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly AppDbContext _context;
-        private readonly IWebHostEnvironment _env;
 
-        public EmployeeService(AppDbContext context, IWebHostEnvironment env)
+        public EmployeeService(AppDbContext context)
         {
             _context = context;
-            _env = env;
         }
 
         public IEnumerable<Employee> GetAll(string status)
@@ -75,10 +73,7 @@ namespace IsoPlan.Services
             if (file == null)
             {
                 throw new AppException("File not found in database.");
-            }
-            string webRootPath = _env.WebRootPath;
-            string fullPath = Path.Combine(webRootPath, "..\\..\\Files\\" + file.Path);
-            File.Delete(fullPath);
+            }            
             _context.EmployeeFiles.Remove(file);
             _context.SaveChanges();
         }
@@ -138,13 +133,6 @@ namespace IsoPlan.Services
             if (employee == null)
             {
                 throw new AppException("Employee not found");
-            }
-
-            List<EmployeeFile> files = new List<EmployeeFile>(employee.Files);
-
-            for (int i = 0; i < files.Count; i++)
-            {
-                DeleteFile(files[i].Id);
             }
 
             _context.Employees.Remove(employee);

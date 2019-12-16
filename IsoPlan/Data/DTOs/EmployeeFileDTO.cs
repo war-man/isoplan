@@ -6,5 +6,6 @@ namespace IsoPlan.Data.DTOs
     {
         public IFormFile File { get; set; }
         public int EmployeeId { get; set; }
+        public string Folder { get; set; }
     }
 }
