@@ -22,17 +22,17 @@ namespace IsoPlan.Controllers
         private readonly IJobService _jobService;
         private readonly ICustomAuthService _customAuthService;
         private readonly IMapper _mapper;
-        private readonly IWebHostEnvironment _env;
+        private readonly IFileService _fileService;
 
         public JobsController(
             IJobService jobService,
             IMapper mapper,
-            IWebHostEnvironment env,
+            IFileService fileService,
             ICustomAuthService customAuthService)
         {
             _jobService = jobService;
             _mapper = mapper;
-            _env = env;
+            _fileService = fileService;
             _customAuthService = customAuthService;
         }
 
@@ -88,6 +88,7 @@ namespace IsoPlan.Controllers
         public IActionResult Delete(int id)
         {
             _jobService.Delete(id);
+            _fileService.DeleteDirectory(Path.Combine("Jobs", id.ToString()));
             return NoContent();
         }
 
@@ -132,32 +133,22 @@ namespace IsoPlan.Controllers
                 throw new AppException("Folder not found in predefined folders.");
             }
 
-            string guid = Guid.NewGuid().ToString();
-
             var file = jobFileDTO.File;
 
-            string root = _env.WebRootPath;
+            string path = Path.Combine("Jobs", job.Id.ToString(), jobFileDTO.Folder);
 
-            string path = Path.Combine(guid + "_" + file.FileName);
+            _fileService.Create(file, path);
 
-            string fullPath = Path.Combine(root, "..\\..\\Files\\" + path);
-
-            if (file.Length > 0)
+            JobFile jobFile = new JobFile
             {
-                JobFile jobFile = new JobFile
-                {
-                    Name = jobFileDTO.File.FileName,
-                    Path = path,
-                    JobId = job.Id,
-                    Job = job,
-                    Folder = jobFileDTO.Folder
-                };
-                _jobService.CreateFile(jobFile);
-                using (var fileStream = new FileStream(fullPath, FileMode.Create))
-                {
-                    file.CopyTo(fileStream);
-                }
-            }
+                Name = jobFileDTO.File.FileName,
+                Path = Path.Combine(path, file.FileName),
+                JobId = job.Id,
+                Job = job,
+                Folder = jobFileDTO.Folder
+            };
+
+            _jobService.CreateFile(jobFile);
 
             return Ok();
         }
@@ -182,16 +173,14 @@ namespace IsoPlan.Controllers
 
             string filePath = file.Path;
 
-            string webRootPath = _env.WebRootPath;
-
-            string fullPath = Path.Combine(webRootPath, "..\\..\\Files\\" + filePath);
-
             var provider = new FileExtensionContentTypeProvider();
             string contentType;
             if (!provider.TryGetContentType(fileName, out contentType))
             {
                 contentType = "application/octet-stream";
             }
+
+            string fullPath = _fileService.getFullPath(filePath);
 
             var memory = new MemoryStream();
             using (var stream = new FileStream(fullPath, FileMode.Open))
@@ -206,6 +195,12 @@ namespace IsoPlan.Controllers
         [HttpDelete("Files/{id}")]
         public IActionResult DeleteJobFile(int id)
         {
+            var file = _jobService.GetFile(id);
+            if (file == null)
+            {
+                throw new AppException("File not found in database");
+            }
+            _fileService.Delete(file.Path);
             _jobService.DeleteFile(id);
             return NoContent();
         }

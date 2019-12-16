@@ -3,10 +3,12 @@ using IsoPlan.Data.DTOs;
 using IsoPlan.Data.Entities;
 using IsoPlan.Exceptions;
 using IsoPlan.Services;
+using IsoPlan.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,20 +22,20 @@ namespace IsoPlan.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
+        private readonly IFileService _fileService;
         private readonly ICustomAuthService _customAuthService;
         private readonly IMapper _mapper;
-        private readonly IWebHostEnvironment _env;
 
         public EmployeesController(
             IEmployeeService employeeService,
             IMapper mapper,
-            IWebHostEnvironment env,
-            ICustomAuthService customAuthService)
+            ICustomAuthService customAuthService,
+            IFileService fileService)
         {
             _employeeService = employeeService;
             _mapper = mapper;
-            _env = env;
             _customAuthService = customAuthService;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -88,6 +90,7 @@ namespace IsoPlan.Controllers
         public IActionResult Delete(int id)
         {
             _employeeService.Delete(id);
+            _fileService.DeleteDirectory(Path.Combine("Employees", id.ToString()));
             return NoContent();
         }
 
@@ -99,34 +102,22 @@ namespace IsoPlan.Controllers
             if (employee == null)
             {
                 throw new AppException("Employee not found");
-            }
-
-            string guid = Guid.NewGuid().ToString();
+            }           
 
             var file = employeeFileDTO.File;
 
-            string root = _env.WebRootPath;
+            string path = Path.Combine("Employees", employee.Id.ToString(), employeeFileDTO.Folder);
 
-            string path = Path.Combine(guid + "_" + file.FileName);
+            _fileService.Create(file, path);
 
-            string fullPath = Path.Combine(root, "..\\..\\Files\\" + path);
-
-            if (file.Length > 0)
+            EmployeeFile employeeFile = new EmployeeFile
             {
-                EmployeeFile employeeFile = new EmployeeFile
-                {
-                    Name = employeeFileDTO.File.FileName,
-                    Path = path,
-                    EmployeeId = employee.Id,
-                    Employee = employee
-                };
-                _employeeService.CreateFile(employeeFile);
-                using (var fileStream = new FileStream(fullPath, FileMode.Create))
-                {
-                    file.CopyTo(fileStream);
-                }
-
-            }
+                Name = employeeFileDTO.File.FileName,
+                Path = Path.Combine(path, file.FileName),
+                EmployeeId = employee.Id,
+                Employee = employee
+            };
+            _employeeService.CreateFile(employeeFile);
 
             return Ok();
         }
@@ -151,16 +142,14 @@ namespace IsoPlan.Controllers
 
             string filePath = file.Path;
 
-            string webRootPath = _env.WebRootPath;
-
-            string fullPath = Path.Combine(webRootPath, "..\\..\\Files\\" + filePath);
-
             var provider = new FileExtensionContentTypeProvider();
             string contentType;
             if (!provider.TryGetContentType(fileName, out contentType))
             {
                 contentType = "application/octet-stream";
             }
+
+            string fullPath = _fileService.getFullPath(filePath);
 
             var memory = new MemoryStream();
             using (var stream = new FileStream(fullPath, FileMode.Open))
@@ -175,7 +164,13 @@ namespace IsoPlan.Controllers
         [HttpDelete("Files/{id}")]
         public IActionResult DeleteEmployeeFile(int id)
         {
-            _employeeService.DeleteFile(id);
+            var file = _employeeService.GetFile(id);
+            if (file == null)
+            {
+                throw new AppException("File not found in database");
+            }
+            _fileService.Delete(file.Path);
+            _employeeService.DeleteFile(id);  
             return NoContent();
         }
 
