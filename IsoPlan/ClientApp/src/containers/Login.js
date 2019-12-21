@@ -12,6 +12,7 @@ import { Redirect } from 'react-router-dom';
 import Snackbar from '@material-ui/core/Snackbar';
 import CustomSnackbarContent from '../components/CustomSnackbarContent';
 import { login, logout, handleResponse } from '../helpers/authentication';
+import { CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -43,13 +44,25 @@ const useStyles = makeStyles(theme => ({
     snackbar: {
         margin: theme.spacing(1),
     },
+    wrapper: {
+        margin: theme.spacing(1),
+        position: 'relative',
+    },
+    buttonProgress: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -8,
+        marginLeft: -8,
+    },
 }));
 
 function Login() {
     const classes = useStyles();
 
     const [loggedIn, setLoggedIn] = useState(false)
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         logout()
@@ -81,15 +94,16 @@ function Login() {
                 'password': password
             })
         };
-
+        setLoading(true);
         fetch(process.env.REACT_APP_API_URL + "api/Users/authenticate", options)
             .then(handleResponse)
             .then(response => {
                 login(response)
                 setLoggedIn(true)
             })
-            .catch(error => {
+            .catch(() => {
                 setOpen(true)
+                setLoading(false)
             })
     }
 
@@ -144,15 +158,19 @@ function Login() {
                             id="password"
                             autoComplete="current-password"
                         />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                        >
-                            Se connecter
-                        </Button>
+                        <div className={classes.wrapper}>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                disabled={loading}
+                                className={classes.submit}
+                            >
+                                Se connecter
+                            </Button>
+                            {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                        </div>
                     </form>
                 </div>
             </Grid>
