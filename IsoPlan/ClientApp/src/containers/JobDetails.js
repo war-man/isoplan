@@ -212,7 +212,7 @@ function JobDetails() {
         jobService.getFiles(id)
             .then(res => {
                 setFiles(res)
-                setFileLoading(false)
+                setFileLoading(false);
             })
             .catch(err => {
                 setVariant("error");
@@ -225,6 +225,7 @@ function JobDetails() {
         if (formData.get('file') === 'undefined') {
             return
         }
+        setFileLoading(true)
         jobService.uploadFile(id, formData)
             .then(() => {
                 getFiles(id);
@@ -271,10 +272,9 @@ function JobDetails() {
     }
 
     const [fileLoading, setFileLoading] = useState(false)
-    const [fileUploadLoading, setFileUploadLoading] = useState(false)
 
     return (
-        <Dashboard>
+        <Dashboard title={`${job.name} (${job.clientName})`}>
             <Grid container spacing={3} alignItems="flex-start">
                 <Grid item xs={12} md={5}>
                     <Paper className={classes.paper}>
@@ -447,8 +447,6 @@ function JobDetails() {
                             }}
                             to={'api/Jobs/Files'}
                             isLoading={fileLoading}
-                            isUploadLoading={fileUploadLoading}
-                            setUploadLoading={setFileUploadLoading}
                         />
                     </Grid>
                 </Grid>

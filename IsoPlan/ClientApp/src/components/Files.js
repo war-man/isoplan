@@ -34,17 +34,16 @@ const useStyles = makeStyles(theme => ({
 function Files(props) {
     const classes = useStyles();
 
-    const { files, to, uploadFile, deleteFile, isLoading, isUploadLoading, setUploadLoading } = props
+    const { files, to, uploadFile, deleteFile, isLoading} = props
 
     const handleFileSubmit = header => event => {
-        setUploadLoading(true);
+        event.preventDefault();
+        var formData = new FormData();
+        formData.append("folder", header)
         for (let i = 0; i < event.target.files.length; i++) {
-            var formData = new FormData();
-            formData.append("file", event.target.files[i])
-            formData.append("folder", header)
-            uploadFile(formData)
+            formData.append("files", event.target.files[i])
         }
-        setUploadLoading(false);
+        uploadFile(formData)
     }
 
     const handleFileDelete = (id) => (event) => {
@@ -59,7 +58,7 @@ function Files(props) {
         <Paper className={classes.paper}>
             <form>
                 <List dense={true}>
-                    {(isLoading || isUploadLoading) ?
+                    {isLoading ?
                         <CircularProgress />
                         :
                         files.map(({ header, items }, i) =>

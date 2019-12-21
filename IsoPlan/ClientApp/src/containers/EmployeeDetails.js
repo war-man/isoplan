@@ -126,6 +126,7 @@ function EmployeeDetails() {
         if (formData.get('file') === 'undefined') {
             return
         }
+        setFileLoading(true)
         employeeService.uploadFile(id, formData)
             .then(() => {
                 getFiles(id)
@@ -167,10 +168,9 @@ function EmployeeDetails() {
     }
 
     const [fileLoading, setFileLoading] = useState(false)
-    const [fileUploadLoading, setFileUploadLoading] = useState(false)
 
     return (
-        <Dashboard>
+        <Dashboard title={`${employee.firstName} ${employee.lastName}`}>
             <Grid container spacing={3}>
                 <Grid item sm={12} md={5}>
                     <Paper className={classes.paper}>
@@ -291,8 +291,6 @@ function EmployeeDetails() {
                         }}
                         to={'api/Employees/Files'}
                         isLoading={fileLoading}
-                        isUploadLoading={fileUploadLoading}
-                        setUploadLoading={setFileUploadLoading}
                     />
                 </Grid>
             </Grid>

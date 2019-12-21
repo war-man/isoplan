@@ -198,7 +198,7 @@ function Jobs() {
         } else{
             getJobs([{
                 name: 'startDate',
-                value: moment(date).format('01-MM-YYYY')
+                value: moment(date).format('YYYY-MM-01')
             }]);
             setDate(date);
         }        

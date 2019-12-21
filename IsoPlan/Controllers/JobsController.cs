@@ -133,22 +133,25 @@ namespace IsoPlan.Controllers
                 throw new AppException("Folder not found in predefined folders.");
             }
 
-            var file = jobFileDTO.File;
+            var files = jobFileDTO.Files;
 
             string path = Path.Combine("Jobs", job.Id.ToString(), jobFileDTO.Folder);
 
-            _fileService.Create(file, path);
-
-            JobFile jobFile = new JobFile
+            foreach (var file in files)
             {
-                Name = jobFileDTO.File.FileName,
-                Path = Path.Combine(path, file.FileName),
-                JobId = job.Id,
-                Job = job,
-                Folder = jobFileDTO.Folder
-            };
+                _fileService.Create(file, path);
 
-            _jobService.CreateFile(jobFile);
+                JobFile jobFile = new JobFile
+                {
+                    Name = file.FileName,
+                    Path = Path.Combine(path, file.FileName),
+                    JobId = job.Id,
+                    Job = job,
+                    Folder = jobFileDTO.Folder
+                };
+
+                _jobService.CreateFile(jobFile);
+            }            
 
             return Ok();
         }

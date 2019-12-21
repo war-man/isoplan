@@ -104,20 +104,23 @@ namespace IsoPlan.Controllers
                 throw new AppException("Employee not found");
             }           
 
-            var file = employeeFileDTO.File;
+            var files = employeeFileDTO.Files;
 
             string path = Path.Combine("Employees", employee.Id.ToString(), employeeFileDTO.Folder);
 
-            _fileService.Create(file, path);
-
-            EmployeeFile employeeFile = new EmployeeFile
+            foreach (var file in files)
             {
-                Name = employeeFileDTO.File.FileName,
-                Path = Path.Combine(path, file.FileName),
-                EmployeeId = employee.Id,
-                Employee = employee
-            };
-            _employeeService.CreateFile(employeeFile);
+                _fileService.Create(file, path);
+
+                EmployeeFile employeeFile = new EmployeeFile
+                {
+                    Name = file.FileName,
+                    Path = Path.Combine(path, file.FileName),
+                    EmployeeId = employee.Id,
+                    Employee = employee
+                };
+                _employeeService.CreateFile(employeeFile);
+            }
 
             return Ok();
         }
