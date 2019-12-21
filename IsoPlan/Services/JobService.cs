@@ -240,16 +240,17 @@ namespace IsoPlan.Services
                 {
                     Header = folder,
                     Items = _context.JobFiles
-                            .Select(jf => new JobFile
-                            {
-                                Id = jf.Id,
-                                JobId = jf.JobId,
-                                Name = jf.Name,
-                                Folder = jf.Folder
-                            }
-                            )
-                            .Where(jf => jf.Folder == folder && jf.JobId == jobId)
-                            .ToList()
+                        .Select(jf => new JobFile
+                        {
+                            Id = jf.Id,
+                            JobId = jf.JobId,
+                            Name = jf.Name,
+                            Folder = jf.Folder
+                        }
+                        )
+                        .Where(jf => jf.Folder == folder && jf.JobId == jobId)
+                        .OrderBy(jf => jf.Name)
+                        .ToList()
                 }
                 );
             }
