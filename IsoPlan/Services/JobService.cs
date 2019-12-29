@@ -42,8 +42,8 @@ namespace IsoPlan.Services
                 .Where(j => (string.IsNullOrWhiteSpace(status) || j.Status.Equals(status)) &&
                             (string.IsNullOrWhiteSpace(startDate) || j.StartDate >= DateTime.Parse(startDate)) &&
                             (string.IsNullOrWhiteSpace(endDate) || j.StartDate < DateTime.Parse(endDate)))
-                .OrderBy(j => j.ClientName)
-                .ThenBy(j => j.Name)
+                .OrderByDescending(j => j.DevisStatus)
+                .ThenBy(j => j.Status)
                 .ToList();
         }
 
@@ -266,8 +266,8 @@ namespace IsoPlan.Services
                 .AsEnumerable()
                 .GroupBy(s => s.Job)
                 .Select(group => group.Key)
-                .OrderBy(j => j.ClientName)
-                .ThenBy(j => j.Name)
+                .OrderByDescending(j => j.DevisStatus)
+                .ThenBy(j => j.Status)
                 .ToList();
         }
     }
