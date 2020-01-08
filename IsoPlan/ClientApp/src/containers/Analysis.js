@@ -29,6 +29,9 @@ const useStyles = makeStyles(theme => ({
     autocomplete: {
         width: '240px',
     },
+    bottomMargin: {
+        marginBottom: theme.spacing(3)
+    }
 }));
 
 
@@ -170,7 +173,7 @@ function Analysis() {
     const [jobs, setJobs] = useState([])
     const getJobs = (params) => {
         jobService.getBySchedules(params)
-            .then(res =>setJobs(res))
+            .then(res => setJobs(res))
             .catch(err => alert(err))
     }
 
@@ -218,72 +221,70 @@ function Analysis() {
                         data={totalData}
                         options={options}
                         localization={Localization}
-                        onRowClick={(event, rowData) => setEmployee({...rowData.employee})}
+                        onRowClick={(event, rowData) => setEmployee({ ...rowData.employee })}
                         isLoading={totalLoading}
                     />
                 </Grid>
-                <Grid item xs={12} md={6} container spacing={3}>
-                    <Grid item xs={12}>
-                        <Paper className={classes.toolbarTop}>
-                            <Typography variant="h6">
-                                {`Employé total ${dateDisplayString}`}
-                            </Typography>
-                            <Autocomplete
-                                className={classes.autocomplete}
-                                options={employees}
-                                getOptionLabel={employee => employee.id === 0 ? '' : `${employee.firstName} ${employee.lastName}`}
-                                onChange={handleEmployeeChange}
-                                value={employee}
-                                renderInput={params => (
-                                    <TextField
-                                        {...params}
-                                        variant="standard"
-                                        label="Employé"
-                                        margin="dense"
-                                        fullWidth
-                                    />
-                                )}
-                            />
-                        </Paper>
+                <Grid item xs={12} md={6}>
+                    <Paper className={classes.toolbarTop}>
+                        <Typography variant="h6">
+                            {`Employé total ${dateDisplayString}`}
+                        </Typography>
+                        <Autocomplete
+                            className={classes.autocomplete}
+                            options={employees}
+                            getOptionLabel={employee => employee.id === 0 ? '' : `${employee.firstName} ${employee.lastName}`}
+                            onChange={handleEmployeeChange}
+                            value={employee}
+                            renderInput={params => (
+                                <TextField
+                                    {...params}
+                                    variant="standard"
+                                    label="Employé"
+                                    margin="dense"
+                                    fullWidth
+                                />
+                            )}
+                        />
+                    </Paper>
+                    <div className={classes.bottomMargin}>
                         <MaterialTable
                             columns={byEmployeeColumns}
                             data={byEmployee}
                             options={options}
                             localization={Localization}
-                            onRowClick={(event, rowData) => setJob({...rowData.job})}
+                            onRowClick={(event, rowData) => setJob({ ...rowData.job })}
                             isLoading={byEmployeeLoading}
                         />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Paper className={classes.toolbarTop}>
-                            <Typography variant="h6">
-                                {`Travail total ${dateDisplayString}`}
-                            </Typography>
-                            <Autocomplete
-                                className={classes.autocomplete}
-                                options={jobs}
-                                getOptionLabel={job => `${job.name}`}
-                                onChange={handleJobChange}
-                                value={job}
-                                renderInput={params => (
-                                    <TextField
-                                        {...params}
-                                        variant="standard"
-                                        label="Travail"
-                                        margin="dense"
-                                        fullWidth
-                                    />
-                                )}
-                            />
-                        </Paper>
-                        <MaterialTable
-                            columns={byJobColumns}
-                            data={byJob}
-                            options={options}
-                            localization={Localization}
-                            isLoading={byJobLoading}
+                    </div>
+                    <Paper className={classes.toolbarTop}>
+                        <Typography variant="h6">
+                            {`Travail total ${dateDisplayString}`}
+                        </Typography>
+                        <Autocomplete
+                            className={classes.autocomplete}
+                            options={jobs}
+                            getOptionLabel={job => `${job.name}`}
+                            onChange={handleJobChange}
+                            value={job}
+                            renderInput={params => (
+                                <TextField
+                                    {...params}
+                                    variant="standard"
+                                    label="Travail"
+                                    margin="dense"
+                                    fullWidth
+                                />
+                            )}
                         />
-                    </Grid>
+                    </Paper>
+                    <MaterialTable
+                        columns={byJobColumns}
+                        data={byJob}
+                        options={options}
+                        localization={Localization}
+                        isLoading={byJobLoading}
+                    />
                 </Grid>
             </Grid>
 
