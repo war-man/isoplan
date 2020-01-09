@@ -5,7 +5,7 @@ export const DevisStatus = {
 }
 
 export const DevisStatusFR = {
-    InProgress: 'En cours',
+    InProgress: 'En attente',
     Valid: 'Valide',
     Rejected: 'Rejeté',
 }

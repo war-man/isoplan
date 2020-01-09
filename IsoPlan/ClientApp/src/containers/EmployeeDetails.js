@@ -203,7 +203,7 @@ function EmployeeDetails() {
                                 </Select>
                             </FormControl>
                             <TextField
-                                label='Per diem (€)'
+                                label='Journée (€)'
                                 required
                                 type='number'
                                 inputProps={{ min: 0, step: 0.01 }}
@@ -213,7 +213,7 @@ function EmployeeDetails() {
                                 margin="normal"
                             />
                             <TextField
-                                label='Numéro de compte'
+                                label='Nr de compte'
                                 required
                                 value={employee.accountNumber}
                                 className={classes.textField}

@@ -94,7 +94,7 @@ function EmployeeAddDialog(props) {
                         </Select>
                     </FormControl>
                     <TextField                        
-                        label='Per diem (€)'
+                        label='Journée (€)'
                         required
                         type='number'
                         inputProps={{ min: 0, step: 0.01 }}
@@ -104,7 +104,7 @@ function EmployeeAddDialog(props) {
                         margin="normal"
                     />
                     <TextField
-                        label='Numéro de compte'
+                        label='Nr de compte'
                         required
                         defaultValue={employeeToAdd.accountNumber}
                         className={classes.textField}

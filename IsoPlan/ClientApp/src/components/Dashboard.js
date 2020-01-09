@@ -20,7 +20,7 @@ const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
-        backgroundImage: `url(${process.env.PUBLIC_URL}/background.jpg)`,
+        backgroundImage: `url(${process.env.PUBLIC_URL}/planks.jpg)`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',

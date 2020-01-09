@@ -87,7 +87,8 @@ function Analysis() {
         });
         setJob({
             id: 0,
-            name: ''
+            name: '',
+            clientName: ''
         });
     }
 
@@ -136,13 +137,15 @@ function Analysis() {
 
     const [job, setJob] = useState({
         id: 0,
-        name: ''
+        name: '',
+        clientName: ''
     })
     const handleJobChange = (event, newJob) => {
         if (newJob === null) {
             setJob({
                 id: 0,
-                name: ''
+                name: '',
+                clientName: ''
             });
         } else {
             setJob(newJob);
@@ -264,7 +267,7 @@ function Analysis() {
                         <Autocomplete
                             className={classes.autocomplete}
                             options={jobs}
-                            getOptionLabel={job => `${job.name}`}
+                            getOptionLabel={job => job.clientName === '' ? '' : `${job.name} (${job.clientName})`}
                             onChange={handleJobChange}
                             value={job}
                             renderInput={params => (

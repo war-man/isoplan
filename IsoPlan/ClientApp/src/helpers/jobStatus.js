@@ -7,7 +7,7 @@ export const JobStatus = {
 export const JobStatusFR = {
     Started: 'Commencé',
     Completed: 'Terminé',
-    Paused: 'En pause',
+    Paused: 'En attente',
 }
 
 export const JobStatusList = [JobStatus.Started, JobStatus.Completed, JobStatus.Paused]

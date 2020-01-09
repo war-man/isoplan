@@ -4,8 +4,8 @@ export const ContractType = {
 }
 
 export const ContractTypeFR = {
-    Indefinite: 'Indéfini',
-    Definite: 'Définitif'
+    Indefinite: 'CDI',
+    Definite: 'CDD'
 }
 
 export const ContractTypeList = [ContractType.Indefinite, ContractType.Definite]

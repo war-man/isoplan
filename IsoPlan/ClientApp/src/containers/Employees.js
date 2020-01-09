@@ -20,8 +20,8 @@ function Employees() {
             render: rowData => <div>{EmployeeStatusFR[rowData.status]}</div>,
             customFilterAndSearch: (term, rowData) => EmployeeStatusFR[rowData.status].toUpperCase().includes(term.toUpperCase())
         },
-        { title: 'Per diem', field: 'salary', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
-        { title: 'Numéro de compte', field: 'accountNumber', sorting: false, cellStyle: { maxWidth: '200px', overflowWrap: 'break-word' } },
+        { title: 'Journée', field: 'salary', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
+        { title: 'Nr de compte', field: 'accountNumber', sorting: false, cellStyle: { maxWidth: '200px', overflowWrap: 'break-word' } },
         { 
             title: 'Contrat', 
             field: 'contractType', 
@@ -29,7 +29,7 @@ function Employees() {
             customFilterAndSearch: (term, rowData) => ContractTypeFR[rowData.contractType].toUpperCase().includes(term.toUpperCase())
         },
         { title: 'Commencé', field: 'workStart', render: rowData => { return rowData.workStart && <div>{moment(rowData.workStart).format('DD.MM.YYYY')}</div> } },
-        { title: 'Arrêté', field: 'workEnd', render: rowData => { return rowData.workEnd && <div>{moment(rowData.workEnd).format('DD.MM.YYYY')}</div> } },
+        { title: 'Fini', field: 'workEnd', render: rowData => { return rowData.workEnd && <div>{moment(rowData.workEnd).format('DD.MM.YYYY')}</div> } },
     ];
     const options = {
         draggable: false,
