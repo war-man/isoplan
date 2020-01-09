@@ -15,7 +15,6 @@ namespace IsoPlan.Services
         string getFullPath(string path);
         void Create(IFormFile file, string path);
         void Delete(string path);
-
         void DeleteDirectory(string path);
     }
     public class FileService : IFileService
@@ -60,7 +59,10 @@ namespace IsoPlan.Services
         public void DeleteDirectory(string path)
         {
             string fullPath = Path.Combine(_appSettings.FilesPath, path);
-            Directory.Delete(fullPath, true);
+            if (Directory.Exists(fullPath))
+            {
+                Directory.Delete(fullPath, true);
+            }
         }
     }
 }
