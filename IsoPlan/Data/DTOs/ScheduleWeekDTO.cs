@@ -4,6 +4,7 @@ namespace IsoPlan.Data.DTOs
 {
     public class ScheduleWeekDTO
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public List<ScheduleDTO> Date1 { get; set; }
         public List<ScheduleDTO> Date2 { get; set; }

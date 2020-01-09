@@ -67,7 +67,7 @@ function Schedules() {
 
     const columns = [
         {
-            title: 'Nom complet', field: 'name', headerStyle: headerStyle
+            title: 'Nom complet', field: 'name', headerStyle: headerStyle, render: rowData => <Link to={`/personnel/${rowData.id}`}>{rowData.name}</Link>
         },
         {
             title: `Lundi ${titles[0]}`, field: 'date1', headerStyle: headerStyle, render: rowData => renderItems(rowData, 'date1')

@@ -4,6 +4,7 @@ namespace IsoPlan.Data.Entities
 {
     public class ScheduleWeek
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public List<Schedule> Date1 { get; set; }
         public List<Schedule> Date2 { get; set; }

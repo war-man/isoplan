@@ -90,6 +90,7 @@ namespace IsoPlan.Services
                     .ToList();
                 weeks.Add(new ScheduleWeek
                 {
+                    Id = e.Id,
                     Name = e.FirstName + " " + e.LastName,
                     Date1 = employeeSchedules.Where(s => s.Date.Equals(start)).ToList(),
                     Date2 = employeeSchedules.Where(s => s.Date.Equals(start.AddDays(1))).ToList(),
