@@ -50,9 +50,9 @@ function Jobs() {
             render: rowData => <div>{JobStatusFR[rowData.status]}</div>,
             customFilterAndSearch: (term, rowData) => JobStatusFR[rowData.status].toUpperCase().includes(term.toUpperCase())
         },
-        { title: 'Achat', field: 'totalBuy', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
+        //{ title: 'Achat', field: 'totalBuy', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
         { title: 'Vente', field: 'totalSell', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
-        { title: 'Marge', field: 'totalProfit', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
+        //{ title: 'Marge', field: 'totalProfit', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
         { title: 'RG', field: 'rgCollected', type: 'boolean' },
     ];
     const options = {
@@ -221,7 +221,7 @@ function Jobs() {
                     />
                 </MuiPickersUtilsProvider>
                 <Typography className={classes.toolbarText}>
-                    {`Achat total: ${total.buy}€ | Vente total: ${total.sell}€ | Marge total: ${total.profit}€`}
+                    {`Vente total: ${total.sell}€`}
                 </Typography>
             </Paper>
             <MaterialTable

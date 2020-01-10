@@ -132,6 +132,7 @@ function EmployeeDetails() {
                 getFiles(id)
             })
             .catch(err => {
+                setFileLoading(false)
                 setVariant("error");
                 setMessage(err);
                 setOpenSnackbar(true);
@@ -146,6 +147,7 @@ function EmployeeDetails() {
                 getFiles(id)
             })
             .catch(err => {
+                setFileLoading(false)
                 setVariant("error");
                 setMessage(err);
                 setOpenSnackbar(true);
