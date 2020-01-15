@@ -9,7 +9,7 @@ import JobAddDialog from '../components/JobAddDialog';
 import { DevisStatus, DevisStatusFR } from '../helpers/devisStatus';
 import { JobStatus, JobStatusFR } from '../helpers/jobStatus';
 import { Localization } from '../helpers/localization';
-import { Paper, makeStyles, Typography } from '@material-ui/core';
+import { Paper, makeStyles, Typography, FormControlLabel, Checkbox } from '@material-ui/core';
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from '@date-io/date-fns';
 import { fr } from 'date-fns/locale';
@@ -20,19 +20,43 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'space-between',
         alignItems: 'center',
         margin: `0px 0px ${theme.spacing(1)}px`,
-        padding: theme.spacing(2)
-    },
-    toolbarText: {
-        fontWeight: 'bold'
+        padding: theme.spacing(1)
     },
     datePicker: {
-        width: '150px'
+        minWidth: '120px',
+        width: '120px'
+    },
+    filterItem: {
+        marginTop: theme.spacing(1),
+        marginLeft: theme.spacing(1),
+    },
+    endItem: {
+        flexGrow: 1
     }
 }));
 
 function Jobs() {
     const classes = useStyles();
     const columns = [
+        { title: 'Date devis', field: 'devisDate', render: rowData => { return rowData.devisDate && <div>{moment(rowData.devisDate).format('DD.MM.YYYY.')}</div> } },
+        {
+            title: 'Devis statut',
+            field: 'devisStatus',
+            render: rowData => <div>{DevisStatusFR[rowData.devisStatus]}</div>,
+            customFilterAndSearch: (term, rowData) => DevisStatusFR[rowData.devisStatus].toUpperCase().includes(term.toUpperCase())
+        },
+        { title: 'Client', field: 'clientName', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
+        { title: 'Affaire', field: 'name', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
+        { title: 'Début', field: 'startDate', render: rowData => { return rowData.startDate && <div>{moment(rowData.startDate).format('DD.MM.YYYY.')}</div> } },
+        {
+            title: 'Statut',
+            field: 'status',
+            render: rowData => <div>{JobStatusFR[rowData.status]}</div>,
+            customFilterAndSearch: (term, rowData) => JobStatusFR[rowData.status].toUpperCase().includes(term.toUpperCase())
+        },
+        { title: 'Vente', field: 'totalSell', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
+    ];
+    const colimnsDetails = [
         { title: 'Date devis', field: 'devisDate', render: rowData => { return rowData.devisDate && <div>{moment(rowData.devisDate).format('DD.MM.YYYY.')}</div> } },
         {
             title: 'Devis statut',
@@ -50,9 +74,9 @@ function Jobs() {
             render: rowData => <div>{JobStatusFR[rowData.status]}</div>,
             customFilterAndSearch: (term, rowData) => JobStatusFR[rowData.status].toUpperCase().includes(term.toUpperCase())
         },
-        //{ title: 'Achat', field: 'totalBuy', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
+        { title: 'Achat', field: 'totalBuy', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
         { title: 'Vente', field: 'totalSell', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
-        //{ title: 'Marge', field: 'totalProfit', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
+        { title: 'Marge', field: 'totalProfit', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
         { title: 'RG', field: 'rgCollected', type: 'boolean' },
     ];
     const options = {
@@ -77,7 +101,7 @@ function Jobs() {
                 setOpenAdd(true);
             }
         },
-        rowData => ({
+        () => ({
             icon: 'more_horiz',
             tooltip: 'Détails',
             onClick: (event, rowData) => {
@@ -85,7 +109,7 @@ function Jobs() {
                 setRedirect(true);
             }
         }),
-        rowData => ({
+        () => ({
             icon: 'delete',
             tooltip: 'Supprimer',
             onClick: (event, rowData) => {
@@ -191,21 +215,30 @@ function Jobs() {
         profit: 0
     })
 
+    const [filter, setFilter] = useState({
+        details: false,
+    })
+    const handleCheckboxChange = name => event => {
+        var value;
+        value = event.target.checked;
+        setFilter({...filter, [name]: value});
+    }
+
     const handleDateChange = (date) => {
-        if(!moment(date).isValid()){            
+        if (!moment(date).isValid()) {
             getJobs();
             setDate(null);
-        } else{
+        } else {
             getJobs([{
                 name: 'startDate',
                 value: moment(date).format('YYYY-MM-01')
             }]);
             setDate(date);
-        }        
+        }
     }
 
     return (
-        <Dashboard maxWidth={false} title={'Travaux'}>
+        <Dashboard maxWidth={filter.details ? false : 0} title={'Travaux'}>
             {renderRedirect()}
             <Paper className={classes.toolbarTop}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
@@ -219,13 +252,33 @@ function Jobs() {
                         value={date}
                         onChange={(date) => handleDateChange(date)}
                     />
+                    <FormControlLabel className={classes.filterItem}
+                        control={
+                            <Checkbox
+                                checked={filter.details}
+                                onChange={handleCheckboxChange("details")}
+                                value={filter.details}
+                                color="primary"
+                            />
+                        }
+                        label={
+                            <div className={classes.checkboxLabel}>
+                                Détails
+                            </div>
+                        }
+                    />
                 </MuiPickersUtilsProvider>
-                <Typography className={classes.toolbarText}>
-                    {`Vente total: ${total.sell}€`}
+                <div className={classes.endItem} />                
+                <Typography>
+                    { filter.details ? 
+                        `Achat total: ${total.buy}€ | Vente total: ${total.sell}€ | Marge total: ${total.profit}€`      
+                    :
+                        `Vente total: ${total.sell}€`
+                    }
                 </Typography>
             </Paper>
             <MaterialTable
-                columns={columns}
+                columns={filter.details ? colimnsDetails : columns}
                 data={data}
                 options={options}
                 actions={actions}
