@@ -43,7 +43,8 @@ namespace IsoPlan.Services
                             (string.IsNullOrWhiteSpace(startDate) || j.StartDate >= DateTime.Parse(startDate)) &&
                             (string.IsNullOrWhiteSpace(endDate) || j.StartDate < DateTime.Parse(endDate)))
                 .OrderByDescending(j => j.DevisStatus)
-                .ThenBy(j => j.Status)
+                .ThenByDescending(j => j.Status)
+                .ThenByDescending(j => j.StartDate)
                 .ToList();
         }
 

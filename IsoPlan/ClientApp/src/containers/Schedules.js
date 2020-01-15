@@ -37,8 +37,8 @@ const useStyles = makeStyles(theme => ({
 
 const headerStyle = {
     textAlign: 'center',
-    minWidth: '140px',
-    maxWidth: '140px',
+    minWidth: '120px',
+    maxWidth: '120px',
 }
 
 function Schedules() {
