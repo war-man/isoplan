@@ -5,14 +5,14 @@ const useStyles = makeStyles(theme => ({
     item: {
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.primary.main,
-        fontWeight: 'bold', 
+        fontSize: 12,
         margin: 'auto',
         marginTop: '1px',
         marginBottom: '1px',
         padding: '3px',
         textAlign: 'center',
-        minWidth: '120px',
-        maxWidth: '120px',
+        minWidth: '100px',
+        maxWidth: '100px',
         overflowWrap: 'break-word',
         borderRadius: 10,
         '&:hover': {

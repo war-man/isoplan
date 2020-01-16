@@ -202,7 +202,7 @@ function Analysis() {
 
     return (
         <Dashboard title={'Analyse'}>
-            <Grid container spacing={3} alignItems="flex-start">
+            <Grid container spacing={2} alignItems="flex-start">
                 <Grid item xs={12} md={6}>
                     <Paper className={classes.toolbarTop}>
                         <Typography variant="h6">
