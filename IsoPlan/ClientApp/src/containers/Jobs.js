@@ -9,7 +9,7 @@ import JobAddDialog from '../components/JobAddDialog';
 import { DevisStatus, DevisStatusFR } from '../helpers/devisStatus';
 import { JobStatus, JobStatusFR } from '../helpers/jobStatus';
 import { Localization } from '../helpers/localization';
-import { Paper, makeStyles, Typography, FormControlLabel, Checkbox } from '@material-ui/core';
+import { makeStyles, FormControlLabel, Checkbox } from '@material-ui/core';
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from '@date-io/date-fns';
 import { fr } from 'date-fns/locale';
@@ -37,6 +37,11 @@ const useStyles = makeStyles(theme => ({
 
 function Jobs() {
     const classes = useStyles();
+    const [total, setTotal] = useState({
+        buy: 0,
+        sell: 0,
+        profit: 0
+    })
     const columns = [
         { title: 'Date devis', field: 'devisDate', render: rowData => { return rowData.devisDate && <div>{moment(rowData.devisDate).format('DD.MM.YYYY.')}</div> } },
         {
@@ -54,9 +59,15 @@ function Jobs() {
             render: rowData => <div>{JobStatusFR[rowData.status]}</div>,
             customFilterAndSearch: (term, rowData) => JobStatusFR[rowData.status].toUpperCase().includes(term.toUpperCase())
         },
-        { title: 'Vente', field: 'totalSell', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
+        {
+            title: `Vente [${total.sell.toFixed(2).toLocaleString('fr-FR')}€]`,
+            field: 'totalSell',
+            type: 'currency',
+            currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
+            headerStyle: {textAlign: 'right'}
+        },
     ];
-    const colimnsDetails = [
+    const columnsDetails = [
         { title: 'Date devis', field: 'devisDate', render: rowData => { return rowData.devisDate && <div>{moment(rowData.devisDate).format('DD.MM.YYYY.')}</div> } },
         {
             title: 'Devis statut',
@@ -74,9 +85,29 @@ function Jobs() {
             render: rowData => <div>{JobStatusFR[rowData.status]}</div>,
             customFilterAndSearch: (term, rowData) => JobStatusFR[rowData.status].toUpperCase().includes(term.toUpperCase())
         },
-        { title: 'Achat', field: 'totalBuy', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
-        { title: 'Vente', field: 'totalSell', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
-        { title: 'Marge', field: 'totalProfit', type: 'currency', currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' } },
+        {
+            title: `Achat [${total.buy.toFixed(2).toLocaleString('fr-FR')}€]`,
+            field: 'totalBuy',
+            type: 'currency',
+            currencySetting: {
+                currencyCode: 'EUR', locale: 'fr-FR'
+            },
+            headerStyle: {textAlign: 'right'}
+        },
+        {
+            title: `Vente [${total.sell.toFixed(2).toLocaleString('fr-FR')}€]`,
+            field: 'totalSell',
+            type: 'currency',
+            currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
+            headerStyle: {textAlign: 'right'}
+        },
+        {
+            title: `Marge [${total.profit.toFixed(2).toLocaleString('fr-FR')}€]`,
+            field: 'totalProfit',
+            type: 'currency',
+            currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
+            headerStyle: {textAlign: 'right'}
+        },
         { title: 'RG', field: 'rgCollected', type: 'boolean' },
     ];
     const options = {
@@ -209,11 +240,6 @@ function Jobs() {
     }
 
     const [date, setDate] = useState(null)
-    const [total, setTotal] = useState({
-        buy: 0,
-        sell: 0,
-        profit: 0
-    })
 
     const [filter, setFilter] = useState({
         details: false,
@@ -221,7 +247,7 @@ function Jobs() {
     const handleCheckboxChange = name => event => {
         var value;
         value = event.target.checked;
-        setFilter({...filter, [name]: value});
+        setFilter({ ...filter, [name]: value });
     }
 
     const handleDateChange = (date) => {
@@ -239,9 +265,13 @@ function Jobs() {
 
     return (
         <Dashboard maxWidth={filter.details ? false : 0} title={'Travaux'}>
-            {renderRedirect()}
-            <Paper className={classes.toolbarTop}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
+            {renderRedirect()}  
+            <MaterialTable
+                columns={filter.details ? columnsDetails : columns}
+                data={data}
+                options={options}
+                actions={actions}
+                title={<MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
                     <DatePicker
                         clearable
                         clearLabel='Supprimer'
@@ -264,25 +294,10 @@ function Jobs() {
                         label={
                             <div className={classes.checkboxLabel}>
                                 Détails
-                            </div>
+                        </div>
                         }
                     />
-                </MuiPickersUtilsProvider>
-                <div className={classes.endItem} />                
-                <Typography>
-                    { filter.details ? 
-                        `Achat total: ${total.buy}€ | Vente total: ${total.sell}€ | Marge total: ${total.profit}€`      
-                    :
-                        `Vente total: ${total.sell}€`
-                    }
-                </Typography>
-            </Paper>
-            <MaterialTable
-                columns={filter.details ? colimnsDetails : columns}
-                data={data}
-                options={options}
-                actions={actions}
-                title="Travaux"
+                </MuiPickersUtilsProvider>}
                 isLoading={loading}
                 localization={Localization}
             />

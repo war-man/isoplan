@@ -7,24 +7,21 @@ import { getCurrentUser } from '../helpers/authentication';
 
 const useStyles = makeStyles(theme => ({
     paper: {
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(2),
         textAlign: 'center',
         overflow: 'auto',
-        maxHeight: '320px'
+        maxHeight: '640px'
     },
     header: {
-        paddingLeft: 0,
-        paddingRight: 0,
-        backgroundColor: 'white'
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2),
+        backgroundColor: '#e8eaf6',
+    },
+    listText: {
+        paddingTop: theme.spacing(1),
+        paddingBottom: theme.spacing(1)
     },
     headerText: {
         fontSize: 16
-    },
-    listText: {
-        wordWrap: 'break-word',
-        paddingTop: '8px',
-        paddingBottom: '8px'
     },
     emptyText: {
         color: 'rgba(0, 0, 0, 0.54)'
@@ -34,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 function Files(props) {
     const classes = useStyles();
 
-    const { files, to, uploadFile, deleteFile, isLoading} = props
+    const { files, to, uploadFile, deleteFile, isLoading } = props
 
     const handleFileSubmit = header => event => {
         event.preventDefault();
@@ -55,9 +52,9 @@ function Files(props) {
     }
 
     return (
-        <Paper className={classes.paper}>
+        <Paper className={classes.paper} square>
             <form>
-                <List dense={true}>
+                <List dense={true} style={{ padding: 0 }}>
                     {isLoading ?
                         <CircularProgress />
                         :
@@ -103,7 +100,7 @@ function Files(props) {
                                                     primary={item.name}
                                                 />
                                                 <ListItemSecondaryAction>
-                                                    <IconButton edge="end" onClick={handleFileDelete(item.id)}>
+                                                    <IconButton onClick={handleFileDelete(item.id)}>
                                                         <DeleteIcon />
                                                     </IconButton>
                                                 </ListItemSecondaryAction>
