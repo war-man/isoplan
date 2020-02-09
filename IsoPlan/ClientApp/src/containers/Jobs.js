@@ -60,7 +60,7 @@ function Jobs() {
             customFilterAndSearch: (term, rowData) => JobStatusFR[rowData.status].toUpperCase().includes(term.toUpperCase())
         },
         {
-            title: `Vente [${total.sell.toFixed(2).toLocaleString('fr-FR')}€]`,
+            title: `Vente [${Number(total.sell.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
             field: 'totalSell',
             type: 'currency',
             currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
@@ -86,7 +86,7 @@ function Jobs() {
             customFilterAndSearch: (term, rowData) => JobStatusFR[rowData.status].toUpperCase().includes(term.toUpperCase())
         },
         {
-            title: `Achat [${total.buy.toFixed(2).toLocaleString('fr-FR')}€]`,
+            title: `Achat [${Number(total.buy.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
             field: 'totalBuy',
             type: 'currency',
             currencySetting: {
@@ -95,14 +95,14 @@ function Jobs() {
             headerStyle: {textAlign: 'right'}
         },
         {
-            title: `Vente [${total.sell.toFixed(2).toLocaleString('fr-FR')}€]`,
+            title: `Vente [${Number(total.sell.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
             field: 'totalSell',
             type: 'currency',
             currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
             headerStyle: {textAlign: 'right'}
         },
         {
-            title: `Marge [${total.profit.toFixed(2).toLocaleString('fr-FR')}€]`,
+            title: `Marge [${Number(total.profit.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
             field: 'totalProfit',
             type: 'currency',
             currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
