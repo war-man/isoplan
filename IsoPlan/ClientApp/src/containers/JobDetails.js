@@ -139,7 +139,7 @@ function JobDetails() {
             headerStyle: { textAlign: 'right' },
         },
         {
-            title: `Marge [${Number(job.totalBuy.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
+            title: `Marge [${Number(job.totalProfit.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
             field: 'profit',
             type: 'currency',
             currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
