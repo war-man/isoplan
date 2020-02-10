@@ -125,14 +125,14 @@ function JobDetails() {
         { title: 'Type de travail', field: 'name' },
         { title: 'Quantité', field: 'quantity', type: 'numeric' },
         {
-            title: `Achat [${Number(job.totalBuy).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
+            title: `Achat [${Number(job.totalBuy.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
             field: 'buy',
             type: 'currency',
             currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
             headerStyle: { textAlign: 'right' },
         },
         {
-            title: `Vente [${Number(job.totalBuy.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
+            title: `Vente [${Number(job.totalSell.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
             field: 'sell',
             type: 'currency',
             currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
