@@ -120,6 +120,7 @@ namespace IsoPlan
             services.AddScoped<ICustomAuthService, CustomAuthService>();
             services.AddScoped<IScheduleService, ScheduleService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IFactureService, FactureService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -17,7 +17,9 @@ namespace IsoPlan.Helpers
             CreateMap<EmployeeDTO, Employee>().ForMember(e => e.Files, opt => opt.Ignore());
 
             // job mapping
-            CreateMap<Job, JobDTO>();
+            CreateMap<Job, JobDTO>()
+                .ForMember(dest => dest.Remaining,
+                           opts => opts.MapFrom(src => src.TotalSell - src.TotalFactures));
             CreateMap<JobDTO, Job>();
 
             // job item mapping
@@ -35,6 +37,11 @@ namespace IsoPlan.Helpers
                 .ForMember(dest => dest.JobName,
                            opts => opts.MapFrom(src => src.Job.Name + " (" + src.Job.ClientName + ")"));
             CreateMap<ScheduleDTO, Schedule>();
+
+            // facture mapping
+            CreateMap<Facture, FactureDTO>();
+            CreateMap<FactureDTO, Facture>();
+
         }
     }
 }
