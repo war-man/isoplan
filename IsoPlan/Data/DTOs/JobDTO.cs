@@ -14,6 +14,8 @@ namespace IsoPlan.Data.DTOs
         public float TotalBuy { get; set; }
         public float TotalSell { get; set; }
         public float TotalProfit { get; set; }
+        public float Remaining { get; set; }
+        public float TotalFactures { get; set; }
         public DateTime? DevisDate { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
@@ -21,5 +23,6 @@ namespace IsoPlan.Data.DTOs
         public bool RGCollected { get; set; }
         public string Status { get; set; }
         public List<JobItemDTO> JobItems { get; set; }
+        public List<FactureDTO> Factures { get; set; }
     }
 }

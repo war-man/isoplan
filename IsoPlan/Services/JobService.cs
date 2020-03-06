@@ -25,16 +25,15 @@ namespace IsoPlan.Services
         JobFile GetFile(int id);
         void DeleteFile(int id);
         List<JobFilePair> GetFiles(int jobId);
+        void RecalculateFactures(Job job);
     }
     public class JobService : IJobService
     {
         private readonly AppDbContext _context;
-        private readonly IWebHostEnvironment _env;
 
-        public JobService(AppDbContext context, IWebHostEnvironment env)
+        public JobService(AppDbContext context)
         {
             _context = context;
-            _env = env;
         }
         public IEnumerable<Job> GetAll(string status, string startDate, string endDate)
         {
@@ -50,9 +49,15 @@ namespace IsoPlan.Services
 
         public Job GetById(int id)
         {
-            return _context.Jobs
+            var job = _context.Jobs
                 .Include(j => j.JobItems)
+                .Include(j => j.Factures)
                 .FirstOrDefault(j => j.Id == id);
+
+            job.Factures = job.Factures.OrderByDescending(f => f.Date).ToList();
+
+            return job;
+                
         }
 
         public void Create(Job job)
@@ -125,6 +130,12 @@ namespace IsoPlan.Services
             job.TotalBuy = job.JobItems.Sum(ji => ji.Buy);
             job.TotalSell = job.JobItems.Sum(ji => ji.Sell);
             job.TotalProfit = job.JobItems.Sum(ji => ji.Profit);
+            _context.SaveChanges();
+        }
+
+        public void RecalculateFactures(Job job)
+        {
+            job.TotalFactures = job.Factures.Where(f => f.Paid).Sum(f => f.Value);
             _context.SaveChanges();
         }
 

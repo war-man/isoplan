@@ -40,10 +40,12 @@ function Jobs() {
     const [total, setTotal] = useState({
         buy: 0,
         sell: 0,
-        profit: 0
+        profit: 0,
+        remaining: 0,
+        factures: 0,
     })
     const columns = [
-        { title: 'Date devis', field: 'devisDate', render: rowData => { return rowData.devisDate && <div>{moment(rowData.devisDate).format('DD.MM.YYYY.')}</div> } },
+        { title: 'Date devis', field: 'devisDate', render: rowData => { return rowData.devisDate && <div>{moment(rowData.devisDate).format('DD.MM.YYYY')}</div> } },
         {
             title: 'Devis statut',
             field: 'devisStatus',
@@ -52,7 +54,7 @@ function Jobs() {
         },
         { title: 'Client', field: 'clientName', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
         { title: 'Affaire', field: 'name', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
-        { title: 'Début', field: 'startDate', render: rowData => { return rowData.startDate && <div>{moment(rowData.startDate).format('DD.MM.YYYY.')}</div> } },
+        { title: 'Début', field: 'startDate', render: rowData => { return rowData.startDate && <div>{moment(rowData.startDate).format('DD.MM.YYYY')}</div> } },
         {
             title: 'Statut',
             field: 'status',
@@ -60,15 +62,15 @@ function Jobs() {
             customFilterAndSearch: (term, rowData) => JobStatusFR[rowData.status].toUpperCase().includes(term.toUpperCase())
         },
         {
-            title: `Vente [${Number(total.sell.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
-            field: 'totalSell',
+            title: `Reste [${Number(total.remaining.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
+            field: 'remaining',
             type: 'currency',
             currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
             headerStyle: {textAlign: 'right'}
         },
     ];
     const columnsDetails = [
-        { title: 'Date devis', field: 'devisDate', render: rowData => { return rowData.devisDate && <div>{moment(rowData.devisDate).format('DD.MM.YYYY.')}</div> } },
+        { title: 'Date devis', field: 'devisDate', render: rowData => { return rowData.devisDate && <div>{moment(rowData.devisDate).format('DD.MM.YYYY')}</div> } },
         {
             title: 'Devis statut',
             field: 'devisStatus',
@@ -77,8 +79,8 @@ function Jobs() {
         },
         { title: 'Client', field: 'clientName', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
         { title: 'Affaire', field: 'name', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
-        { title: 'Début', field: 'startDate', render: rowData => { return rowData.startDate && <div>{moment(rowData.startDate).format('DD.MM.YYYY.')}</div> } },
-        { title: 'Fin', field: 'endDate', render: rowData => { return rowData.endDate && <div>{moment(rowData.endDate).format('DD.MM.YYYY.')}</div> } },
+        { title: 'Début', field: 'startDate', render: rowData => { return rowData.startDate && <div>{moment(rowData.startDate).format('DD.MM.YYYY')}</div> } },
+        { title: 'Fin', field: 'endDate', render: rowData => { return rowData.endDate && <div>{moment(rowData.endDate).format('DD.MM.YYYY')}</div> } },
         {
             title: 'Statut',
             field: 'status',
@@ -104,6 +106,20 @@ function Jobs() {
         {
             title: `Marge [${Number(total.profit.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
             field: 'totalProfit',
+            type: 'currency',
+            currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
+            headerStyle: {textAlign: 'right'}
+        },
+        {
+            title: `Paiements [${Number(total.factures.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
+            field: 'totalfactures',
+            type: 'currency',
+            currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
+            headerStyle: {textAlign: 'right'}
+        },
+        {
+            title: `Reste [${Number(total.remaining.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
+            field: 'remaining',
             type: 'currency',
             currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
             headerStyle: {textAlign: 'right'}
@@ -223,6 +239,8 @@ function Jobs() {
                 buy: data.map(x => x.totalBuy).reduce((a, b) => a + b, 0),
                 sell: data.map(x => x.totalSell).reduce((a, b) => a + b, 0),
                 profit: data.map(x => x.totalProfit).reduce((a, b) => a + b, 0),
+                remaining: data.map(x => x.remaining).reduce((a, b) => a + b, 0),
+                factures: data.map(x => x.totalFactures).reduce((a, b) => a + b, 0),
             })
         }
         recalculate()

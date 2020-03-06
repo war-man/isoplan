@@ -24,6 +24,11 @@ namespace IsoPlan.Data
               .WithMany(j => j.JobItems)
               .HasForeignKey(ji => ji.JobId);
 
+            modelBuilder.Entity<Facture>()
+              .HasOne(f => f.Job)
+              .WithMany(j => j.Factures)
+              .HasForeignKey(f => f.JobId);
+
             modelBuilder.Entity<User>().HasAlternateKey(u => u.Username).HasName("AlternateKey_Username");
 
             modelBuilder.Entity<Schedule>().HasKey(s => new { s.JobId, s.EmployeeId, s.Date });
@@ -36,5 +41,7 @@ namespace IsoPlan.Data
         public DbSet<EmployeeFile> EmployeeFiles { get; set; }
         public DbSet<JobItem> JobItems { get; set; }
         public DbSet<JobFile> JobFiles { get; set; }
+        public DbSet<Facture> Factures { get; set; }
+
     }
 }
