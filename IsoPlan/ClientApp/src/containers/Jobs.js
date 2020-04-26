@@ -112,7 +112,7 @@ function Jobs() {
         },
         {
             title: `Paiements [${Number(total.factures.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
-            field: 'totalfactures',
+            field: 'totalFactures',
             type: 'currency',
             currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
             headerStyle: {textAlign: 'right'}
@@ -131,7 +131,7 @@ function Jobs() {
         actionsColumnIndex: -1,
         pageSizeOptions: [],
         paging: true,
-        pageSize: 8,
+        pageSize: 7,
         rowStyle: (rowData) => {
             if (rowData.rgCollected === false && moment(rowData.rgDate).isValid() && moment(rowData.rgDate).isBefore(moment(new Date()))) {
                 return {
