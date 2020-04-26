@@ -15,6 +15,7 @@ const JobItems = (props) => {
             field: 'buy',
             type: 'currency',
             currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
+            editable: 'never',
             headerStyle: { textAlign: 'right' },
         },
         {
@@ -38,7 +39,8 @@ const JobItems = (props) => {
         draggable: false,
         actionsColumnIndex: -1,
         pageSizeOptions: [],
-        paging: false,
+        paging: true,
+        pageSize: 5,
         search: false,
         addRowPosition: 'first',
         sorting: false,
@@ -51,7 +53,6 @@ const JobItems = (props) => {
                     jobId: job.id,
                     name: newData.name,
                     quantity: parseInt(newData.quantity),
-                    buy: parseFloat(newData.buy),
                     sell: parseFloat(newData.sell),
                 }
                 jobService.createItem(item)
@@ -73,7 +74,6 @@ const JobItems = (props) => {
                     jobId: job.id,
                     name: newData.name,
                     quantity: parseInt(newData.quantity),
-                    buy: parseFloat(newData.buy),
                     sell: parseFloat(newData.sell),
                 }
                 jobService.updateItem(item)

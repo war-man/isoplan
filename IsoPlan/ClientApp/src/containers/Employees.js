@@ -35,7 +35,8 @@ function Employees() {
         draggable: false,
         actionsColumnIndex: -1,
         pageSizeOptions: [],
-        paging: false,
+        paging: true,
+        pageSize: 8,
     }
     const actions = [
         {
@@ -81,7 +82,6 @@ function Employees() {
                 handleCloseAdd();
                 getEmployees();
             })
-            .catch(err => alert(err))
     }
 
     const [openAdd, setOpenAdd] = useState(false)
@@ -111,7 +111,6 @@ function Employees() {
                 handleConfirmClose()
                 getEmployees()
             })
-            .catch(err => alert(err))
     }
 
     const [data, setData] = useState([])
@@ -121,7 +120,6 @@ function Employees() {
                 setData(res)
                 setLoading(false)
             })
-            .catch(err => alert(err))
     }
     useEffect(() => {
         setLoading(true)

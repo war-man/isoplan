@@ -42,6 +42,10 @@ namespace IsoPlan.Helpers
             CreateMap<Facture, FactureDTO>();
             CreateMap<FactureDTO, Facture>();
 
+            // expense mapping
+            CreateMap<Expense, ExpenseDTO>();
+            CreateMap<ExpenseDTO, Expense>();
+
         }
     }
 }

@@ -24,5 +24,6 @@ namespace IsoPlan.Data.DTOs
         public string Status { get; set; }
         public List<JobItemDTO> JobItems { get; set; }
         public List<FactureDTO> Factures { get; set; }
+        public List<ExpenseDTO> Expenses { get; set; }
     }
 }

@@ -34,11 +34,18 @@ namespace IsoPlan.Services
                 throw new AppException("Name is empty");
             }
 
+            Job job = _jobService.GetById(facture.JobId);
+
+            if(job == null)
+            {
+                throw new AppException("Job not found");
+            }
+
             facture.FilePath = "";
             _context.Factures.Add(facture);
             _context.SaveChanges();
 
-            Job job = _jobService.GetById(facture.JobId);
+            job = _jobService.GetById(facture.JobId);
             _jobService.RecalculateFactures(job);
         }
 
@@ -80,7 +87,7 @@ namespace IsoPlan.Services
                 throw new AppException("Facture not found");
             }
 
-            if (string.IsNullOrWhiteSpace(facture.Name))
+            if (string.IsNullOrWhiteSpace(factureParam.Name))
             {
                 throw new AppException("Name is empty");
             }

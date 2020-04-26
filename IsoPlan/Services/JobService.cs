@@ -18,6 +18,7 @@ namespace IsoPlan.Services
         void Create(Job job);
         void Update(Job job);
         void Delete(int id);
+        JobItem GetJobItem(int id);
         void CreateJobItem(JobItem jobItem);
         void UpdateJobItem(JobItem jobItem);
         void DeleteJobItem(int id);
@@ -26,6 +27,7 @@ namespace IsoPlan.Services
         void DeleteFile(int id);
         List<JobFilePair> GetFiles(int jobId);
         void RecalculateFactures(Job job);
+        void RecalculateExpenseForItem(JobItem jobItem);
     }
     public class JobService : IJobService
     {
@@ -52,9 +54,11 @@ namespace IsoPlan.Services
             var job = _context.Jobs
                 .Include(j => j.JobItems)
                 .Include(j => j.Factures)
+                .Include(j => j.Expenses)
                 .FirstOrDefault(j => j.Id == id);
 
             job.Factures = job.Factures.OrderByDescending(f => f.Date).ToList();
+            job.Expenses = job.Expenses.OrderByDescending(e => e.Date).ToList();
 
             return job;
                 
@@ -139,6 +143,21 @@ namespace IsoPlan.Services
             _context.SaveChanges();
         }
 
+        public void RecalculateExpenseForItem(JobItem jobItem)
+        {
+            jobItem.Buy = jobItem.Expenses.Sum(e => e.Value);
+            _context.SaveChanges();
+            Recalculate(jobItem.Job);
+        }
+
+        public JobItem GetJobItem(int id)
+        {
+            return _context.JobItems
+                .Include(ji => ji.Job)
+                .Include(ji => ji.Expenses)
+                .FirstOrDefault(ji => ji.Id == id);
+        }
+
         public void CreateJobItem(JobItem jobItem)
         {
             var job = GetById(jobItem.JobId);
@@ -153,7 +172,7 @@ namespace IsoPlan.Services
                 throw new AppException("Name is empty");
             }
 
-            jobItem.Profit = jobItem.Sell - jobItem.Buy;
+            jobItem.Profit = jobItem.Sell;
             _context.JobItems.Add(jobItem);
             _context.SaveChanges();
 
@@ -183,7 +202,6 @@ namespace IsoPlan.Services
 
             jobItem.Name = jobItemParam.Name;
             jobItem.Quantity = jobItemParam.Quantity;
-            jobItem.Buy = jobItemParam.Buy;
             jobItem.Sell = jobItemParam.Sell;
             jobItem.Profit = jobItem.Sell - jobItem.Buy;
             _context.SaveChanges();

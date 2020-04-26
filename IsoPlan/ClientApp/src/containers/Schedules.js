@@ -161,25 +161,21 @@ function Schedules() {
                 setData(res);
                 setLoading(false);
             })
-            .catch(err => alert(err))
         employeeService.getAll([{
             name: 'status',
             value: EmployeeStatus.Active
         }])
             .then(res => setEmployees(res))
-            .catch(err => alert(err))
         jobService.getAll([{
             name: 'status',
             value: JobStatus.Started
         }])
             .then(res => setJobs(res))
-            .catch(err => alert(err))
     }
 
     const handleCreate = schedule => {
         scheduleService.create(schedule)
             .then(() => getEverything(startOfWeekString))
-            .catch((err) => alert(err))
     }
 
     const handleUpdate = () => {
@@ -241,7 +237,7 @@ function Schedules() {
                     component={Link}
                     to={`${nextStartOfWeekString}`}
                 >
-                    prochaine
+                    suivante
                 </Button>
             </Paper>
             <MaterialTable

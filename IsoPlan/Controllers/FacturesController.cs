@@ -18,7 +18,6 @@ namespace IsoPlan.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "Admin, Manager")]
-
     public class FacturesController : ControllerBase
     {
         private readonly IFactureService _factureService;
@@ -41,8 +40,8 @@ namespace IsoPlan.Controllers
         [HttpGet]
         public IActionResult Get(int jobId, string startDate, string endDate)
         {
-            IEnumerable<FactureDTO> jobDtos = _mapper.Map<List<FactureDTO>>(_factureService.GetAll(jobId, startDate, endDate));
-            return Ok(jobDtos);
+            IEnumerable<FactureDTO> factureDTOs = _mapper.Map<List<FactureDTO>>(_factureService.GetAll(jobId, startDate, endDate));
+            return Ok(factureDTOs);
         }
 
         [HttpGet("{id}")]
@@ -81,7 +80,13 @@ namespace IsoPlan.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _fileService.DeleteDirectory(Path.Combine("Factures", id.ToString()));
+            Facture facture = _factureService.GetById(id);
+            if (facture == null)
+            {
+                throw new AppException("Facture not found");
+            }
+
+            _fileService.DeleteDirectory(Path.Combine("Jobs", facture.JobId.ToString(),"internalFactures", id.ToString()));
             _factureService.Delete(id);
             return NoContent();
         }

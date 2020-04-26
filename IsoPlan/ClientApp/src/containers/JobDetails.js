@@ -13,6 +13,9 @@ import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog';
 import JobItems from '../components/JobItems';
 import JobDetailsForm from '../components/JobDetailsForm';
 import Factures from '../components/Factures';
+import Expenses from '../components/Expenses';
+import { expenseService } from '../services/expenseService';
+
 
 function JobDetails() {
     const classes = useStyles();
@@ -128,6 +131,20 @@ function JobDetails() {
             })
     }
 
+    const uploadExpenseFile = (expenseId, formData) => {
+        setLoading(true)
+        expenseService.uploadFile(expenseId, formData)
+            .then(() => {
+                getJob(id);
+            })
+            .catch(err => {
+                setVariant("error");
+                setMessage(err);
+                setOpenSnackbar(true);
+                setLoading(false);
+            })
+    }
+
     const [loading, setLoading] = useState(false)
     const [variant, setVariant] = useState('success');
     const [message, setMessage] = useState('');
@@ -157,6 +174,8 @@ function JobDetails() {
             deleteFile();
         } else if (deleteMode === 'facture') {
             deleteFactureFile();
+        } else if (deleteMode === 'expense'){
+            deleteExpenseFile();
         }
     }
 
@@ -188,6 +207,21 @@ function JobDetails() {
             })
     }
 
+    const deleteExpenseFile = () => {
+        setConfirmOpen(false);
+        setLoading(true);
+        expenseService.deleteFile(deleteId)
+            .then(() => {
+                getJob(id);
+            })
+            .catch(err => {
+                setVariant("error");
+                setMessage(err);
+                setOpenSnackbar(true);
+                setLoading(false);
+            })
+    }
+
     return (
         <Dashboard title={`${job.name} (${job.clientName})`}>
             <Paper className={classes.paper} square>
@@ -208,6 +242,23 @@ function JobDetails() {
                     loading={loading}
                     setOpenSnackbar={setOpenSnackbar}
                     getJob={getJob}
+                />
+            </Paper>
+            <Paper square className={classes.topMargin}>
+                <Expenses
+                    job={job}
+                    setMessage={setMessage}
+                    setVariant={setVariant}
+                    loading={loading}
+                    setOpenSnackbar={setOpenSnackbar}
+                    getJob={getJob}
+                    to={'api/Expenses/Files'}
+                    uploadFile={uploadExpenseFile}
+                    deleteFile={(id) => {
+                        setConfirmOpen(true);
+                        setDeleteId(id);
+                        setDeleteMode('expense')
+                    }}
                 />
             </Paper>
             <Paper square className={classes.topMargin}>

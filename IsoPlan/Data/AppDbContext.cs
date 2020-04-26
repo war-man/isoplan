@@ -29,6 +29,17 @@ namespace IsoPlan.Data
               .WithMany(j => j.Factures)
               .HasForeignKey(f => f.JobId);
 
+            modelBuilder.Entity<Expense>()
+                .HasOne(e => e.Job)
+                .WithMany(j => j.Expenses)
+                .HasForeignKey(e => e.JobId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Expense>()
+                .HasOne(e => e.JobItem)
+                .WithMany(ji => ji.Expenses)
+                .HasForeignKey(e => e.JobItemId);
+
             modelBuilder.Entity<User>().HasAlternateKey(u => u.Username).HasName("AlternateKey_Username");
 
             modelBuilder.Entity<Schedule>().HasKey(s => new { s.JobId, s.EmployeeId, s.Date });
@@ -42,6 +53,6 @@ namespace IsoPlan.Data
         public DbSet<JobItem> JobItems { get; set; }
         public DbSet<JobFile> JobFiles { get; set; }
         public DbSet<Facture> Factures { get; set; }
-
+        public DbSet<Expense> Expenses { get; set; }
     }
 }
