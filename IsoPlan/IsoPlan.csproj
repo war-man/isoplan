@@ -50,6 +50,11 @@
     <None Include="wwwroot\*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\20200307163459_expenses.cs" />
+    <Compile Remove="Migrations\20200307163459_expenses.Designer.cs" />
+  </ItemGroup>
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">

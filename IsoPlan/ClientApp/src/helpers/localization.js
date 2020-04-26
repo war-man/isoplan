@@ -16,5 +16,11 @@ export const Localization = {
             cancelTooltip: 'Annuler',
             saveTooltip: 'Enregistrer'
         }
+    },
+    pagination: {
+        firstTooltip: 'Première page',
+        lastTooltip: 'Dernière page',
+        previousTooltip: 'Page précédente',
+        nextTooltip: 'Page suivante'
     }
 }

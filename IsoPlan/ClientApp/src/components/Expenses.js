@@ -6,19 +6,26 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import CloseIcon from '@material-ui/icons/Close';
 import { getCurrentUser } from '../helpers/authentication';
 import moment from 'moment';
-import { factureService } from '../services/factureService';
+import { expenseService } from '../services/expenseService';
 
-const Factures = (props) => {
+const Expenses = (props) => {
 
     const { job, setMessage, setVariant, loading, setOpenSnackbar, getJob, to, uploadFile, deleteFile } = props;
 
+    const possibleItems = preProcessData(job.jobItems);
+
     const columns = [
-        { title: 'Facture Nr', field: 'name' },
+        { title: 'Nom', field: 'name' },
         {
             title: 'Date',
             field: 'date',
             type: 'date',
             render: rowData => <div>{moment(rowData.date).format('DD.MM.YYYY')}</div>
+        },
+        {
+            title: 'Achat type',
+            field: 'jobItemId',
+            lookup: possibleItems,
         },
         {
             title: `Montant`,
@@ -27,7 +34,6 @@ const Factures = (props) => {
             currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
             headerStyle: { textAlign: 'right' },
         },
-        { title: 'Payé', field: 'paid', type: 'boolean' },
         {
             title: 'Document',
             field: 'filePath',
@@ -65,7 +71,7 @@ const Factures = (props) => {
                         onClick={clearInput}
                         size={'small'}
                     >
-                        <NoteAddIcon/>
+                        <NoteAddIcon />
                         <input
                             type="file"
                             style={{ display: "none" }}
@@ -100,13 +106,14 @@ const Factures = (props) => {
         onRowAdd: newData =>
             new Promise((resolve, reject) => {
                 const item = {
+                    id: newData.id,
                     jobId: job.id,
                     name: newData.name,
                     date: moment(newData.date).format("YYYY-MM-DD"),
                     value: parseFloat(newData.value),
-                    paid: newData.paid,
+                    jobItemId: parseInt(newData.jobItemId)
                 }
-                factureService.create(item)
+                expenseService.create(item)
                     .then(() => {
                         getJob(job.id)
                         resolve()
@@ -126,9 +133,9 @@ const Factures = (props) => {
                     name: newData.name,
                     date: moment(newData.date).format("YYYY-MM-DD"),
                     value: parseFloat(newData.value),
-                    paid: newData.paid,
+                    jobItemId: parseInt(newData.jobItemId)
                 }
-                factureService.update(item)
+                expenseService.update(item)
                     .then(() => {
                         getJob(job.id)
                         resolve()
@@ -142,7 +149,7 @@ const Factures = (props) => {
             }),
         onRowDelete: oldData =>
             new Promise((resolve, reject) => {
-                factureService.deleteFacture(oldData.id)
+                expenseService.deleteFacture(oldData.id)
                     .then(() => {
                         getJob(job.id)
                         resolve()
@@ -162,10 +169,10 @@ const Factures = (props) => {
                 components={{
                     Container: props => <Paper {...props} elevation={0} />,
                 }}
-                data={job.factures}
+                data={job.expenses}
                 columns={columns}
                 options={options}
-                title={'Facturation'}
+                title={'Achat'}
                 editable={editable}
                 isLoading={loading}
                 localization={Localization}
@@ -174,4 +181,12 @@ const Factures = (props) => {
     )
 }
 
-export default Factures;
+export default Expenses;
+
+function preProcessData(data) {
+    var newData = {};
+    data.forEach(e => {
+        newData = { ...newData, [e.id]: e.name }
+    });
+    return newData;
+}

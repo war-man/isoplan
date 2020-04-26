@@ -121,6 +121,7 @@ namespace IsoPlan
             services.AddScoped<IScheduleService, ScheduleService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IFactureService, FactureService>();
+            services.AddScoped<IExpenseService, ExpenseService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

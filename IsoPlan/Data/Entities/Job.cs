@@ -24,5 +24,6 @@ namespace IsoPlan.Data.Entities
         public List<JobItem> JobItems { get; set; }
         public List<JobFile> Files { get; set; }
         public List<Facture> Factures { get; set; }
+        public List<Expense> Expenses { get; set; }
     }
 }

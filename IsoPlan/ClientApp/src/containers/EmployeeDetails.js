@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { employeeService } from '../services/employeeService';
 import { EmployeeStatus, EmployeeStatusList, EmployeeStatusFR } from '../helpers/employeeStatus';
 import { ContractType, ContractTypeList, ContractTypeFR } from '../helpers/contractType';
-import { Grid, Paper, TextField, FormControl, MenuItem, Button, InputLabel, Select, makeStyles } from '@material-ui/core';
+import { Paper, TextField, FormControl, MenuItem, Button, InputLabel, Select, makeStyles } from '@material-ui/core';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import { fr } from 'date-fns/locale'
@@ -18,6 +18,7 @@ const useStyles = makeStyles(theme => ({
     paper: {
         padding: theme.spacing(1),
         textAlign: 'center',
+        marginBottom: theme.spacing(1)
     },
     container: {
         paddingLeft: theme.spacing(1),
@@ -30,6 +31,12 @@ const useStyles = makeStyles(theme => ({
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
         width: 200,
+        textAlign: 'left',
+    },
+    remarksField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: 600 + theme.spacing(5),
         textAlign: 'left',
     },
     actions: {
@@ -54,8 +61,8 @@ function EmployeeDetails() {
         var value;
         if (name === 'workStart' || name === 'workEnd') {
             value = moment(event).isValid()
-                    ? moment(event).format('YYYY-MM-DD')
-                    : null   
+                ? moment(event).format('YYYY-MM-DD')
+                : null
         } else {
             value = event.target.value;
         }
@@ -143,7 +150,7 @@ function EmployeeDetails() {
     const deleteFile = () => {
         setConfirmOpen(false)
         employeeService.deleteFile(deleteId)
-            .then(() => {                
+            .then(() => {
                 getFiles(id)
             })
             .catch(err => {
@@ -173,129 +180,127 @@ function EmployeeDetails() {
 
     return (
         <Dashboard title={`${employee.firstName} ${employee.lastName}`}>
-            <Grid container spacing={3}>
-                <Grid item sm={12} md={5}>
-                    <Paper className={classes.paper}>
-                        <form autoComplete="off" onSubmit={handleSubmit} className={classes.container}>
-                            <TextField
-                                label='Prénom'
-                                required
-                                value={employee.firstName}
-                                className={classes.textField}
-                                onChange={handleChange('firstName')}
-                                margin="normal"
-                            />
-                            <TextField
-                                label='Nom'
-                                required
-                                value={employee.lastName}
-                                className={classes.textField}
-                                onChange={handleChange('lastName')}
-                                margin="normal"
-                            />
-                            <FormControl margin="normal" className={classes.textField}>
-                                <InputLabel>Statut</InputLabel>
-                                <Select
-                                    value={employee.status}
-                                    onChange={handleChange('status')}
-                                >
-                                    {EmployeeStatusList.map((status, i) =>
-                                        <MenuItem key={i} value={status}>{EmployeeStatusFR[status]}</MenuItem>
-                                    )}
-                                </Select>
-                            </FormControl>
-                            <TextField
-                                label='Journée (€)'
-                                required
-                                type='number'
-                                inputProps={{ min: 0, step: 0.01 }}
-                                value={employee.salary}
-                                className={classes.textField}
-                                onChange={handleChange('salary')}
-                                margin="normal"
-                            />
-                            <TextField
-                                label='Nr de compte'
-                                required
-                                value={employee.accountNumber}
-                                className={classes.textField}
-                                onChange={handleChange('accountNumber')}
-                                margin="normal"
-                            />
-                            <FormControl margin="normal" className={classes.textField}>
-                                <InputLabel>Contrat</InputLabel>
-                                <Select
-                                    value={employee.contractType}
-                                    onChange={handleChange('contractType')}
-                                >
-                                    {ContractTypeList.map((contract, i) =>
-                                        <MenuItem key={i} value={contract}>{ContractTypeFR[contract]}</MenuItem>
-                                    )}
-                                </Select>
-                            </FormControl>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
-                                <KeyboardDatePicker
-                                    required={true}
-                                    margin="normal"
-                                    label="Commencé le travail"
-                                    cancelLabel="Annuler"
-                                    format="dd.MM.yyyy"
-                                    value={employee.workStart}
-                                    className={classes.textField}
-                                    onChange={handleChange('workStart')}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'Changer la date',
-                                    }}
-                                />
-                                <KeyboardDatePicker
-                                    margin="normal"                                    
-                                    label="Arrêté le travail"
-                                    cancelLabel="Annuler"
-                                    format="dd.MM.yyyy"
-                                    value={employee.workEnd}
-                                    className={classes.textField}
-                                    onChange={handleChange('workEnd')}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'Changer la date',
-                                    }}
-                                />
-                            </MuiPickersUtilsProvider>
-                            <TextField
-                                label="Remarque"
-                                multiline
-                                value={employee.note}
-                                onChange={handleChange('note')}
-                                className={classes.textField}
-                                fullWidth
-                                rowsMax={10}
-                                margin="normal"
-                                variant="outlined"
-                            />
-                            <div className={classes.textField}></div>
-                            <div className={classes.actions}>
-                                <Button variant="contained" color="primary" className={classes.button} onClick={() => getEmployee(id)}>
-                                    Annuler
-                                </Button>
-                                <Button variant="contained" type="submit" color="primary">
-                                    Enregistrer
-                                </Button>
-                            </div>
-                        </form>
-                    </Paper>
-                </Grid>
-                <Grid item sm={12} md={4}>
-                    <Files
-                        files={files}
-                        uploadFile={uploadFile(id)}
-                        deleteFile={(id) => {
-                            setConfirmOpen(true); 
-                            setDeleteId(id);
-                        }}
-                        to={'api/Employees/Files'}
-                        isLoading={fileLoading}
+            <Paper className={classes.paper}>
+                <form autoComplete="off" onSubmit={handleSubmit} className={classes.container}>
+                    <TextField
+                        label='Prénom'
+                        required
+                        value={employee.firstName}
+                        className={classes.textField}
+                        onChange={handleChange('firstName')}
+                        margin="normal"
                     />
-                </Grid>
-            </Grid>
+                    <TextField
+                        label='Nom'
+                        required
+                        value={employee.lastName}
+                        className={classes.textField}
+                        onChange={handleChange('lastName')}
+                        margin="normal"
+                    />
+                    <FormControl margin="normal" className={classes.textField}>
+                        <InputLabel>Statut</InputLabel>
+                        <Select
+                            value={employee.status}
+                            onChange={handleChange('status')}
+                        >
+                            {EmployeeStatusList.map((status, i) =>
+                                <MenuItem key={i} value={status}>{EmployeeStatusFR[status]}</MenuItem>
+                            )}
+                        </Select>
+                    </FormControl>
+                    <TextField
+                        label='Journée (€)'
+                        required
+                        type='number'
+                        inputProps={{ min: 0, step: 0.01 }}
+                        value={employee.salary}
+                        className={classes.textField}
+                        onChange={handleChange('salary')}
+                        margin="normal"
+                    />
+                    <TextField
+                        label='Nr de compte'
+                        required
+                        value={employee.accountNumber}
+                        className={classes.textField}
+                        onChange={handleChange('accountNumber')}
+                        margin="normal"
+                    />
+                    <FormControl margin="normal" className={classes.textField}>
+                        <InputLabel>Contrat</InputLabel>
+                        <Select
+                            value={employee.contractType}
+                            onChange={handleChange('contractType')}
+                        >
+                            {ContractTypeList.map((contract, i) =>
+                                <MenuItem key={i} value={contract}>{ContractTypeFR[contract]}</MenuItem>
+                            )}
+                        </Select>
+                    </FormControl>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
+                        <KeyboardDatePicker
+                            required={true}
+                            margin="normal"
+                            label="Commencé le travail"
+                            cancelLabel="Annuler"
+                            format="dd.MM.yyyy"
+                            value={employee.workStart}
+                            className={classes.textField}
+                            onChange={handleChange('workStart')}
+                            KeyboardButtonProps={{
+                                'aria-label': 'Changer la date',
+                            }}
+                        />
+                        <KeyboardDatePicker
+                            margin="normal"
+                            label="Arrêté le travail"
+                            cancelLabel="Annuler"
+                            format="dd.MM.yyyy"
+                            value={employee.workEnd}
+                            className={classes.textField}
+                            onChange={handleChange('workEnd')}
+                            KeyboardButtonProps={{
+                                'aria-label': 'Changer la date',
+                            }}
+                        />
+                    </MuiPickersUtilsProvider>
+                    <div className={classes.textField}></div>
+                    <div className={classes.textField}></div>
+                    <TextField
+                        label="Remarque"
+                        multiline
+                        value={employee.note}
+                        onChange={handleChange('note')}
+                        className={classes.remarksField}
+                        fullWidth
+                        rowsMax={6}
+                        rows={6}
+                        margin="normal"
+                        variant="outlined"
+                    />
+                    <div className={classes.textField}></div>
+                    <div className={classes.textField}></div>
+                    <div className={classes.actions}>
+                        <Button variant="contained" color="primary" className={classes.button} onClick={() => getEmployee(id)}>
+                            Annuler
+                                </Button>
+                        <Button variant="contained" type="submit" color="primary">
+                            Enregistrer
+                                </Button>
+                    </div>
+                </form>
+            </Paper>
+            <Files
+                files={files}
+                uploadFile={uploadFile(id)}
+                deleteFile={(id) => {
+                    setConfirmOpen(true);
+                    setDeleteId(id);
+                }}
+                to={'api/Employees/Files'}
+                isLoading={fileLoading}
+            />
             <Snackbar
                 anchorOrigin={{
                     vertical: 'top',

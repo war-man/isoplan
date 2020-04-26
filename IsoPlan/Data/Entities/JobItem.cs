@@ -1,4 +1,6 @@
-﻿namespace IsoPlan.Data.Entities
+﻿using System.Collections.Generic;
+
+namespace IsoPlan.Data.Entities
 {
     public class JobItem
     {
@@ -10,5 +12,6 @@
         public float Profit { get; set; }
         public int JobId { get; set; }
         public Job Job { get; set; }
+        public List<Expense> Expenses { get; set; }
     }
 }

@@ -130,7 +130,8 @@ function Jobs() {
         draggable: false,
         actionsColumnIndex: -1,
         pageSizeOptions: [],
-        paging: false,
+        paging: true,
+        pageSize: 8,
         rowStyle: (rowData) => {
             if (rowData.rgCollected === false && moment(rowData.rgDate).isValid() && moment(rowData.rgDate).isBefore(moment(new Date()))) {
                 return {
@@ -185,7 +186,6 @@ function Jobs() {
             .then(() => {
                 getJobs();
             })
-            .catch(err => alert(err))
     }
     const [openAdd, setOpenAdd] = useState(false)
     const handleCloseAdd = () => {
@@ -216,7 +216,6 @@ function Jobs() {
                 handleConfirmClose()
                 getJobs()
             })
-            .catch(err => alert(err))
     }
 
     const [data, setData] = useState([])
@@ -227,7 +226,6 @@ function Jobs() {
                 setData(res)
                 setLoading(false)
             })
-            .catch(err => alert(err))
     }
     useEffect(() => {
         getJobs()

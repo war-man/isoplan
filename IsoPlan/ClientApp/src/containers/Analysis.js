@@ -100,7 +100,6 @@ function Analysis() {
                 setTotalData(res);
                 setTotalLoading(false);
             })
-            .catch(err => alert(err))
     }
 
     const [employee, setEmployee] = useState({
@@ -131,7 +130,6 @@ function Analysis() {
                 setByEmployee(res);
                 setbyEmployeeLoading(false);
             })
-            .catch(err => alert(err))
     }
 
 
@@ -163,21 +161,18 @@ function Analysis() {
                 setByJob(res);
                 setByJobLoading(false);
             })
-            .catch(err => alert(err))
     }
 
     const [employees, setEmployees] = useState([])
     const getEmployees = (params) => {
         employeeService.getBySchedules(params)
             .then(res => setEmployees(res))
-            .catch(err => alert(err))
     }
 
     const [jobs, setJobs] = useState([])
     const getJobs = (params) => {
         jobService.getBySchedules(params)
             .then(res => setJobs(res))
-            .catch(err => alert(err))
     }
 
     useEffect(() => {
