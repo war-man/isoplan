@@ -147,7 +147,8 @@ namespace IsoPlan.Services
         {
             jobItem.Buy = jobItem.Expenses.Sum(e => e.Value);
             _context.SaveChanges();
-            Recalculate(jobItem.Job);
+            Job job = GetById(jobItem.JobId);
+            Recalculate(job);
         }
 
         public JobItem GetJobItem(int id)
