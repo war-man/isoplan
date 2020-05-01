@@ -125,7 +125,7 @@ namespace IsoPlan.Controllers
             {
                 throw new AppException("Facture not found");
             }
-            _fileService.DeleteDirectory(facture.FilePath);
+            _fileService.Delete(facture.FilePath);
             facture.FilePath = "";
             _factureService.Update(facture);
             return NoContent();

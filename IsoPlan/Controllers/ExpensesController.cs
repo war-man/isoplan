@@ -125,7 +125,7 @@ namespace IsoPlan.Controllers
             {
                 throw new AppException("Expense not found");
             }
-            _fileService.DeleteDirectory(expense.FilePath);
+            _fileService.Delete(expense.FilePath);
             expense.FilePath = "";
             _expenseService.Update(expense);
             return NoContent();
