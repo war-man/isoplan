@@ -58,7 +58,9 @@ namespace IsoPlan.Services
                 .FirstOrDefault(j => j.Id == id);
 
             job.Factures = job.Factures.OrderByDescending(f => f.Date).ToList();
-            job.Expenses = job.Expenses.OrderByDescending(e => e.Date).ToList();
+            job.Expenses = job.Expenses.
+                OrderBy(e => e.JobItem).
+                ThenByDescending(e => e.Date).ToList();
 
             return job;
                 
@@ -146,6 +148,7 @@ namespace IsoPlan.Services
         public void RecalculateExpenseForItem(JobItem jobItem)
         {
             jobItem.Buy = jobItem.Expenses.Sum(e => e.Value);
+            jobItem.Profit = jobItem.Buy - jobItem.Sell;
             _context.SaveChanges();
             Job job = GetById(jobItem.JobId);
             Recalculate(job);
