@@ -59,7 +59,7 @@ namespace IsoPlan.Services
 
             job.Factures = job.Factures.OrderByDescending(f => f.Date).ToList();
             job.Expenses = job.Expenses.
-                OrderBy(e => e.JobItem).
+                OrderBy(e => e.JobItemId).
                 ThenByDescending(e => e.Date).ToList();
 
             return job;
