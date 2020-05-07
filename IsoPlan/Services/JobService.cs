@@ -148,7 +148,7 @@ namespace IsoPlan.Services
         public void RecalculateExpenseForItem(JobItem jobItem)
         {
             jobItem.Buy = jobItem.Expenses.Sum(e => e.Value);
-            jobItem.Profit = jobItem.Buy - jobItem.Sell;
+            jobItem.Profit = jobItem.Sell - jobItem.Buy;
             _context.SaveChanges();
             Job job = GetById(jobItem.JobId);
             Recalculate(job);
