@@ -4,14 +4,16 @@ using IsoPlan.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IsoPlan.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200630084507_multiplier")]
+    partial class multiplier
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,9 +133,6 @@ namespace IsoPlan.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DatePaid")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("FilePath")
                         .HasColumnType("nvarchar(max)");
 
@@ -200,9 +199,6 @@ namespace IsoPlan.Migrations
                         .HasColumnType("real");
 
                     b.Property<float>("TotalFactures")
-                        .HasColumnType("real");
-
-                    b.Property<float>("TotalPaid")
                         .HasColumnType("real");
 
                     b.Property<float>("TotalProfit")

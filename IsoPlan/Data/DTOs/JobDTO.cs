@@ -15,6 +15,7 @@ namespace IsoPlan.Data.DTOs
         public float TotalSell { get; set; }
         public float TotalProfit { get; set; }
         public float Remaining { get; set; }
+        public float RemainingToPay { get; set; }
         public float TotalFactures { get; set; }
         public DateTime? DevisDate { get; set; }
         public DateTime? StartDate { get; set; }

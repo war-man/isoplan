@@ -97,7 +97,7 @@ function ScheduleAddDialog(props) {
                             className={classes.textField}
                             onChange={handleChange('date')}
                             value={schedule.date}
-                            shouldDisableDate={date => date.getUTCDay() === 6}
+                            shouldDisableDate={date => date.getDay() === 0}
                             KeyboardButtonProps={{
                                 'aria-label': 'Changer la date',
                             }}

@@ -42,6 +42,7 @@ function Jobs() {
         sell: 0,
         profit: 0,
         remaining: 0,
+        remainingToPay: 0,
         factures: 0,
     })
     const columns = [
@@ -50,7 +51,7 @@ function Jobs() {
             title: 'Devis statut',
             field: 'devisStatus',
             render: rowData => <div>{DevisStatusFR[rowData.devisStatus]}</div>,
-            customFilterAndSearch: (term, rowData) => DevisStatusFR[rowData.devisStatus].toUpperCase().includes(term.toUpperCase())
+            customFilterAndSearch: (term, rowData) => DevisStatusFR[rowData.devisStatus].toUpperCase().includes(term.toUpperCase()),
         },
         { title: 'Client', field: 'clientName', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
         { title: 'Affaire', field: 'name', cellStyle: { maxWidth: '150px', overflowWrap: 'break-word' } },
@@ -124,9 +125,18 @@ function Jobs() {
             currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
             headerStyle: {textAlign: 'right'}
         },
+        {
+            title: `Reste à payer [${Number(total.remainingToPay.toFixed(2)).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'})}]`,
+            field: 'remainingToPay',
+            type: 'currency',
+            currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
+            headerStyle: {textAlign: 'right'}
+        },
         { title: 'RG', field: 'rgCollected', type: 'boolean' },
     ];
     const options = {
+        exportButton: true,
+        exportFileName: 'travaux',
         draggable: false,
         actionsColumnIndex: -1,
         pageSizeOptions: [],
@@ -231,17 +241,15 @@ function Jobs() {
         getJobs()
     }, [])
 
-    useEffect(() => {
-        const recalculate = () => {
-            setTotal({
-                buy: data.map(x => x.totalBuy).reduce((a, b) => a + b, 0),
-                sell: data.map(x => x.totalSell).reduce((a, b) => a + b, 0),
-                profit: data.map(x => x.totalProfit).reduce((a, b) => a + b, 0),
-                remaining: data.map(x => x.remaining).reduce((a, b) => a + b, 0),
-                factures: data.map(x => x.totalFactures).reduce((a, b) => a + b, 0),
-            })
-        }
-        recalculate()
+    useEffect(() => {       
+        setTotal({
+            buy: data.map(x => x.totalBuy).reduce((a, b) => a + b, 0),
+            sell: data.map(x => x.totalSell).reduce((a, b) => a + b, 0),
+            profit: data.map(x => x.totalProfit).reduce((a, b) => a + b, 0),
+            remaining: data.map(x => x.remaining).reduce((a, b) => a + b, 0),
+            remainingToPay: data.map(x => x.remainingToPay).reduce((a, b) => a + b, 0),
+            factures: data.map(x => x.totalFactures).reduce((a, b) => a + b, 0),
+        })        
     }, [data])
 
     const [loading, setLoading] = useState(false)
@@ -283,6 +291,7 @@ function Jobs() {
         <Dashboard maxWidth={filter.details ? false : 0} title={'Travaux'}>
             {renderRedirect()}  
             <MaterialTable
+                key={Number(filter.details)}
                 columns={filter.details ? columnsDetails : columns}
                 data={data}
                 options={options}

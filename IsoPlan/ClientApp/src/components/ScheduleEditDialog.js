@@ -105,6 +105,19 @@ function ScheduleEditDialog(props) {
                         }}
                     />
                     <TextField
+                        label='Multiplier'
+                        type='number'
+                        required
+                        defaultValue={scheduleToEdit.multiplier}
+                        className={classes.textField}
+                        onBlur={handleChange('multiplier')}
+                        margin="normal"
+                        inputProps={{
+                            min: '0.5', 
+                            step: '0.5',                            
+                        }}
+                    />
+                    <TextField
                         label="Remarque"
                         multiline
                         defaultValue={scheduleToEdit.note}
@@ -115,6 +128,7 @@ function ScheduleEditDialog(props) {
                         margin="normal"
                         variant="outlined"
                     />
+                    <div className={classes.textField}></div>
                 </DialogContent>
                 <DialogActions className={classes.actions}>
                     <Button variant="contained" onClick={handleOpenDelete} color="secondary">

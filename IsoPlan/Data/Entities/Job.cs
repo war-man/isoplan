@@ -15,6 +15,7 @@ namespace IsoPlan.Data.Entities
         public float TotalSell { get; set; }
         public float TotalProfit { get; set; }
         public float TotalFactures { get; set; }
+        public float TotalPaid { get; set; }
         public DateTime? DevisDate { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }

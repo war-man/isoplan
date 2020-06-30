@@ -12,6 +12,7 @@ namespace IsoPlan.Data.Entities
         public DateTime Date { get; set; }
         public float Value { get; set; }
         public bool Paid { get; set; }
+        public DateTime DatePaid { get; set; }
         public string FilePath { get; set; }
         public int JobId { get; set; }
         public Job Job { get; set; }

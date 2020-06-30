@@ -34,6 +34,7 @@ function create(schedule) {
 
 function update(schedule) {
     schedule.salary = parseFloat(schedule.salary);
+    schedule.multiplier = parseFloat(schedule.multiplier);
     const requestOptions =
     {
         method: 'PUT',
@@ -48,6 +49,7 @@ function update(schedule) {
 
 function deleteSchedule(schedule) {
     schedule.salary = parseFloat(schedule.salary);
+    schedule.multiplier = parseFloat(schedule.multiplier);
     const requestOptions =
     {
         method: 'DELETE',

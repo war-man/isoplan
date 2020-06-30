@@ -106,6 +106,8 @@ namespace IsoPlan.Services
             expense.Name = expenseParam.Name;
             expense.Date = expenseParam.Date;
             expense.Value = expenseParam.Value;
+            expense.Paid = expenseParam.Paid;
+            expense.DatePaid = expenseParam.DatePaid;
             expense.JobItemId = jobItem.Id;
             expense.JobItem = jobItem;
 

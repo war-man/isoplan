@@ -126,6 +126,7 @@ function Schedules() {
             jobName: '',
             note: '',
             salary: 0,
+            multiplier: 1
         })
     }
     const openDialog = item => event => {
@@ -141,6 +142,7 @@ function Schedules() {
         jobName: '',
         note: '',
         salary: 0,
+        multiplier: 1
     })
 
     const [data, setData] = useState([])

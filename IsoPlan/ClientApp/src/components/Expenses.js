@@ -34,6 +34,13 @@ const Expenses = (props) => {
             currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
             headerStyle: { textAlign: 'right' },
         },
+        { title: 'Payé', field: 'paid', type: 'boolean' },
+        {
+            title: 'Date a payé',
+            field: 'datePaid',
+            type: 'date',
+            render: rowData => <div>{moment(rowData.datePaid).format('DD.MM.YYYY')}</div>
+        },
         {
             title: 'Document',
             field: 'filePath',
@@ -109,8 +116,10 @@ const Expenses = (props) => {
                     id: newData.id,
                     jobId: job.id,
                     name: newData.name,
-                    date: moment(newData.date).format("YYYY-MM-DD"),
+                    date: moment(newData.date).format("YYYY-MM-DD"),                    
                     value: parseFloat(newData.value),
+                    paid: newData.paid,
+                    datePaid: moment(newData.datePaid).format("YYYY-MM-DD"),
                     jobItemId: parseInt(newData.jobItemId)
                 }
                 expenseService.create(item)
@@ -133,6 +142,8 @@ const Expenses = (props) => {
                     name: newData.name,
                     date: moment(newData.date).format("YYYY-MM-DD"),
                     value: parseFloat(newData.value),
+                    paid: newData.paid,
+                    datePaid: moment(newData.datePaid).format("YYYY-MM-DD"),
                     jobItemId: parseInt(newData.jobItemId)
                 }
                 expenseService.update(item)
@@ -149,7 +160,7 @@ const Expenses = (props) => {
             }),
         onRowDelete: oldData =>
             new Promise((resolve, reject) => {
-                expenseService.deleteFacture(oldData.id)
+                expenseService.deleteExpense(oldData.id)
                     .then(() => {
                         getJob(job.id)
                         resolve()

@@ -1,7 +1,9 @@
 export const Localization = {
     toolbar: {
         searchTooltip: 'Chercher',
-        searchPlaceholder: 'Chercher'
+        searchPlaceholder: 'Chercher',
+        exportTitle: 'Telecharger',
+        exportName: 'EXCEL'
     },
     header: {
         actions: 'Actes'

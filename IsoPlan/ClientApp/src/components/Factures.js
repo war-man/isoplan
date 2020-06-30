@@ -12,6 +12,11 @@ const Factures = (props) => {
 
     const { job, setMessage, setVariant, loading, setOpenSnackbar, getJob, to, uploadFile, deleteFile } = props;
 
+    const totalMontant = Number(job.factures.map(x => x.value).reduce((a, b) => a + b, 0).toFixed(2))
+        .toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })
+    const totalPaye = Number(job.factures.filter(x => x.paid).map(x => x.value).reduce((a, b) => a + b, 0).toFixed(2))
+        .toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })
+
     const columns = [
         { title: 'Facture Nr', field: 'name' },
         {
@@ -21,13 +26,19 @@ const Factures = (props) => {
             render: rowData => <div>{moment(rowData.date).format('DD.MM.YYYY')}</div>
         },
         {
-            title: `Montant`,
+            title: `Montant [${totalMontant}]`,
             field: 'value',
             type: 'currency',
             currencySetting: { currencyCode: 'EUR', locale: 'fr-FR' },
             headerStyle: { textAlign: 'right' },
         },
-        { title: 'Payé', field: 'paid', type: 'boolean' },
+        { title: `Payé [${totalPaye}]`, field: 'paid', type: 'boolean' },
+        {
+            title: 'Date a payé',
+            field: 'datePaid',
+            type: 'date',
+            render: rowData => <div>{moment(rowData.datePaid).format('DD.MM.YYYY')}</div>
+        },
         {
             title: 'Document',
             field: 'filePath',
@@ -65,7 +76,7 @@ const Factures = (props) => {
                         onClick={clearInput}
                         size={'small'}
                     >
-                        <NoteAddIcon/>
+                        <NoteAddIcon />
                         <input
                             type="file"
                             style={{ display: "none" }}

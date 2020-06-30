@@ -61,7 +61,8 @@ namespace IsoPlan.Services
                     EmployeeId = e.Id,
                     JobId = job.Id,
                     Date = date,
-                    Salary = e.Salary
+                    Salary = e.Salary,
+                    Multiplier = 1.0
                 });
             }
             _context.SaveChanges();
@@ -115,6 +116,7 @@ namespace IsoPlan.Services
 
             schedule.Note = scheduleParam.Note;
             schedule.Salary = scheduleParam.Salary;
+            schedule.Multiplier = scheduleParam.Multiplier;
 
             _context.SaveChanges();
         }
@@ -142,8 +144,8 @@ namespace IsoPlan.Services
                 .Select(group => new ScheduleTotalPerEmployee
                 {
                     Employee = group.Key,
-                    TotalDays = group.Count(),
-                    Salary = group.Sum(x => x.Salary)
+                    TotalDays = group.Sum(g => g.Multiplier),
+                    Salary = group.Sum(x => x.Salary * x.Multiplier)
                 })
                 .OrderBy(x => x.Employee.FirstName)
                 .ThenBy(x => x.Employee.LastName)

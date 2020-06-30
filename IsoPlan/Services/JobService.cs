@@ -141,13 +141,14 @@ namespace IsoPlan.Services
 
         public void RecalculateFactures(Job job)
         {
-            job.TotalFactures = job.Factures.Where(f => f.Paid).Sum(f => f.Value);
+            job.TotalFactures = job.Factures.Sum(f => f.Value);
+            job.TotalPaid = job.Factures.Where(f => f.Paid).Sum(f => f.Value);
             _context.SaveChanges();
         }
 
         public void RecalculateExpenseForItem(JobItem jobItem)
         {
-            jobItem.Buy = jobItem.Expenses.Sum(e => e.Value);
+            jobItem.Buy = jobItem.Expenses.Where(e => e.Paid).Sum(e => e.Value);
             jobItem.Profit = jobItem.Sell - jobItem.Buy;
             _context.SaveChanges();
             Job job = GetById(jobItem.JobId);

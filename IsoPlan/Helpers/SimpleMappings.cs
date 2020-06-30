@@ -19,7 +19,9 @@ namespace IsoPlan.Helpers
             // job mapping
             CreateMap<Job, JobDTO>()
                 .ForMember(dest => dest.Remaining,
-                           opts => opts.MapFrom(src => src.TotalSell - src.TotalFactures));
+                           opts => opts.MapFrom(src => src.TotalSell - src.TotalFactures))
+                .ForMember(dest => dest.RemainingToPay,
+                               opts => opts.MapFrom(src => src.TotalSell - src.TotalPaid));
             CreateMap<JobDTO, Job>();
 
             // job item mapping
