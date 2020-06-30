@@ -139,7 +139,7 @@ function Jobs() {
         exportFileName: 'travaux',
         draggable: false,
         actionsColumnIndex: -1,
-        pageSizeOptions: [],
+        pageSizeOptions: [7, 25, 50],
         paging: true,
         pageSize: 7,
         rowStyle: (rowData) => {
