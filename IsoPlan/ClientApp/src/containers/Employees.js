@@ -36,7 +36,7 @@ function Employees() {
         actionsColumnIndex: -1,
         pageSizeOptions: [],
         paging: true,
-        pageSize: 8,
+        pageSize: 7,
     }
     const actions = [
         {

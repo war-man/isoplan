@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Dashboard from '../components/Dashboard';
-import { Grid, Typography, Paper, makeStyles, TextField } from '@material-ui/core';
+import { Grid, Typography, makeStyles, TextField } from '@material-ui/core';
 import { scheduleService } from '../services/scheduleService';
 import moment from 'moment';
 import MaterialTable from 'material-table';
@@ -15,16 +15,11 @@ import { employeeService } from '../services/employeeService';
 const useStyles = makeStyles(theme => ({
     toolbarTop: {
         display: 'flex',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        margin: `0px 0px ${theme.spacing(1)}px`,
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(2),
-        paddingTop: theme.spacing(1),
-        paddingBottom: theme.spacing(1)
     },
     datePicker: {
-        width: '150px'
+        width: '150px',
+        marginLeft: '24px'
     },
     autocomplete: {
         width: '240px',
@@ -39,12 +34,13 @@ function Analysis() {
     const classes = useStyles();
 
     const options = {
+        exportButton: true,
+        exportFileName: 'analyse',
         draggable: false,
         actionsColumnIndex: -1,
         pageSizeOptions: [],
         paging: false,
         search: false,
-        toolbar: false,
     }
 
     const [totalLoading, setTotalLoading] = useState(false);
@@ -199,21 +195,6 @@ function Analysis() {
         <Dashboard title={'Analyse'}>
             <Grid container spacing={2} alignItems="flex-start">
                 <Grid item xs={12} md={6}>
-                    <Paper className={classes.toolbarTop}>
-                        <Typography variant="h6">
-                            {`Total ${dateDisplayString}`}
-                        </Typography>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
-                            <DatePicker
-                                cancelLabel="Annuler"
-                                views={["month", "year"]}
-                                label="Changer la date:"
-                                className={classes.datePicker}
-                                value={date}
-                                onChange={(date) => handleDateChange(date)}
-                            />
-                        </MuiPickersUtilsProvider>
-                    </Paper>
                     <MaterialTable
                         columns={totalColumns}
                         data={totalData}
@@ -221,30 +202,26 @@ function Analysis() {
                         localization={Localization}
                         onRowClick={(event, rowData) => setEmployee({ ...rowData.employee })}
                         isLoading={totalLoading}
+                        title={
+                            <div className={classes.toolbarTop}>
+                                <Typography variant="h6">
+                                    {`Total ${dateDisplayString}`}
+                                </Typography>
+                                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
+                                    <DatePicker
+                                        cancelLabel="Annuler"
+                                        views={["month", "year"]}
+                                        label="Changer la date:"
+                                        className={classes.datePicker}
+                                        value={date}
+                                        onChange={(date) => handleDateChange(date)}
+                                    />
+                                </MuiPickersUtilsProvider>
+                            </div>
+                        }
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Paper className={classes.toolbarTop}>
-                        <Typography variant="h6">
-                            {`Employé total ${dateDisplayString}`}
-                        </Typography>
-                        <Autocomplete
-                            className={classes.autocomplete}
-                            options={employees}
-                            getOptionLabel={employee => employee.id === 0 ? '' : `${employee.firstName} ${employee.lastName}`}
-                            onChange={handleEmployeeChange}
-                            value={employee}
-                            renderInput={params => (
-                                <TextField
-                                    {...params}
-                                    variant="standard"
-                                    label="Employé"
-                                    margin="dense"
-                                    fullWidth
-                                />
-                            )}
-                        />
-                    </Paper>
                     <div className={classes.bottomMargin}>
                         <MaterialTable
                             columns={byEmployeeColumns}
@@ -253,35 +230,54 @@ function Analysis() {
                             localization={Localization}
                             onRowClick={(event, rowData) => setJob({ ...rowData.job })}
                             isLoading={byEmployeeLoading}
+                            title={
+                                <div className={classes.toolbarTop}>                                    
+                                    <Autocomplete
+                                        className={classes.autocomplete}
+                                        options={employees}
+                                        getOptionLabel={employee => employee.id === 0 ? '' : `${employee.firstName} ${employee.lastName}`}
+                                        onChange={handleEmployeeChange}
+                                        value={employee}
+                                        renderInput={params => (
+                                            <TextField
+                                                {...params}
+                                                variant="standard"
+                                                label={`Employé total ${dateDisplayString}`}
+                                                margin="dense"
+                                                fullWidth
+                                            />
+                                        )}
+                                    />
+                                </div>
+                            }
                         />
                     </div>
-                    <Paper className={classes.toolbarTop}>
-                        <Typography variant="h6">
-                            {`Travail total ${dateDisplayString}`}
-                        </Typography>
-                        <Autocomplete
-                            className={classes.autocomplete}
-                            options={jobs}
-                            getOptionLabel={job => job.clientName === '' ? '' : `${job.name} (${job.clientName})`}
-                            onChange={handleJobChange}
-                            value={job}
-                            renderInput={params => (
-                                <TextField
-                                    {...params}
-                                    variant="standard"
-                                    label="Travail"
-                                    margin="dense"
-                                    fullWidth
-                                />
-                            )}
-                        />
-                    </Paper>
                     <MaterialTable
                         columns={byJobColumns}
                         data={byJob}
                         options={options}
                         localization={Localization}
                         isLoading={byJobLoading}
+                        title={
+                            <div className={classes.toolbarTop}>
+                                <Autocomplete
+                                    className={classes.autocomplete}
+                                    options={jobs}
+                                    getOptionLabel={job => job.clientName === '' ? '' : `${job.name} (${job.clientName})`}
+                                    onChange={handleJobChange}
+                                    value={job}
+                                    renderInput={params => (
+                                        <TextField
+                                            {...params}
+                                            variant="standard"
+                                            label={`Travail total ${dateDisplayString}`}
+                                            margin="dense"
+                                            fullWidth
+                                        />
+                                    )}
+                                />
+                            </div>
+                        }
                     />
                 </Grid>
             </Grid>

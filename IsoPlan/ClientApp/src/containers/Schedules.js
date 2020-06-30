@@ -96,6 +96,8 @@ function Schedules() {
         paging: false,
         search: false,
         sorting: false,
+        headerStyle: { position: 'sticky', top: 0 },
+        maxBodyHeight: 480,
     }
 
     const actions = [
