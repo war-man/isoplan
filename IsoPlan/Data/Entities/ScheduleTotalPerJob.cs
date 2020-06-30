@@ -3,6 +3,6 @@
     public class ScheduleTotalPerJob
     {
         public Job Job { get; set; }
-        public int TotalDays { get; set; }
+        public double TotalDays { get; set; }
     }
 }

@@ -169,7 +169,7 @@ namespace IsoPlan.Services
                 .Select(group => new ScheduleTotalPerJob
                 {
                     Job = group.Key,
-                    TotalDays = group.Count(),
+                    TotalDays = group.Sum(g => g.Multiplier),
                 })
                 .OrderBy(x => x.Job.ClientName)
                 .ThenBy(x => x.Job.Name)
@@ -193,7 +193,7 @@ namespace IsoPlan.Services
                 .Select(group => new ScheduleTotalPerEmployee
                 {
                     Employee = group.Key,
-                    TotalDays = group.Count(),
+                    TotalDays = group.Sum(g => g.Multiplier),
                     Salary = 0
                 })
                 .OrderBy(x => x.Employee.FirstName)
