@@ -23,6 +23,8 @@ export const Localization = {
         firstTooltip: 'Première page',
         lastTooltip: 'Dernière page',
         previousTooltip: 'Page précédente',
-        nextTooltip: 'Page suivante'
+        nextTooltip: 'Page suivante',
+        labelRowsSelect: 'lignes',
+        labelDisplayedRows: '{from}-{to} sur {count}'
     }
 }
