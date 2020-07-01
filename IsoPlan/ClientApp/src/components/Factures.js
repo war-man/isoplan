@@ -116,6 +116,7 @@ const Factures = (props) => {
                     date: moment(newData.date).format("YYYY-MM-DD"),
                     value: parseFloat(newData.value),
                     paid: newData.paid,
+                    datePaid: moment(newData.datePaid).format("YYYY-MM-DD"),
                 }
                 factureService.create(item)
                     .then(() => {
@@ -138,6 +139,7 @@ const Factures = (props) => {
                     date: moment(newData.date).format("YYYY-MM-DD"),
                     value: parseFloat(newData.value),
                     paid: newData.paid,
+                    datePaid: moment(newData.datePaid).format("YYYY-MM-DD"),
                 }
                 factureService.update(item)
                     .then(() => {
